@@ -6,6 +6,43 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+		"type": "git",
+		"url": "git@github.com:GetuiLaboratory/react-native-getui.git"
+	},
+  "keywords": [
+		"react",
+		"native",
+		"push",
+    "getui"
+	],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "bugs": {
+		"url": "https://github.com/GetuiLaboratory/react-native-getui/issues"
+	},
+  "homepage": "https://github.com/GetuiLaboratory/react-native-getui#readme",
+  	"peerDependencies": {
+  	},
+  	"rnpm": {
+    	"ios": {
+      	"sharedLibraries": [
+        	"libz",
+          "libc++",
+          "libsqlite3",
+          "Security",
+          "MobileCoreServices",
+          "SystemConfiguration",
+          "CoreTelephony",
+          "AVFoundation",
+          "JavaScriptCore",
+        	"UserNotifications",
+        	"CoreLocation",
+          "AdSupport",
+        	"CoreFoundation",
+        	"Foundation",
+        	"UIKit"
+      	]
+    	}
+  	}
 }
