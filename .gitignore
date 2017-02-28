@@ -1,0 +1,10 @@
+# Gradle files
+*.gradle/
+gradle.properties
+build/
+build-res/
+/*/build/
+*.iml
+*.idea/
+*.DS_Store
+*.log
