@@ -31,13 +31,20 @@ $(SRCROOT)/../node_modules/react-native-getui/ios/RCTGetuiModule
 ````
 
 ###Manually
+1、
 ````
 npm install react-native-getui -save
 ````
+
+2、
 ````
 react-native link
 ````
-在 iOS 工程中如果找不到头文件可能要在 TARGETS-> BUILD SETTINGS -> Search Paths -> Header Search Paths 添加如下如路径：
+
+3、
+[Xcode 工程配置](https://github.com/GetuiLaboratory/react-native-getui/blob/master/example/document/iOS.md)
+
+4、在 iOS 工程中如果找不到头文件可能要在 TARGETS-> BUILD SETTINGS -> Search Paths -> Header Search Paths 添加如下如路径：
 ````
 $(SRCROOT)/../node_modules/react-native-getui/ios/RCTGetuiModule
 ````
