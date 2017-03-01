@@ -14,23 +14,34 @@ const log = (message) => {
 }
 
 export default class Getui {
-
-	/**
-	 *  收到消息通知的回调
-	 */
-	static receiveRemoteNotification(cb){
-		GetuiModule.receiveRemoteNotification((param)=>{
-			cb(param)
-		})
-	}
-	/**
-	 *  点击通知的回调，iOS10 以后才有该方法
-	 */
-	static clickRemoteNotification(cb){
-		GetuiModule.clickRemoteNotification((param)=>{
-			cb(param)
-		})
-	}
+	//监听消息通知
+			// var { NativeAppEventEmitter } = require('react-native');
+			// var receiveRemoteNotificationSub = NativeAppEventEmitter.addListener(
+			// 	 'receiveRemoteNotification',
+			// 	 (notification) => {
+			// 		 //消息类型分为 APNs 和 payload 透传消息，具体的消息体格式会有差异
+			// 		 switch (notification.type) {
+			// 				 case "apns":
+			// 						 Alert.alert('APNs 消息通知',JSON.stringify(notification))
+			// 						 break;
+			// 				 case "payload":
+			// 						 Alert.alert('payload 消息通知',JSON.stringify(notification))
+			// 						 break;
+			// 				 default:
+			// 		 }
+			// 	 }
+			//  );
+			//
+			//  var clickRemoteNotificationSub = NativeAppEventEmitter.addListener(
+			// 		 'clickRemoteNotification',
+			// 		 (notification) => {
+			// 				 Alert.alert('点击通知',JSON.stringify(notification))
+			// 		 }
+			//  );
+			//
+			// //记得在 componentWillUnMount 移除监听
+	    //     receiveRemoteNotificationSub.remove()
+	    //     clickRemoteNotificationSub.remove()
 	/**
 	 *  销毁SDK，并且释放资源
 	 */
@@ -197,5 +208,25 @@ export default class Getui {
 			cb(param)
 		});
 	}
+
+	/*****************  deprecated ******************/
+	/*
+	*  React-native 只能 callback 一次，因此移除该形式，改用订阅模式监听消息
+	 *  收到消息通知的回调
+	 */
+	// static receiveRemoteNotification(cb){
+	// 	GetuiModule.receiveRemoteNotification((param)=>{
+	// 		cb(param)
+	// 	})
+	// }
+	/**
+	*  React-native 只能 callback 一次，因此移除该形式，改用订阅模式监听消息
+	 *  点击通知的回调，iOS10 以后才有该方法
+	 */
+	// static clickRemoteNotification(cb){
+	// 	GetuiModule.clickRemoteNotification((param)=>{
+	// 		cb(param)
+	// 	})
+	// }
 
 }

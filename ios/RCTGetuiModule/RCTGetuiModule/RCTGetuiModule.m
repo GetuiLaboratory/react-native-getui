@@ -44,9 +44,9 @@ RCT_EXPORT_MODULE();
     self = [super init];
     if (self) {
         NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
-        
+
         [defaultCenter removeObserver:self];
-        
+
         [defaultCenter addObserver:self
                           selector:@selector(noti_receiveRemoteNotification:)
                               name:GT_DID_RECEIVE_REMOTE_NOTIFICATION
@@ -61,36 +61,35 @@ RCT_EXPORT_MODULE();
 
 - (void)noti_receiveRemoteNotification:(NSNotification *)notification {
     id obj = [notification object];
-    if(receiveRemoteNotificationCallback)
-        receiveRemoteNotificationCallback(@[obj]);
+//    if(receiveRemoteNotificationCallback)
+//        receiveRemoteNotificationCallback(@[obj]);
+    [self.bridge.eventDispatcher sendAppEventWithName:@"receiveRemoteNotification"
+                                                 body:obj];
 }
 
 // iOS 10 后才有点击事件的回调
 - (void)noti_clickRemoteNotification:(NSNotification *)notification {
     id obj = [notification object];
-    if (clickNotificationCallback) {
-        clickNotificationCallback(@[obj]);
-    }
-}
-
-- (void)didRegistRemoteNotification:(NSString *)token {
-    [self.bridge.eventDispatcher sendAppEventWithName:@"didRegisterToken"
-                                                 body:token];
+//    if (clickNotificationCallback) {
+//        clickNotificationCallback(@[obj]);
+//    }
+    [self.bridge.eventDispatcher sendAppEventWithName:@"clickRemoteNotification"
+                                                 body:obj];
 }
 
 #pragma mark - 收到通知回调
 
-RCT_EXPORT_METHOD(receiveRemoteNotification:(RCTResponseSenderBlock)callback)
-{
-    receiveRemoteNotificationCallback = callback;
-}
-/*
- *点击回调传回的消息格式只为 APNs
- */
-RCT_EXPORT_METHOD(clickRemoteNotification:(RCTResponseSenderBlock)callback)
-{
-    clickNotificationCallback = callback;
-}
+//RCT_EXPORT_METHOD(receiveRemoteNotification:(RCTResponseSenderBlock)callback)
+//{
+//    receiveRemoteNotificationCallback = callback;
+//}
+///*
+// *点击回调传回的消息格式只为 APNs
+// */
+//RCT_EXPORT_METHOD(clickRemoteNotification:(RCTResponseSenderBlock)callback)
+//{
+//    clickNotificationCallback = callback;
+//}
 
 /**
  *  销毁SDK，并且释放资源
@@ -125,7 +124,7 @@ RCT_EXPORT_METHOD(clientId:(RCTResponseSenderBlock)callback)
  */
 RCT_EXPORT_METHOD(status:(RCTResponseSenderBlock)callback)
 {
-    callback(@[[NSString stringWithFormat:@"%@",[GeTuiSdk status]]]);
+    callback(@[[NSString stringWithFormat:@"%d",[GeTuiSdk status]]]);
 }
 
 /**
@@ -283,4 +282,3 @@ RCT_EXPORT_METHOD(sendFeedbackMessage:(NSInteger)actionId andTaskId:(NSString *)
 }
 
 @end
-

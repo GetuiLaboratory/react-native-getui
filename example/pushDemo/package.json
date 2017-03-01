@@ -8,6 +8,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "native-base": "^2.0.11",
     "react": "~15.4.0",
     "react-native": "0.41.2",
     "react-native-getui": "^1.0.1"
