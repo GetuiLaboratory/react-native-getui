@@ -6,48 +6,133 @@
 
 import React, { Component } from 'react';
 import {
-  AppRegistry,
-  StyleSheet,
-  Text,
-  View
+    AppRegistry,
+    StyleSheet,
+    View,
+    Alert
 } from 'react-native';
 
+import {Container, Content, Card, CardItem, Text} from 'native-base';
+import Getui from 'react-native-getui'
+
 export default class pushDemo extends Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit index.android.js
-        </Text>
-        <Text style={styles.instructions}>
-          Double tap R on your keyboard to reload,{'\n'}
-          Shake or press menu button for dev menu
-        </Text>
-      </View>
-    );
-  }
+
+    constructor(props) {
+        super(props);
+        // 初始状态
+        this.state = {
+            clientId: '',
+            version:'',
+            status:''
+        };
+    }
+
+    componentWillMount() {
+        //订阅消息通知
+        this.updateComponentInfo()
+        var { NativeAppEventEmitter } = require('react-native');
+
+        var receiveRemoteNotificationSub = NativeAppEventEmitter.addListener(
+            'receiveRemoteNotification',
+            (notification) => {
+                //Android的消息类型为payload 透传消息 或者 cmd消息
+                switch (notification.type) {
+                    case 'payload':
+                        Alert.alert('payload 消息通知',JSON.stringify(notification))
+                        break
+                    case 'cmd':
+                        Alert.alert('cmd 消息通知', 'Cmd action = ' + notification.cmd)
+                        break
+                    default:
+                }
+            }
+        );
+
+        var clickRemoteNotificationSub = NativeAppEventEmitter.addListener(
+            'clickRemoteNotification',
+            (notification) => {
+                Alert.alert('点击通知',JSON.stringify(notification))
+            }
+        );
+    }
+    render() {
+        return (
+            <View style={styles.container}>
+                <Container>
+                    <Content >
+                        <Card>
+                            <CardItem>
+                                <Text>
+                                    Version : {this.state.version}
+                                </Text>
+                            </CardItem>
+                        </Card>
+                        <Card>
+                            <CardItem>
+                                <Text>
+                                    ClientId : {this.state.clientId}
+                                </Text>
+                            </CardItem>
+                        </Card>
+                        <Card>
+                            <CardItem>
+                                <Text>
+                                    运行状态 : {this.state.status}
+                                </Text>
+                            </CardItem>
+                        </Card>
+
+                    </Content>
+
+                </Container>
+            </View>
+        );
+    }
+
+    componentDidMount(){
+        this.updateComponentInfo()
+    }
+
+  updateComponentInfo (){
+
+        Getui.clientId((param)=> {
+            this.setState({'clientId': param})
+        })
+
+        Getui.version((param)=> {
+            this.setState({'version': param})
+        })
+
+        Getui.status((param)=> {
+            let status = ''
+            switch (param){
+                case '0':
+                    status = '正在启动'
+                    break;
+                case '1':
+                    status = '启动'
+                    break;
+                case '2':
+                    status = '停止'
+                    break;
+            }
+            this.setState({'status': status})
+        })
+    }
+
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#F5FCFF',
+        marginTop:20
+    },
+    content: {
+        marginTop: 60
+    }
 });
 
 AppRegistry.registerComponent('pushDemo', () => pushDemo);

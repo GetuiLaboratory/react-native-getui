@@ -1,16 +1,14 @@
 # react-native-getui
 react-native-getui 是个推官方开发的 React Native 插件，使用该插件可以方便快速地集成推送功能。
 
-目前只有 iOS 版本，Android 版本将会在近期推出，暂时请 Android 的小伙伴们使用原生的方式接入，一样简单方便。
 
 #Env
 
 - React Native Version ： Lastest
-- react-native-getui > 1.0.2
+- react-native-getui > 1.1.0
 
 #Installation
 
-##iOS
 ###使用 rnpm 自动安装
 
 ````
@@ -29,7 +27,6 @@ npm run GetuiConfigure <yourModuleName> <yourAppId> <yourAppKey> <yourAppSecret>
 ````
 $(SRCROOT)/../node_modules/react-native-getui/ios/RCTGetuiModule
 ````
-
 ###Manually
 1、
 ````
