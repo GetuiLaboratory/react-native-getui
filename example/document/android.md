@@ -8,9 +8,9 @@
 ````
 // 配置个推的三个参数
 manifestPlaceholders = [
-            GETUI_APP_ID : "DI1jwW3FtZ6kGDeY5dk0Y9",
-            GETUI_APP_KEY : "DQCk2V8Jev9hqhWDU94PF9",
-            GETUI_APP_SECRET : "Rtyp5trKUt8HSyzD8zRXX7"
+            GETUI_APP_ID : "你的AppID",
+            GETUI_APP_KEY : "你的AppKey",
+            GETUI_APP_SECRET : "你的AppSecret"
         ]
 
 ````
@@ -25,17 +25,9 @@ manifestPlaceholders = [
 
 ````
 
-3、修改 android 项目下的 settings.gradle 配置：
-
 ````
 
-include ':app', ':react-native-getui'
-project(':react-native-getui').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-getui/android')
-
-
-````
-
-4、在android/app/build.gradle中添加对react-native-getui的依赖
+4、在android/app/build.gradle中添加对react-native-getui的依赖（如果已经存在，忽略此步）
 
 ````
 compile project(':react-native-getui')
@@ -57,7 +49,7 @@ GetuiModule.initPush(this);
    var receiveRemoteNotificationSub = NativeAppEventEmitter.addListener(
       'receiveRemoteNotification',
       (notification) => {
-        //消息类型分为 APNs 和 payload 透传消息，具体的消息体格式会有差异
+        //消息类型分为 cmd 和 payload 透传消息，具体的消息体格式会有差异
         switch (notification.type) {
             case "cmd":
                 Alert.alert('cmd 消息通知',JSON.stringify(notification))
