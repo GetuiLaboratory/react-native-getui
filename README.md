@@ -47,7 +47,7 @@ react-native link
 [Xcode 工程配置](https://github.com/GetuiLaboratory/react-native-getui/blob/master/example/document/iOS.md)
 
 4、
-[Android 工程配置]()
+[Android 工程配置](https://github.com/GetuiLaboratory/react-native-getui/blob/master/example/document/android.md)
 
 4、在 iOS 工程中如果找不到头文件可能要在 TARGETS-> BUILD SETTINGS -> Search Paths -> Header Search Paths 添加如下如路径：
 ````
