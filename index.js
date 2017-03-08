@@ -42,6 +42,13 @@ export default class Getui {
 			// //记得在 componentWillUnMount 移除监听
 	    //     receiveRemoteNotificationSub.remove()
 	    //     clickRemoteNotificationSub.remove()
+
+    /**
+	 * 初始化推送服务
+     */
+    static initPush(){
+    	GetuiModule.initPush();
+	}
 	/**
 	 *  销毁SDK，并且释放资源
 	 */

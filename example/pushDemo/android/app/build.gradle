@@ -83,8 +83,8 @@ def enableSeparateBuildPerCPUArchitecture = false
 def enableProguardInReleaseBuilds = false
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
 
     defaultConfig {
         applicationId "com.pushdemo"
@@ -92,10 +92,21 @@ android {
         targetSdkVersion 22
         versionCode 1
         versionName "1.0"
+
+        manifestPlaceholders = [
+            GETUI_APP_ID : "DI1jwW3FtZ6kGDeY5dk0Y9",
+            GETUI_APP_KEY : "DQCk2V8Jev9hqhWDU94PF9",
+            GETUI_APP_SECRET : "Rtyp5trKUt8HSyzD8zRXX7"
+        ]
+
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
     }
+
+
+
+
     splits {
         abi {
             reset()
@@ -126,9 +137,11 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: "libs", include: ["*.jar"])
-    compile "com.android.support:appcompat-v7:23.0.1"
-    compile "com.facebook.react:react-native:+"  // From node_modules
+    compile project(':react-native-getui')
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'com.android.support:appcompat-v7:25.2.0'
+    compile 'com.facebook.react:react-native:+'
+    // From node_modules
 }
 
 // Run this once to be able to run the application with BUCK
