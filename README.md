@@ -5,7 +5,7 @@ react-native-getui 是个推官方开发的 React Native 插件，使用该插�
 #Env
 
 - React Native Version ： Lastest
-- react-native-getui > 1.1.0
+- react-native-getui > 1.1.1
 
 #Installation
 
@@ -27,6 +27,11 @@ npm run GetuiConfigure <yourModuleName> <yourAppId> <yourAppKey> <yourAppSecret>
 ````
 $(SRCROOT)/../node_modules/react-native-getui/ios/RCTGetuiModule
 ````
+- 在 Android工程中需要在Application或MainActivity的onCreate中调用
+````
+GetuiModule.initPush(this);
+````
+
 ###Manually
 1、
 ````
@@ -40,6 +45,9 @@ react-native link
 
 3、
 [Xcode 工程配置](https://github.com/GetuiLaboratory/react-native-getui/blob/master/example/document/iOS.md)
+
+4、
+[Android 工程配置]()
 
 4、在 iOS 工程中如果找不到头文件可能要在 TARGETS-> BUILD SETTINGS -> Search Paths -> Header Search Paths 添加如下如路径：
 ````

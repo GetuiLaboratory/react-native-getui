@@ -1,8 +1,9 @@
 #Android usage
-在 react-native link 之后， 使用Android Studio打开工程。
+在 react-native link 之后， 使用Android Studio打开工程（假设主模块名称为app）。
 
+1、使用 Android Studio import 你的 React Native 应用（选择你的 React Native 应用所在目录下的 android 文件夹即可）
 
-1、app/build.gradle 的defaultConfig节点中添加如下代码
+2、android/app/build.gradle 的defaultConfig节点中添加如下代码
 
 ````
 // 配置个推的三个参数
@@ -12,7 +13,39 @@ manifestPlaceholders = [
             GETUI_APP_SECRET : "Rtyp5trKUt8HSyzD8zRXX7"
         ]
 
+````
 
+3、在android/app/AndroidManifest.xml 中添加meta-data
+
+````
+<!-- 配置个推的三个参数 -->
+<meta-data android:name="PUSH_APPID" android:value="${GETUI_APP_ID}" />
+<meta-data android:name="PUSH_APPKEY" android:value="${GETUI_APP_KEY}" />
+<meta-data android:name="PUSH_APPSECRET" android:value="${GETUI_APP_SECRET}" />
+
+````
+
+3、修改 android 项目下的 settings.gradle 配置：
+
+````
+
+include ':app', ':react-native-getui'
+project(':react-native-getui').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-getui/android')
+
+
+````
+
+4、在android/app/build.gradle中添加对react-native-getui的依赖
+
+````
+compile project(':react-native-getui')
+
+````
+
+5、在Application.onCreate或MainActivity.onCreate中初始化个推
+
+````
+GetuiModule.initPush(this);
 ````
 #JS 使用
 
