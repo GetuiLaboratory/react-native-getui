@@ -25,8 +25,6 @@ manifestPlaceholders = [
 
 ````
 
-````
-
 4、在android/app/build.gradle中添加对react-native-getui的依赖（如果已经存在，忽略此步）
 
 ````
@@ -38,7 +36,9 @@ compile project(':react-native-getui')
 
 ````
 GetuiModule.initPush(this);
+
 ````
+
 #JS 使用
 
 主要的消息通知回调使用如下，其他的接口均可在 [index.js](https://github.com/GetuiLaboratory/react-native-getui/blob/master/index.js) 查看。
@@ -61,13 +61,8 @@ GetuiModule.initPush(this);
         }
       }
     );
-
-    var clickRemoteNotificationSub = NativeAppEventEmitter.addListener(
-        'clickRemoteNotification',
-        (notification) => {
-            Alert.alert('点击通知',JSON.stringify(notification))
-        }
-    );
+ 
+    
 ````
 
 ````
@@ -76,6 +71,7 @@ componentWillUnMount() {
     receiveRemoteNotificationSub.remove()
     clickRemoteNotificationSub.remove()
 }
+
 ````
 
 其他接口：
