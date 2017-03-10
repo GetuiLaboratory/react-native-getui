@@ -61,15 +61,14 @@ GetuiModule.initPush(this);
         }
       }
     );
- 
-    
+
+
 ````
 
 ````
 componentWillUnMount() {
   //记得在此处移除监听
     receiveRemoteNotificationSub.remove()
-    clickRemoteNotificationSub.remove()
 }
 
 ````

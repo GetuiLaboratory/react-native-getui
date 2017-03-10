@@ -20,6 +20,10 @@ public class GetuiPackage implements ReactPackage {
         GetuiLogger.ENABLE = logEnable;
     }
 
+    public GetuiPackage(){
+        GetuiLogger.ENABLE = true;
+    }
+
     @Override
     public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
         return Arrays.asList(new NativeModule[]{
