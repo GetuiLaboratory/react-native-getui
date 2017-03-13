@@ -118,13 +118,6 @@ export default class pushDemo extends Component {
                                 </Text>
                             </CardItem>
                         </Card>
-                        <Card>
-                            <CardItem>
-                                <Text>
-                                    clientId : {this.state.clientId}
-                                </Text>
-                            </CardItem>
-                        </Card>
                     </Content>
 
                 </Container>

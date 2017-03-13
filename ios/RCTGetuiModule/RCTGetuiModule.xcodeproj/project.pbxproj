@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		84E116B21E768807000ECE6B /* libGeTuiSdk-1.6.2.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 84E116B11E768807000ECE6B /* libGeTuiSdk-1.6.2.0.a */; };
 		84F17A2E1E63FB1B00F97ED1 /* RCTGetuiModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 84F17A2D1E63FB1B00F97ED1 /* RCTGetuiModule.m */; };
-		84F17AF21E640AC100F97ED1 /* libGeTuiSdk-1.5.3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F17AF11E640AC100F97ED1 /* libGeTuiSdk-1.5.3.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,11 +25,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		84E116B11E768807000ECE6B /* libGeTuiSdk-1.6.2.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libGeTuiSdk-1.6.2.0.a"; sourceTree = "<group>"; };
 		84F17A291E63FB1B00F97ED1 /* libRCTGetuiModule.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRCTGetuiModule.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		84F17A2C1E63FB1B00F97ED1 /* RCTGetuiModule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RCTGetuiModule.h; sourceTree = "<group>"; };
 		84F17A2D1E63FB1B00F97ED1 /* RCTGetuiModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RCTGetuiModule.m; sourceTree = "<group>"; };
 		84F17AF01E640ABC00F97ED1 /* GeTuiSdk.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeTuiSdk.h; sourceTree = "<group>"; };
-		84F17AF11E640AC100F97ED1 /* libGeTuiSdk-1.5.3.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libGeTuiSdk-1.5.3.a"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -37,7 +37,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				84F17AF21E640AC100F97ED1 /* libGeTuiSdk-1.5.3.a in Frameworks */,
+				84E116B21E768807000ECE6B /* libGeTuiSdk-1.6.2.0.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -66,7 +66,7 @@
 				84F17A2C1E63FB1B00F97ED1 /* RCTGetuiModule.h */,
 				84F17A2D1E63FB1B00F97ED1 /* RCTGetuiModule.m */,
 				84F17AF01E640ABC00F97ED1 /* GeTuiSdk.h */,
-				84F17AF11E640AC100F97ED1 /* libGeTuiSdk-1.5.3.a */,
+				84E116B11E768807000ECE6B /* libGeTuiSdk-1.6.2.0.a */,
 			);
 			path = RCTGetuiModule;
 			sourceTree = "<group>";
