@@ -5,7 +5,7 @@ react-native-getui 是个推官方开发的 React Native 插件，使用该插�
 #Env
 
 - React Native Version ： Lastest
-- react-native-getui > 1.1.2
+- react-native-getui > 1.1.3
 
 #Installation
 
