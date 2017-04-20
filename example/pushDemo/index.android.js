@@ -31,7 +31,7 @@ export default class pushDemo extends Component {
     }
 
     componentWillMount() {
-        //订阅消息通知
+
         this.updateComponentInfo()
 
     }
@@ -115,6 +115,7 @@ const styles = StyleSheet.create({
     }
 });
 
+//订阅消息通知
 var { NativeAppEventEmitter } = require('react-native');
 
                 var receiveRemoteNotificationSub = NativeAppEventEmitter.addListener(
@@ -123,13 +124,14 @@ var { NativeAppEventEmitter } = require('react-native');
                         //Android的消息类型为payload 透传消息 或者 cmd消息
                         switch (notification.type) {
                             case "cid":
+                              //  console.log("receiveRemoteNotification cid = " + notification.cid)
                                 Alert.alert('初始化获取到cid',JSON.stringify(notification))
                                 break;
                             case 'payload':
                                 Alert.alert('payload 消息通知',JSON.stringify(notification))
                                 break
                             case 'cmd':
-                                Alert.alert('cmd 消息通知', 'Cmd action = ' + notification.cmd)
+                                Alert.alert('cmd 消息通知', 'cmd action = ' + notification.cmd)
                                 break
                             default:
                         }
