@@ -27,11 +27,17 @@ public class PushIntentService extends GTIntentService {
     @Override
     public void onReceiveServicePid(Context context, int pid) {
         GetuiLogger.log("onReceiveServicePid = " +  pid);
+
+
     }
 
     @Override
     public void onReceiveClientId(Context context, String clientId) {
         GetuiLogger.log("onReceiveClientId = " + clientId);
+        WritableMap param = Arguments.createMap();
+        param.putString("type", GetuiModule.EVENT_TYPE_RECEIVE_CID);
+        param.putString("cid", clientId);
+        GetuiModule.sendEvent(GetuiModule.EVENT_RECEIVE_REMOTE_NOTIFICATION,  param);
     }
 
     @Override

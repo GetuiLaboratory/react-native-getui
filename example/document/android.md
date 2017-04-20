@@ -51,6 +51,9 @@ GetuiModule.initPush(this);
       (notification) => {
         //消息类型分为 cmd 和 payload 透传消息，具体的消息体格式会有差异
         switch (notification.type) {
+            case "cid":
+                Alert.alert('初始化获取到cid',JSON.stringify(notification))
+                break;
             case "cmd":
                 Alert.alert('cmd 消息通知',JSON.stringify(notification))
                 break;

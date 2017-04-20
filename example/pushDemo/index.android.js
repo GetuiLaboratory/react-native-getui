@@ -15,6 +15,8 @@ import {
 import {Container, Content, Card, CardItem, Text} from 'native-base';
 import Getui from 'react-native-getui'
 
+
+
 export default class pushDemo extends Component {
 
     constructor(props) {
@@ -25,35 +27,13 @@ export default class pushDemo extends Component {
             version:'',
             status:''
         };
+
     }
 
     componentWillMount() {
         //订阅消息通知
         this.updateComponentInfo()
-        var { NativeAppEventEmitter } = require('react-native');
 
-        var receiveRemoteNotificationSub = NativeAppEventEmitter.addListener(
-            'receiveRemoteNotification',
-            (notification) => {
-                //Android的消息类型为payload 透传消息 或者 cmd消息
-                switch (notification.type) {
-                    case 'payload':
-                        Alert.alert('payload 消息通知',JSON.stringify(notification))
-                        break
-                    case 'cmd':
-                        Alert.alert('cmd 消息通知', 'Cmd action = ' + notification.cmd)
-                        break
-                    default:
-                }
-            }
-        );
-
-        var clickRemoteNotificationSub = NativeAppEventEmitter.addListener(
-            'clickRemoteNotification',
-            (notification) => {
-                Alert.alert('点击通知',JSON.stringify(notification))
-            }
-        );
     }
     render() {
         return (
@@ -135,4 +115,32 @@ const styles = StyleSheet.create({
     }
 });
 
+var { NativeAppEventEmitter } = require('react-native');
+
+                var receiveRemoteNotificationSub = NativeAppEventEmitter.addListener(
+                    'receiveRemoteNotification',
+                    (notification) => {
+                        //Android的消息类型为payload 透传消息 或者 cmd消息
+                        switch (notification.type) {
+                            case "cid":
+                                Alert.alert('初始化获取到cid',JSON.stringify(notification))
+                                break;
+                            case 'payload':
+                                Alert.alert('payload 消息通知',JSON.stringify(notification))
+                                break
+                            case 'cmd':
+                                Alert.alert('cmd 消息通知', 'Cmd action = ' + notification.cmd)
+                                break
+                            default:
+                        }
+                    }
+                );
+
+                var clickRemoteNotificationSub = NativeAppEventEmitter.addListener(
+                    'clickRemoteNotification',
+                    (notification) => {
+                        Alert.alert('点击通知',JSON.stringify(notification))
+                    }
+                );
 AppRegistry.registerComponent('pushDemo', () => pushDemo);
+
