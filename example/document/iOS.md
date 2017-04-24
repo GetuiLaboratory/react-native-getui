@@ -102,7 +102,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
 
     // 控制台打印接收APNs信息
     NSLog(@"\n>>>[Receive RemoteNotification]:%@\n\n", userInfo);
-    
+
   	[[NSNotificationCenter defaultCenter]postNotificationName:GT_DID_RECEIVE_REMOTE_NOTIFICATION object:@{@"type":@"apns",@"userInfo":userInfo}];
 
     completionHandler(UIBackgroundFetchResultNewData);
@@ -144,6 +144,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
 /** SDK启动成功返回cid */
 - (void)GeTuiSdkDidRegisterClient:(NSString *)clientId {
     // [4-EXT-1]: 个推SDK已注册，返回clientId
+    [[NSNotificationCenter defaultCenter]postNotificationName:GT_DID_REGISTE_CLIENTID object:clientId];
     NSLog(@"\n>>[GTSdk RegisterClient]:%@\n\n", clientId);
 }
 
@@ -204,6 +205,12 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
 ````
 //订阅消息通知
    var { NativeAppEventEmitter } = require('react-native');
+   var resigsteClientIdSub = NativeAppEventEmitter.addListener(
+         'registeClientId',
+         (clientId) => {
+           Alert.alert(clientId);
+         }
+       )
    var receiveRemoteNotificationSub = NativeAppEventEmitter.addListener(
       'receiveRemoteNotification',
       (notification) => {
@@ -233,6 +240,7 @@ componentWillUnMount() {
   //记得在此处移除监听
     receiveRemoteNotificationSub.remove()
     clickRemoteNotificationSub.remove()
+    resigsteClientIdSub.remove()
 }
 ````
 

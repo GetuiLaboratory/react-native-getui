@@ -110,4 +110,9 @@
   [[NSNotificationCenter defaultCenter]postNotificationName:GT_DID_RECEIVE_REMOTE_NOTIFICATION object:@{@"type":@"payload",@"userInfo":userInfo}];
   NSLog(@">>[GTSdk ReceivePayload]:%@", msg);
 }
+/** SDK成功注册 CID 回调 */
+-(void)GeTuiSdkDidRegisterClient:(NSString *)clientId{
+[[NSNotificationCenter defaultCenter]postNotificationName:GT_DID_REGISTE_CLIENTID object:clientId];
+}
+
 @end

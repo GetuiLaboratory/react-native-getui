@@ -55,6 +55,10 @@ RCT_EXPORT_MODULE();
                           selector:@selector(noti_clickRemoteNotification:)
                               name:GT_DID_CLICK_NOTIFICATION
                             object:nil];
+        [defaultCenter addObserver:self
+                          selector:@selector(noti_registeClientId:)
+                              name:GT_DID_REGISTE_CLIENTID
+                            object:nil];
     }
     return self;
 }
@@ -65,6 +69,12 @@ RCT_EXPORT_MODULE();
 //        receiveRemoteNotificationCallback(@[obj]);
     [self.bridge.eventDispatcher sendAppEventWithName:@"receiveRemoteNotification"
                                                  body:obj];
+}
+
+-(void)noti_registeClientId:(NSNotification *)notification {
+  id obj = [notification object];
+  [self.bridge.eventDispatcher sendAppEventWithName:@"registeClientId"
+                                               body:obj];
 }
 
 // iOS 10 后才有点击事件的回调
@@ -115,7 +125,8 @@ RCT_EXPORT_METHOD(resume)
  */
 RCT_EXPORT_METHOD(clientId:(RCTResponseSenderBlock)callback)
 {
-    callback(@[[GeTuiSdk clientId]]);
+    NSString *clientId = [GeTuiSdk clientId]?:@"";
+    callback(@[clientId]);
 }
 /**
  *  获取SDK运行状态

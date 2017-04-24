@@ -21,6 +21,7 @@
 
 #define GT_DID_RECEIVE_REMOTE_NOTIFICATION @"GtDidReciveRemoteNotification"
 #define GT_DID_CLICK_NOTIFICATION @"GtDidClickNotification"
+#define GT_DID_REGISTE_CLIENTID @"GtDidRegisteClient"
 
 @interface RCTGetuiModule : NSObject <RCTBridgeModule>
 

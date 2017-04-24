@@ -30,6 +30,12 @@ export default class pushDemo extends Component {
         this.updateComponentInfo()
        //订阅消息通知
        var { NativeAppEventEmitter } = require('react-native');
+       var resigsteClientIdSub = NativeAppEventEmitter.addListener(
+         'registeClientId',
+         (clientId) => {
+           Alert.alert(clientId);
+         }
+       )
        var receiveRemoteNotificationSub = NativeAppEventEmitter.addListener(
           'receiveRemoteNotification',
           (notification) => {
@@ -89,6 +95,7 @@ export default class pushDemo extends Component {
       //记得在此处移除监听
         receiveRemoteNotificationSub.remove()
         clickRemoteNotificationSub.remove()
+        resigsteClientIdSub.remove()
     }
 
 

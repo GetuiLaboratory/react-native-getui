@@ -128,6 +128,18 @@ function insertIOSImplCode(path){
         fs.writeFileSync(path, rf, "utf-8");
     }
 
+		// 这里插入 SDK 注册 cid 成功回调
+		var rf = fs.readFileSync(path,"utf-8");
+    var search = rf.match(/\n.*GeTuiSdkDidRegisterClient\:.*\{\n/);
+		var mathStr = "/** SDK成功注册 CID 回调 */\n-(void)GeTuiSdkDidRegisterClient:(NSString *)clientId{\n[[NSNotificationCenter defaultCenter]postNotificationName:GT_DID_REGISTE_CLIENTID object:clientId];\n}\n"
+    if (search == null) {
+        console.log("没有匹配到 函数 GeTuiSdkDidRegisterClient");
+
+				rf = rf.replace(/\@end/,mathStr+"\n@end")
+        // console.log(rf);
+        fs.writeFileSync(path, rf, "utf-8");
+    }
+
 		// 这里插入 SDK收到透传消息回调
     var rf = fs.readFileSync(path,"utf-8");
     var search = rf.match(/\n.*andTaskId\:\(NSString \*\)taskId[ ]*andMsgId\:.*\{\n/);
