@@ -5,11 +5,11 @@ react-native-getui 是个推官方开发的 React Native 插件，使用该插�
 # Env
 
 - React Native Version ： Lastest
-- react-native-getui > 1.1.4
+- react-native-getui > 1.1.6
 
-#Installation
+# Installation
 
-###使用 rnpm 自动安装
+### 使用 rnpm 自动安装
 
 ````
 npm install react-native-getui -save
@@ -32,7 +32,7 @@ $(SRCROOT)/../node_modules/react-native-getui/ios/RCTGetuiModule
 GetuiModule.initPush(this);
 ````
 
-###Manually
+### 手动安装
 1、
 ````
 npm install react-native-getui -save
