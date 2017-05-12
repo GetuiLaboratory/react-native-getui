@@ -1,4 +1,5 @@
-#Android usage
+# Android 手动集成方式
+
 在 react-native link 之后， 使用Android Studio打开工程（假设主模块名称为app），当然您也可以不适用Android Studio。
 
 1、如果您使用Android Studio作为开发Android原生代码的IDE，使用 Android Studio import 你的 React Native 应用（选择你的 React Native 应用所在目录下的 android 文件夹即可）
