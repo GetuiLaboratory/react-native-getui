@@ -45,6 +45,12 @@ protected void onCreate(Bundle savedInstanceState) {
         GetuiModule.initPush(this);
     }
 ````
+如果您使用Android Studio作为IDE，Android Studio会自动为您import 相应的类名，如果您使用其他的IDE，请import相关的类
+
+````
+import android.os.Bundle;
+import com.getui.reactnativegetui.GetuiModule;
+````
 
 ### 手动安装
 1、
