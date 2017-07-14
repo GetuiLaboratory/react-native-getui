@@ -11,19 +11,19 @@ if (moduleName == undefined || moduleName == null) {
 	moduleName = "app";
 };
 
-var appId = process.argv[3];
+var appId = process.argv[2];
 if (appId == undefined || appId == null) {
 	console.log("error 没有输入 appId 参数");
 	return;
 }
 
-var appKey = process.argv[4];
+var appKey = process.argv[3];
 if (appKey == undefined || appKey == null) {
 	console.log("error 没有输入 appKey 参数");
 	return;
 }
 
-var appSecret = process.argv[5];
+var appSecret = process.argv[4];
 if (appSecret == undefined || appSecret == null) {
 	console.log("error 没有输入 appSecret 参数");
 	return;
