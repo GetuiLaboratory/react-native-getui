@@ -5,7 +5,7 @@ var os = require('os');
 
 // add other link flag
 
-var moduleName = process.argv[2];
+var moduleName = process.argv[5];
 if (moduleName == undefined || moduleName == null) {
 	console.log("没有输入 moduleName, 将使用默认模块名： app");
 	moduleName = "app";
