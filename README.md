@@ -20,7 +20,11 @@ npm install react-native-getui -save
 react-native link
 ````
 ````
-npm run GetuiConfigure <yourModuleName> <yourAppId> <yourAppKey> <yourAppSecret>
+npm run GetuiConfigure <yourAppId> <yourAppKey> <yourAppSecret>  <yourModuleName>
+// yourModuleName 指的是你的 Android 项目中的模块名称（对 iOS 没有影响，不填写的话默认值为 app）
+// 举个列子：
+npm run GetuiConfigure DI1jwW3FtZ6kGDeY5dk0Y9 DQCk2V8Jev9hqhWDU94PF9 Rtyp5trKUt8HSyzD8zRXX7 app
+
 ````
 #### 注意:
 
