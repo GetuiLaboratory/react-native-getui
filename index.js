@@ -140,7 +140,7 @@ export default class Getui {
 	 *  @param aSn   绑定序列码, 不为nil
 	 */
 
-	static bindAlias(alias, aSn = 0) {
+	static bindAlias(alias, aSn = '0') {
 		GetuiModule.bindAlias(alias, aSn);
 	}
 	/**
@@ -149,7 +149,7 @@ export default class Getui {
 	 *  @param alias 别名字符串
 	 *  @param aSn   绑定序列码, 不为nil
 	 */
-	static unbindAlias(alias, aSn = 0) {
+	static unbindAlias(alias, aSn = '0') {
 		GetuiModule.unbindAlias(alias, aSn);
 	}
 	/**
