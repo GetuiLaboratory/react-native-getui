@@ -298,7 +298,7 @@ function configureAndroidManifest(path) {
      if (isAlreadyWrite == null){
         var searchKey = rf.match(/\n.*\<\/activity\>/);
         	if (searchKey != null) {
-        		rf = rf.replace(searchKey[0], searchKey[0] + "\n\n\<meta-data android\:name=\"PUSH_APPID\" android\:value=\"\$\{appId\}\"\/\>\n\<meta-data android\:name=\"PUSH_APPKEY\" android\:value=\"\$\{appKey\}\"\/\>\n\<meta-data android\:name=\"PUSH_APPSECRET\" android\:value=\"\$\{appSecret\}\"\/\>\n");
+        		rf = rf.replace(searchKey[0], searchKey[0] + "\n\n\<meta-data android\:name=\"PUSH_APPID\" android\:value=\"" + appId + "\"\/\>\n\<meta-data android\:name=\"PUSH_APPKEY\" android\:value=\"" + appKey + "\"\/\>\n\<meta-data android\:name=\"PUSH_APPSECRET\" android\:value=\"" + appSecret + "\"\/\>\n");
         		fs.writeFileSync(path, rf, "utf-8");
         	}
      }
