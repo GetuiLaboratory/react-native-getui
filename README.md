@@ -5,7 +5,7 @@ react-native-getui 是个推官方开发的 React Native 插件，使用该插�
 # 环境
 
 - React Native Version ： 0.42(demo中使用的rn版本)，理论上可以任意使用其他任何RN版本
-- react-native-getui > 1.1.7
+- react-native-getui > 1.1.9
 
 # 安装
 
