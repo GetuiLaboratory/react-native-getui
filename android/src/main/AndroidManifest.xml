@@ -65,22 +65,6 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" >
         </activity>
 
-        <service
-            android:name="com.igexin.download.DownloadService"
-            android:process=":pushservice" />
-
-        <receiver android:name="com.igexin.download.DownloadReceiver" >
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-            </intent-filter>
-        </receiver>
-
-        <provider
-            android:name="com.igexin.download.DownloadProvider"
-            android:exported="true"
-            android:authorities="downloads.${applicationId}"
-            android:process=":pushservice" />
-
         <activity
             android:name="com.igexin.sdk.GActivity"
             android:excludeFromRecents="true"
