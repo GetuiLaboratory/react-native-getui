@@ -217,7 +217,7 @@ RCT_EXPORT_METHOD(bindAlias:(NSString *)alias andSequenceNum:(NSString *)aSn)
  */
 RCT_EXPORT_METHOD(unbindAlias:(NSString *)alias andSequenceNum:(NSString *)aSn)
 {
-    [GeTuiSdk unbindAlias:alias andSequenceNum:aSn];
+    [GeTuiSdk unbindAlias:alias andSequenceNum:aSn andIsSelf:YES];
 }
 /**
  *  给用户打标签 , 后台可以根据标签进行推送

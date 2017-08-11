@@ -5,6 +5,7 @@
 //  Created by gexin on 15-5-5.
 //  Copyright (c) 2015年 Gexin Interactive (Beijing) Network Technology Co.,LTD. All rights reserved.
 //
+//  GTSDK-Version:2.0.0.0
 
 #import <Foundation/Foundation.h>
 
@@ -19,7 +20,6 @@ typedef enum {
 
 //SDK Delegate 回调接口
 @protocol GeTuiSdkDelegate;
-
 
 @interface GeTuiSdk : NSObject
 
@@ -54,6 +54,7 @@ typedef enum {
 /**
  *  获取SDK版本号
  *
+ *  当前GeTuiSdk版本：2.0.0.0
  *  @return 版本值
  */
 + (NSString *)version;
@@ -125,10 +126,11 @@ typedef enum {
 /**
  *  取消绑定别名功能
  *
- *  @param alias 别名字符串
- *  @param aSn   绑定序列码, 不为nil
+ *  @param alias   别名字符串
+ *  @param aSn     绑定序列码, 不为nil
+ *  @param isSelf  是否只对当前cid有效，如果是true，只对当前cid做解绑；如果是false，对所有绑定该别名的cid列表做解绑
  */
-+ (void)unbindAlias:(NSString *)alias andSequenceNum:(NSString *)aSn;
++ (void)unbindAlias:(NSString *)alias andSequenceNum:(NSString *)aSn andIsSelf:(BOOL) isSelf;
 
 /**
  *  给用户打标签 , 后台可以根据标签进行推送
