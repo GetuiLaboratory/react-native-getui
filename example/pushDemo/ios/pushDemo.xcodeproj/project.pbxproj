@@ -619,6 +619,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				61B53ED131654F81B7FF471F /* Frameworks */,
 				72AE5C5D23D04E5087A558AC /* Resources */,
+				8487A2A61FEA06D500094980 /* Recovered References */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -639,6 +640,14 @@
 				8428AB891F3D5E1F00E59AE3 /* libRCTGetuiModule.a */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		8487A2A61FEA06D500094980 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				391D1EDCD9EB4273AFC370D4 /* libRCTGetuiModule.a */,
+			);
+			name = "Recovered References";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

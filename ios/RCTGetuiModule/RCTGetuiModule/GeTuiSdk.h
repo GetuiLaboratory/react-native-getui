@@ -5,14 +5,15 @@
 //  Created by gexin on 15-5-5.
 //  Copyright (c) 2015年 Gexin Interactive (Beijing) Network Technology Co.,LTD. All rights reserved.
 //
-//  GTSDK-Version:2.0.0.0
+//  GTSDK-Version:2.1.0.0
 
 #import <Foundation/Foundation.h>
 
 typedef enum {
-    SdkStatusStarting, // 正在启动
-    SdkStatusStarted,  // 启动
-    SdkStatusStoped    // 停止
+    SdkStatusStarting,  // 正在启动
+    SdkStatusStarted,   // 启动、在线
+    SdkStatusStoped,    // 停止
+    SdkStatusOffline,   // 离线
 } SdkStatus;
 
 #define kGtResponseBindType @"bindAlias"
@@ -54,7 +55,7 @@ typedef enum {
 /**
  *  获取SDK版本号
  *
- *  当前GeTuiSdk版本：2.0.0.0
+ *  当前GeTuiSdk版本：2.1.0.0
  *  @return 版本值
  */
 + (NSString *)version;
@@ -114,6 +115,7 @@ typedef enum {
  *
  */
 + (BOOL)registerDeviceToken:(NSString *)deviceToken;
+
 
 /**
  *  绑定别名功能:后台可以根据别名进行推送
