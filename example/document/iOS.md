@@ -248,7 +248,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
 
 为保证正确收到 VoIP 推送回调，需要先调用注册 VoIP 接口 `Getui.voipRegistration()`，并且需要打开推送统治权限，并且开启 VoIP 后台运行权限。
 
-![VoIP 权限配置](https://github.com/GetuiLaboratory/react-native-getui/blob/master/example/img/ios_1.jpeg)
+![VoIP 权限配置](https://github.com/GetuiLaboratory/react-native-getui/blob/master/example/document/img/ios_1.jpeg?raw=true)
 
 ````
 componentWillUnMount() {
