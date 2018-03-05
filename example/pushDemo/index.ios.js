@@ -29,6 +29,9 @@ export default class pushDemo extends Component {
     componentWillMount() {
         this.updateComponentInfo()
 
+        //  注册 VoIP 通知
+       Getui.voipRegistration();
+
        //订阅消息通知
        var { NativeAppEventEmitter } = require('react-native');
        var resigsteClientIdSub = NativeAppEventEmitter.addListener(
@@ -102,8 +105,6 @@ export default class pushDemo extends Component {
            }
            this.setState({'status': status})
        })
-        //    注册 VoIP 通知
-       Getui.voipRegistration();
     }
 
     componentWillUnMount() {
