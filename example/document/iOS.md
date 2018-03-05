@@ -1,4 +1,5 @@
-#iOS usage
+# iOS 手动集成方式
+
 在 react-native link 之后，打开 iOS 工程。
 Xcode 工程中需要注册个推 SDK 、注册 deviceToken 、监听消息回调，才能正常使用推送服务，只需要通过以下几步即可集成：
 
@@ -198,7 +199,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
 
 ````
 
-#JS 使用
+#JS 使用及接口
 
 主要的消息通知回调使用如下，其他的接口均可在 [index.js](https://github.com/GetuiLaboratory/react-native-getui/blob/master/index.js) 查看。
 
