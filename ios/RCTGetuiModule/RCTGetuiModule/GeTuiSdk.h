@@ -5,7 +5,7 @@
 //  Created by gexin on 15-5-5.
 //  Copyright (c) 2015年 Gexin Interactive (Beijing) Network Technology Co.,LTD. All rights reserved.
 //
-//  GTSDK-Version:2.1.0.0
+//  GTSDK-Version:2.2.0.0
 
 #import <Foundation/Foundation.h>
 
@@ -116,6 +116,15 @@ typedef enum {
  */
 + (BOOL)registerDeviceToken:(NSString *)deviceToken;
 
+/**
+ *  向个推服务器注册VoipToken
+ *  备注：可以未启动SDK就调用该方法
+ *
+ *  @param voipToken 推送时使用的voipToken
+ *  @return voipToken有效判断，YES.有效 NO.无效
+ *
+ */
++ (BOOL)registerVoipToken:(NSString *)voipToken;
 
 /**
  *  绑定别名功能:后台可以根据别名进行推送
@@ -179,6 +188,14 @@ typedef enum {
  *  @param userInfo 远程推送消息
  */
 + (void)handleRemoteNotification:(NSDictionary *)userInfo;
+
+
+/**
+ *  VOIP消息回执
+ *
+ *  @param payload VOIP 推送内容
+ */
++ (void)handleVoipNotification:(NSDictionary *)payload;
 
 /**
  *  SDK发送上行消息结果

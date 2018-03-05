@@ -28,13 +28,18 @@ export default class pushDemo extends Component {
 
     componentWillMount() {
         this.updateComponentInfo()
+
        //订阅消息通知
        var { NativeAppEventEmitter } = require('react-native');
        var resigsteClientIdSub = NativeAppEventEmitter.addListener(
          'registeClientId',
          (clientId) => {
            Alert.alert(clientId);
+           this.setState({
+                status:'已启动'
+            })
          }
+         
        )
        var receiveRemoteNotificationSub = NativeAppEventEmitter.addListener(
           'receiveRemoteNotification',
@@ -56,6 +61,14 @@ export default class pushDemo extends Component {
             'clickRemoteNotification',
             (notification) => {
                 Alert.alert('点击通知',JSON.stringify(notification))
+            }
+        );
+
+        var voipPushPayloadSub = 
+        NativeAppEventEmitter.addListener(
+            'voipPushPayload',
+            (notification) => {
+                Alert.alert('VoIP 通知： ',JSON.stringify(notification))
             }
         );
     }
@@ -81,7 +94,7 @@ export default class pushDemo extends Component {
                    status = '正在启动'
                    break;
                case '1':
-                   status = '启动'
+                   status = '已启动'
                    break;
                case '2':
                    status = '停止'
@@ -89,6 +102,8 @@ export default class pushDemo extends Component {
            }
            this.setState({'status': status})
        })
+        //    注册 VoIP 通知
+       Getui.voipRegistration();
     }
 
     componentWillUnMount() {
@@ -96,6 +111,7 @@ export default class pushDemo extends Component {
         receiveRemoteNotificationSub.remove()
         clickRemoteNotificationSub.remove()
         resigsteClientIdSub.remove()
+        voipPushPayloadSub.remove()
     }
 
 

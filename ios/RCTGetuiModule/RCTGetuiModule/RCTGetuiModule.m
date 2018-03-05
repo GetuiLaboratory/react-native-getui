@@ -25,9 +25,13 @@
 #import "React/RCTBridge.h"
 #import "React/RCTLog.h"
 #endif
+#define kGtAppId @"iMahVVxurw6BNr7XSn9EF2"
+#define kGtAppKey @"yIPfqwq6OMAPp6dkqgLpG5"
+#define kGtAppSecret @"G0aBqAD6t79JfzTB6Z5lo5"
 
+#import <PushKit/PushKit.h>
 
-@interface RCTGetuiModule () {
+@interface RCTGetuiModule ()<PKPushRegistryDelegate,GeTuiSdkDelegate> {
     RCTResponseSenderBlock receiveRemoteNotificationCallback;
     RCTResponseSenderBlock clickNotificationCallback;
 
@@ -61,6 +65,11 @@ RCT_EXPORT_MODULE();
                             object:nil];
     }
     return self;
+}
+
+- (dispatch_queue_t)methodQueue
+{
+    return dispatch_get_main_queue();
 }
 
 - (void)noti_receiveRemoteNotification:(NSNotification *)notification {
@@ -290,6 +299,48 @@ RCT_EXPORT_METHOD(sendFeedbackMessage:(NSInteger)actionId andTaskId:(NSString *)
 {
     BOOL isSuccess = [GeTuiSdk sendFeedbackMessage:actionId andTaskId:taskId andMsgId:msgId];
     callback(@[isSuccess?@"true":@"false"]);
+}
+
+#pragma mark - VOIP related
+
+// 实现 PKPushRegistryDelegate 协议方法
+
+/** 系统返回VOIPToken，并提交个推服务器 */
+
+- (void)pushRegistry:(PKPushRegistry *)registry didUpdatePushCredentials:(PKPushCredentials *)credentials forType:(NSString *)type {
+    NSString *voiptoken = [credentials.token.description stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]];
+    voiptoken = [voiptoken stringByReplacingOccurrencesOfString:@" " withString:@""];
+    NSLog(@"\n>>>[VoIP Token]:%@\n\n",voiptoken);
+    //向个推服务器注册 VoipToken
+    [GeTuiSdk registerVoipToken:voiptoken];
+}
+
+/** 接收VOIP推送中的payload进行业务逻辑处理（一般在这里调起本地通知实现连续响铃、接收视频呼叫请求等操作），并执行个推VOIP回执统计 */
+- (void)pushRegistry:(PKPushRegistry *)registry didReceiveIncomingPushWithPayload:(PKPushPayload *)payload forType:(NSString *)type {
+    //个推VOIP回执统计
+    [GeTuiSdk handleVoipNotification:payload.dictionaryPayload];
+    
+    //TODO:接受 VoIP 推送中的 payload 内容进行具体业务逻辑处理
+    NSLog(@"[VoIP Payload]:%@,%@", payload, payload.dictionaryPayload);
+    
+    NSDictionary *ret = [NSDictionary dictionaryWithObjectsAndKeys:
+                         [NSNumber numberWithInteger:1], @"result",
+                         @"voipPayload", @"type",
+                         payload.dictionaryPayload[@"payload"], @"payload",
+                         payload.dictionaryPayload[@"_gmid_"], @"gmid",  nil];
+    [self.bridge.eventDispatcher sendAppEventWithName:@"voipPushPayload"
+                                                 body:ret];
+//    [self sendResultEventWithCallbackId:voipCBId dataDict:ret errDict:nil doDelete:NO];
+    
+}
+
+RCT_EXPORT_METHOD(voipRegistration)
+{
+    dispatch_queue_t mainQueue = dispatch_get_main_queue();
+    PKPushRegistry *voipRegistry = [[PKPushRegistry alloc] initWithQueue:mainQueue];
+    voipRegistry.delegate = self;
+    // Set the push type to VoIP
+    voipRegistry.desiredPushTypes = [NSSet setWithObject:PKPushTypeVoIP];
 }
 
 @end

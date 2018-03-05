@@ -233,7 +233,22 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
             Alert.alert('点击通知',JSON.stringify(notification))
         }
     );
+
+    <!-- VoIP 推送通知回调 -->
+
+    var voipPushPayloadSub = 
+        NativeAppEventEmitter.addListener(
+            'voipPushPayload',
+            (notification) => {
+                Alert.alert('VoIP 通知： ',JSON.stringify(notification))
+            }
+        );
 ````
+**注意** 
+
+为保证正确收到 VoIP 推送回调，需要先调用注册 VoIP 接口 `Getui.voipRegistration()`，并且需要打开推送统治权限，并且开启 VoIP 后台运行权限。
+
+![VoIP 权限配置](https://github.com/GetuiLaboratory/react-native-getui/blob/master/example/img/ios_1.jpeg)
 
 ````
 componentWillUnMount() {
@@ -241,6 +256,7 @@ componentWillUnMount() {
     receiveRemoteNotificationSub.remove()
     clickRemoteNotificationSub.remove()
     resigsteClientIdSub.remove()
+    voipPushPayloadSub.remove()
 }
 ````
 
@@ -249,6 +265,9 @@ componentWillUnMount() {
 ````
 import Getui from 'react-native-getui'
 
+  // 注册 VoIP 通知，只有注册后才能收到 VoIP 通知。
+  Getui.voipRegistration();
+  
   Getui.clientId((param)=> {
        this.setState({'clientId': param})
    })

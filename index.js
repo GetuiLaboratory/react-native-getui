@@ -216,6 +216,16 @@ export default class Getui {
 		});
 	}
 
+	/**
+	 *  向个推服务器注册 VoIP
+	 *  备注：可以未启动SDK就调用该方法
+	 *	iOS 可用
+	 *
+	 */
+	static voipRegistration() {
+		GetuiModule.voipRegistration();
+	}
+
 	/*****************  deprecated ******************/
 	/*
 	*  React-native 只能 callback 一次，因此移除该形式，改用订阅模式监听消息

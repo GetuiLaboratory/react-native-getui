@@ -1,6 +1,6 @@
 {
   "name": "react-native-getui",
-  "version": "1.1.19",
+  "version": "1.1.20",
   "description": "Getui push sdk plugin for rect-native",
   "main": "index.js",
   "scripts": {
@@ -40,7 +40,8 @@
         "AdSupport",
         "CoreFoundation",
         "Foundation",
-        "UIKit"
+        "UIKit",
+        "PushKit"
       ]
     }
   },
