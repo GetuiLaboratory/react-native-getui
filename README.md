@@ -5,7 +5,7 @@ react-native-getui 是个推官方开发的 React Native 插件，使用该插�
 # 环境
 
 - React Native Version ： 0.42(demo中使用的rn版本)，理论上可以任意使用其他任何RN版本
-- react-native-getui >= 1.1.18
+- react-native-getui >= 1.1.21
 
 # 安装
 
@@ -73,7 +73,7 @@ react-native link
 4、
 [Android Studio 工程配置](https://github.com/GetuiLaboratory/react-native-getui/blob/master/example/document/android.md)
 
-5、在 iOS 工程中如果找不到头文件可能要在 TARGETS-> BUILD SETTINGS -> Search Paths -> Header Search Paths 添加如下如路径：
+5、在 iOS 工程中如果找不到头文件需要在 TARGETS-> BUILD SETTINGS -> Search Paths -> Header Search Paths 添加如下如路径：
 ````
 $(SRCROOT)/../node_modules/react-native-getui/ios/RCTGetuiModule
 ````

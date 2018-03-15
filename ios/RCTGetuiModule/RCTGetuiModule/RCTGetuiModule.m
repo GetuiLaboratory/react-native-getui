@@ -25,16 +25,13 @@
 #import "React/RCTBridge.h"
 #import "React/RCTLog.h"
 #endif
-#define kGtAppId @"iMahVVxurw6BNr7XSn9EF2"
-#define kGtAppKey @"yIPfqwq6OMAPp6dkqgLpG5"
-#define kGtAppSecret @"G0aBqAD6t79JfzTB6Z5lo5"
 
 #import <PushKit/PushKit.h>
 
 @interface RCTGetuiModule ()<PKPushRegistryDelegate,GeTuiSdkDelegate> {
     RCTResponseSenderBlock receiveRemoteNotificationCallback;
     RCTResponseSenderBlock clickNotificationCallback;
-
+    
 }
 
 @end
@@ -43,28 +40,65 @@
 RCT_EXPORT_MODULE();
 @synthesize bridge = _bridge;
 
++ (id)allocWithZone:(NSZone *)zone {
+    static RCTGetuiModule  *sharedInstance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sharedInstance = [super allocWithZone:zone];
+    });
+    return sharedInstance;
+}
+
 - (instancetype)init
 {
     self = [super init];
     if (self) {
         NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
-
+        
         [defaultCenter removeObserver:self];
-
+        
         [defaultCenter addObserver:self
                           selector:@selector(noti_receiveRemoteNotification:)
                               name:GT_DID_RECEIVE_REMOTE_NOTIFICATION
                             object:nil];
         [defaultCenter addObserver:self
-                          selector:@selector(noti_clickRemoteNotification:)
+                          selector:@selector(noti_openRemoteNotification:)
                               name:GT_DID_CLICK_NOTIFICATION
                             object:nil];
         [defaultCenter addObserver:self
                           selector:@selector(noti_registeClientId:)
                               name:GT_DID_REGISTE_CLIENTID
                             object:nil];
+        [defaultCenter addObserver:self
+                          selector:@selector(jsDidLoad)
+                              name:RCTJavaScriptDidLoadNotification
+                            object:nil];
     }
     return self;
+}
+
+- (void)setBridge:(RCTBridge *)bridge {
+    _bridge = bridge;
+    
+    // 实现APP在关闭状态通过点击推送打开时的推送处理
+    [RCTGetuiPushBridgeQueue sharedInstance].openedRemoteNotification = [_bridge.launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
+    [RCTGetuiPushBridgeQueue sharedInstance].openedLocalNotification = [_bridge.launchOptions objectForKey:UIApplicationLaunchOptionsLocalNotificationKey];
+}
+
+- (void)jsDidLoad {
+    [RCTGetuiPushBridgeQueue sharedInstance].jsDidLoad = YES;
+    
+    if ([RCTGetuiPushBridgeQueue sharedInstance].openedRemoteNotification != nil) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:GT_DID_CLICK_NOTIFICATION object:[RCTGetuiPushBridgeQueue sharedInstance].openedRemoteNotification];
+        //        [RNAlipushBridgeQueue sharedInstance].openedRemoteNotification = nil;
+    }
+    
+    if ([RCTGetuiPushBridgeQueue sharedInstance].openedLocalNotification != nil) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:GT_DID_CLICK_NOTIFICATION object:[RCTGetuiPushBridgeQueue sharedInstance].openedLocalNotification];
+        //        [RNAlipushBridgeQueue sharedInstance].openedLocalNotification = nil;
+    }
+    
+    [[RCTGetuiPushBridgeQueue sharedInstance] scheduleBridgeQueue];
 }
 
 - (dispatch_queue_t)methodQueue
@@ -74,26 +108,31 @@ RCT_EXPORT_MODULE();
 
 - (void)noti_receiveRemoteNotification:(NSNotification *)notification {
     id obj = [notification object];
-//    if(receiveRemoteNotificationCallback)
-//        receiveRemoteNotificationCallback(@[obj]);
-    [self.bridge.eventDispatcher sendAppEventWithName:@"receiveRemoteNotification"
-                                                 body:obj];
+    if ([RCTGetuiPushBridgeQueue sharedInstance].jsDidLoad == YES) {
+        [self.bridge.eventDispatcher sendAppEventWithName:@"receiveRemoteNotification"
+                                                     body:obj];
+    }else{
+        [[RCTGetuiPushBridgeQueue sharedInstance] postNotification:notification status:@"receive"];
+    }
+    
 }
 
 -(void)noti_registeClientId:(NSNotification *)notification {
-  id obj = [notification object];
-  [self.bridge.eventDispatcher sendAppEventWithName:@"registeClientId"
-                                               body:obj];
+    id obj = [notification object];    
+    [self.bridge.eventDispatcher sendAppEventWithName:@"registeClientId"
+                                                 body:obj];
 }
 
-// iOS 10 后才有点击事件的回调
-- (void)noti_clickRemoteNotification:(NSNotification *)notification {
+
+- (void)noti_openRemoteNotification:(NSNotification *)notification {
     id obj = [notification object];
-//    if (clickNotificationCallback) {
-//        clickNotificationCallback(@[obj]);
-//    }
-    [self.bridge.eventDispatcher sendAppEventWithName:@"clickRemoteNotification"
-                                                 body:obj];
+    // 如果js部分未加载完，则先存档
+    if ([RCTGetuiPushBridgeQueue sharedInstance].jsDidLoad == YES) {
+        [self.bridge.eventDispatcher sendAppEventWithName:@"clickRemoteNotification"
+                                                     body:obj];
+    } else {
+        [[RCTGetuiPushBridgeQueue sharedInstance] postNotification:notification status:@"open"];
+    }
 }
 
 #pragma mark - 收到通知回调
@@ -330,8 +369,6 @@ RCT_EXPORT_METHOD(sendFeedbackMessage:(NSInteger)actionId andTaskId:(NSString *)
                          payload.dictionaryPayload[@"_gmid_"], @"gmid",  nil];
     [self.bridge.eventDispatcher sendAppEventWithName:@"voipPushPayload"
                                                  body:ret];
-//    [self sendResultEventWithCallbackId:voipCBId dataDict:ret errDict:nil doDelete:NO];
-    
 }
 
 RCT_EXPORT_METHOD(voipRegistration)
@@ -344,3 +381,4 @@ RCT_EXPORT_METHOD(voipRegistration)
 }
 
 @end
+

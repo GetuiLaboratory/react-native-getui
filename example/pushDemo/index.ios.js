@@ -26,7 +26,7 @@ export default class pushDemo extends Component {
         };
     }
 
-    componentWillMount() {
+    componentDidMount() {
         this.updateComponentInfo()
 
         //  注册 VoIP 通知
@@ -74,10 +74,6 @@ export default class pushDemo extends Component {
                 Alert.alert('VoIP 通知： ',JSON.stringify(notification))
             }
         );
-    }
-
-    componentDidMount(){
-        this.updateComponentInfo()
     }
 
     updateComponentInfo (){
