@@ -81,3 +81,4 @@ $(SRCROOT)/../node_modules/react-native-getui/ios/RCTGetuiModule
 # 示例
 
 我们提供了一个demo供开发者参考对照 [demo](https://github.com/GetuiLaboratory/react-native-getui/tree/master/example/pushDemo)
+新版本插件[demo](https://github.com/GetuiLaboratory/react-native-getui/tree/master/example/pushDemo_new)
