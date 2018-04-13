@@ -1,5 +1,7 @@
 # Android 手动集成方式
 
+* 新版本0.49以后，JS层统一入口为index.js，index.android.js和index.ios.js都不存在。请参考新的demo，pushDemo_new
+
 在 react-native link 之后， 使用Android Studio打开工程（假设主模块名称为app），当然您也可以不适用Android Studio。
 
 1、如果您使用Android Studio作为开发Android原生代码的IDE，使用 Android Studio import 你的 React Native 应用（选择你的 React Native 应用所在目录下的 android 文件夹即可）
@@ -75,6 +77,13 @@ import com.getui.reactnativegetui.GetuiModule;
             case "payload":
                 Alert.alert('payload 消息通知',JSON.stringify(notification))
                 break;
+            //新增回调通知到达，点击回调
+            case 'notificationArrived':
+                Alert.alert('notificationArrived 通知到达',JSON.stringify(notification))
+                break
+            case 'notificationClicked':
+                Alert.alert('notificationArrived 通知点击',JSON.stringify(notification))
+                break
             default:
         }
       }
