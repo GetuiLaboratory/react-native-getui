@@ -29,7 +29,8 @@ public class GetuiModule extends ReactContextBaseJavaModule {
     public static final String EVENT_TYPE_RECEIVE_CID = "cid";
     public static final String EVENT_TYPE_PAYLOAD = "payload";
     public static final String EVENT_TYPE_CMD = "cmd";
-
+    public static final String EVENT_TYPE_NOTIFICATION_ARRIVED = "notificationArrived";
+    public static final String EVENT_TYPE_NOTIFICATION_CLICKED = "notificationClicked";
 
     private static ReactApplicationContext mRAC;
 
