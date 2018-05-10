@@ -918,7 +918,7 @@ boom@2.x.x:
   version "2.10.1"
   resolved "http://registry.npm.taobao.org/boom/download/boom-2.10.1.tgz#39c8918ceff5799f83f9492a848f625add0c766f"
   dependencies:
-    hoek "2.x.x"
+    hoek "4.x.x"
 
 boom@4.x.x:
   version "4.3.1"
@@ -2034,7 +2034,7 @@ hawk@3.1.3, hawk@~3.1.3:
   dependencies:
     boom "2.x.x"
     cryptiles "2.x.x"
-    hoek "2.x.x"
+    hoek "4.x.x"
     sntp "1.x.x"
 
 hawk@~6.0.2:
@@ -2046,9 +2046,9 @@ hawk@~6.0.2:
     hoek "4.x.x"
     sntp "2.x.x"
 
-hoek@2.x.x:
-  version "2.16.3"
-  resolved "http://registry.npm.taobao.org/hoek/download/hoek-2.16.3.tgz#20bb7403d3cea398e91dc4710a8ff1b8274a25ed"
+hoek@4.x.x:
+  version "4.2.1"
+  resolved "http://registry.npm.taobao.org/hoek/download/hoek-4.2.1.tgz#20bb7403d3cea398e91dc4710a8ff1b8274a25ed"
 
 hoek@4.x.x:
   version "4.2.1"
@@ -4236,7 +4236,7 @@ sntp@1.x.x:
   version "1.0.9"
   resolved "http://registry.npm.taobao.org/sntp/download/sntp-1.0.9.tgz#6541184cc90aeea6c6e7b35e2659082443c66198"
   dependencies:
-    hoek "2.x.x"
+    hoek "4.x.x"
 
 sntp@2.x.x:
   version "2.1.0"
