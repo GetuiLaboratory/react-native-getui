@@ -5,7 +5,7 @@
 //  Created by gexin on 15-5-5.
 //  Copyright (c) 2015年 Gexin Interactive (Beijing) Network Technology Co.,LTD. All rights reserved.
 //
-//  GTSDK-Version:2.2.0.0
+//  GTSDK-Version:2.3.0.0
 
 #import <Foundation/Foundation.h>
 
@@ -55,7 +55,7 @@ typedef enum {
 /**
  *  获取SDK版本号
  *
- *  当前GeTuiSdk版本：2.1.0.0
+ *  当前GeTuiSdk版本：2.3.0.0
  *  @return 版本值
  */
 + (NSString *)version;
@@ -223,6 +223,13 @@ typedef enum {
  *  清空下拉通知栏全部通知,并将角标置“0”，不显示角标
  */
 + (void)clearAllNotificationForNotificationBar;
+
+/**
+ *  APPLink 回执
+ *  @param webUrl applink Url
+ *  @return applink 中用户的 payload 信息
+ */
++ (NSString*) handleApplinkFeedback:(NSURL* ) webUrl;
 
 @end
 
