@@ -12,8 +12,7 @@
 
 @implementation AppDelegate
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-{
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   // 接入个推
   [GeTuiSdk startSdkWithAppId:kGtAppId appKey:kGtAppKey appSecret:kGtAppSecret delegate:self];
   // APNs
@@ -65,7 +64,9 @@
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes:apn_type];
   }
 }
+
 /** 远程通知注册成功委托 */
+
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
   NSString *token = [[deviceToken description] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]];
   token = [token stringByReplacingOccurrencesOfString:@" " withString:@""];
@@ -73,6 +74,7 @@
   // [ GTSdk ]：向个推服务器注册deviceToken
   [GeTuiSdk registerDeviceToken:token];
 }
+
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)   (UIBackgroundFetchResult))completionHandler {
   // [ GTSdk ]：将收到的APNs信息传给个推统计
   [GeTuiSdk handleRemoteNotification:userInfo];
@@ -81,6 +83,7 @@
   [[NSNotificationCenter defaultCenter]postNotificationName:GT_DID_RECEIVE_REMOTE_NOTIFICATION object:@{@"type":@"apns",@"userInfo":userInfo}];
   completionHandler(UIBackgroundFetchResultNewData);
 }
+
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler {
   [[NSNotificationCenter defaultCenter]postNotificationName:GT_DID_RECEIVE_REMOTE_NOTIFICATION object:@{@"type":@"apns",@"userInfo":notification.request.content.userInfo}]; completionHandler(UNNotificationPresentationOptionAlert);
@@ -91,7 +94,9 @@
   completionHandler();
 }
 #endif
+
 /** SDK收到透传消息回调 */
+
 - (void)GeTuiSdkDidReceivePayloadData:(NSData *)payloadData andTaskId:(NSString *)taskId andMsgId:(NSString *)msgId andOffLine:(BOOL)offLine fromGtAppId:(NSString *)appId {
   // [ GTSdk ]：汇报个推自定义事件(反馈透传消息)
   [GeTuiSdk sendFeedbackMessage:90001 andTaskId:taskId andMsgId:msgId];
@@ -109,6 +114,7 @@
   NSLog(@">>[GTSdk ReceivePayload]:%@", msg);
 }
 /** SDK成功注册 CID 回调 */
+
 -(void)GeTuiSdkDidRegisterClient:(NSString *)clientId{
   [[NSNotificationCenter defaultCenter]postNotificationName:GT_DID_REGISTE_CLIENTID object:clientId];
 }
