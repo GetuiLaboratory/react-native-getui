@@ -80,7 +80,7 @@ react-native link
 $(SRCROOT)/../node_modules/react-native-getui/ios/RCTGetuiModule
 ````
 
-###订阅消息
+### 订阅消息
 
 1.payload透传消息回调
 
