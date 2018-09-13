@@ -75,8 +75,56 @@ react-native link
 [Android Studio 工程配置](https://github.com/GetuiLaboratory/react-native-getui/blob/master/example/document/android.md)
 
 5、在 iOS 工程中如果找不到头文件需要在 TARGETS-> BUILD SETTINGS -> Search Paths -> Header Search Paths 添加如下如路径：
+
 ````
 $(SRCROOT)/../node_modules/react-native-getui/ios/RCTGetuiModule
+````
+
+###订阅消息
+
+1.payload透传消息回调
+
+2.cid 拿到clientId的回调
+
+3.notificationArrived通知消息到达的回调
+
+4.notificationClicked通知消息点击的回调
+
+````javascript
+var { NativeAppEventEmitter } = require('react-native');
+
+var receiveRemoteNotificationSub = NativeAppEventEmitter.addListener(
+    'receiveRemoteNotification',
+    (notification) => {
+        Alert.alert('JSON.stringify(notification)111',JSON.stringify(notification));
+        switch (notification.type) {
+            case "cid":
+                Alert.alert('初始化获取到cid',JSON.stringify(notification))
+                break;
+            case 'payload':
+                Alert.alert('payload 消息通知',JSON.stringify(notification))
+                break
+            case 'cmd':
+                Alert.alert('cmd 消息通知', 'cmd action = ' + notification.cmd)
+                break
+            case 'notificationArrived':
+                Alert.alert('notificationArrived 通知到达',JSON.stringify(notification))
+                break
+            case 'notificationClicked':
+                Alert.alert('notificationArrived 通知点击',JSON.stringify(notification))
+                break
+            default:
+                break
+        }
+    }
+);
+
+var clickRemoteNotificationSub = NativeAppEventEmitter.addListener(
+    'clickRemoteNotification',
+    (notification) => {
+        Alert.alert('点击通知',JSON.stringify(notification))
+    }
+);
 ````
 
 # 示例
