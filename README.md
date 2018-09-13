@@ -96,7 +96,6 @@ var { NativeAppEventEmitter } = require('react-native');
 var receiveRemoteNotificationSub = NativeAppEventEmitter.addListener(
     'receiveRemoteNotification',
     (notification) => {
-        Alert.alert('JSON.stringify(notification)111',JSON.stringify(notification));
         switch (notification.type) {
             case "cid":
                 Alert.alert('初始化获取到cid',JSON.stringify(notification))
