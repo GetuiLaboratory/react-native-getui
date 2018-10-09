@@ -1,4 +1,4 @@
-# react-native-getui
+# react-native-getui （npm最新1.1.25）
 react-native-getui 是个推官方开发的 React Native 插件，使用该插件可以方便快速地集成推送功能。
 
 
