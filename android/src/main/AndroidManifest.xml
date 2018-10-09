@@ -28,7 +28,7 @@
         android:protectionLevel="normal" >
     </permission>
 
-    <application>
+    <application android:usesCleartextTraffic="true">
 
 
 
