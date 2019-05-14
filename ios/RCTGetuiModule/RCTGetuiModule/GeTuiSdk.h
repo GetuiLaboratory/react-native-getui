@@ -5,7 +5,7 @@
 //  Created by gexin on 15-5-5.
 //  Copyright (c) 2015年 Gexin Interactive (Beijing) Network Technology Co.,LTD. All rights reserved.
 //
-//  GTSDK-Version:2.3.0.0
+//  GTSDK-Version:2.4.0.0
 
 #import <Foundation/Foundation.h>
 
@@ -27,6 +27,7 @@ typedef enum {
 #if __IPHONE_OS_VERSION_MIN_REQUIRED < 70000
 #error "GeTuiSDK is requested iOS7 or iOS7 above version"
 #endif
+
 
 #pragma mark - 基本功能
 
@@ -50,12 +51,13 @@ typedef enum {
  */
 + (void)resume;
 
+
 #pragma mark -
 
 /**
  *  获取SDK版本号
  *
- *  当前GeTuiSdk版本：2.3.0.0
+ *  当前GeTuiSdk版本, 当前文件头部(顶部)可见
  *  @return 版本值
  */
 + (NSString *)version;
@@ -74,74 +76,51 @@ typedef enum {
  */
 + (SdkStatus)status;
 
-#pragma mark -
-
-/**
- *  是否允许SDK 后台运行（默认值：NO）
- *  备注：可以未启动SDK就调用该方法
- *  警告：该功能会和音乐播放冲突，使用时请注意
- *
- *  @param isEnable 支持当APP进入后台后，个推是否运行,YES.允许
- */
-+ (void)runBackgroundEnable:(BOOL)isEnable;
-
-/**
- *  地理围栏功能，设置地理围栏是否运行
- *  备注：SDK可以未启动就调用该方法
- *
- *  @param isEnable 设置地理围栏功能是否运行（默认值：NO）
- *  @param isVerify 设置是否SDK主动弹出用户定位请求（默认值：NO）
- */
-+ (void)lbsLocationEnable:(BOOL)isEnable andUserVerify:(BOOL)isVerify;
 
 #pragma mark -
-
-/**
- *  设置渠道
- *  备注：SDK可以未启动就调用该方法
- *
- *  SDK-1.5.0+
- *
- *  @param aChannelId 渠道值，可以为空值
- */
-+ (void)setChannelId:(NSString *)aChannelId;
 
 /**
  *  向个推服务器注册DeviceToken
  *  备注：可以未启动SDK就调用该方法
  *
- *  @param deviceToken 推送时使用的deviceToken
+ *  @param deviceToken 推送时使用的deviceToken NSString
  *  @return deviceToken有效判断，YES.有效 NO.无效
  *
  */
 + (BOOL)registerDeviceToken:(NSString *)deviceToken;
 
 /**
+ *  向个推服务器注册DeviceToken
+ *  备注：可以未启动SDK就调用该方法
+ *
+ *  @param deviceToken 推送时使用的deviceToken NSData
+ *  @return deviceToken有效判断，YES.有效 NO.无效
+ *
+ */
++ (BOOL)registerDeviceTokenData:(NSData *)deviceToken;
+
+/**
  *  向个推服务器注册VoipToken
  *  备注：可以未启动SDK就调用该方法
  *
- *  @param voipToken 推送时使用的voipToken
+ *  @param voipToken 推送时使用的voipToken NSString
  *  @return voipToken有效判断，YES.有效 NO.无效
  *
  */
 + (BOOL)registerVoipToken:(NSString *)voipToken;
 
 /**
- *  绑定别名功能:后台可以根据别名进行推送
+ *  向个推服务器注册VoipToken
+ *  备注：可以未启动SDK就调用该方法
  *
- *  @param alias 别名字符串
- *  @param aSn   绑定序列码, 不为nil
+ *  @param voipToken 推送时使用的voipToken NSData
+ *  @return voipToken有效判断，YES.有效 NO.无效
+ *
  */
-+ (void)bindAlias:(NSString *)alias andSequenceNum:(NSString *)aSn;
++ (BOOL)registerVoipTokenCredentials:(NSData *)voipToken;
 
-/**
- *  取消绑定别名功能
- *
- *  @param alias   别名字符串
- *  @param aSn     绑定序列码, 不为nil
- *  @param isSelf  是否只对当前cid有效，如果是true，只对当前cid做解绑；如果是false，对所有绑定该别名的cid列表做解绑
- */
-+ (void)unbindAlias:(NSString *)alias andSequenceNum:(NSString *)aSn andIsSelf:(BOOL) isSelf;
+
+#pragma mark -
 
 /**
  *  给用户打标签 , 后台可以根据标签进行推送
@@ -151,16 +130,6 @@ typedef enum {
  *  @return 提交结果，YES表示尝试提交成功，NO表示尝试提交失败
  */
 + (BOOL)setTags:(NSArray *)tags;
-
-/**
- *  设置关闭推送模式（默认值：NO）
- *
- *  @param isValue 消息推送开发，YES.关闭消息推送 NO.开启消息推送
- *
- *  SDK-1.2.1+
- *
- */
-+ (void)setPushModeForOff:(BOOL)isValue;
 
 /**
  *  同步角标值到个推服务器
@@ -180,6 +149,44 @@ typedef enum {
  */
 + (void)resetBadge;
 
+/**
+ *  设置渠道
+ *  备注：SDK可以未启动就调用该方法
+ *
+ *  SDK-1.5.0+
+ *
+ *  @param aChannelId 渠道值，可以为空值
+ */
++ (void)setChannelId:(NSString *)aChannelId;
+
+/**
+ *  设置关闭推送模式（默认值：NO）
+ *
+ *  @param isValue 消息推送开发，YES.关闭消息推送 NO.开启消息推送
+ *
+ *  SDK-1.2.1+
+ *
+ */
++ (void)setPushModeForOff:(BOOL)isValue;
+
+/**
+ *  绑定别名功能:后台可以根据别名进行推送
+ *
+ *  @param alias 别名字符串
+ *  @param aSn   绑定序列码, 不为nil
+ */
++ (void)bindAlias:(NSString *)alias andSequenceNum:(NSString *)aSn;
+
+/**
+ *  取消绑定别名功能
+ *
+ *  @param alias   别名字符串
+ *  @param aSn     绑定序列码, 不为nil
+ *  @param isSelf  是否只对当前cid有效，如果是true，只对当前cid做解绑；如果是false，对所有绑定该别名的cid列表做解绑
+ */
++ (void)unbindAlias:(NSString *)alias andSequenceNum:(NSString *)aSn andIsSelf:(BOOL)isSelf;
+
+
 #pragma mark -
 
 /**
@@ -189,13 +196,19 @@ typedef enum {
  */
 + (void)handleRemoteNotification:(NSDictionary *)userInfo;
 
-
 /**
  *  VOIP消息回执
  *
  *  @param payload VOIP 推送内容
  */
 + (void)handleVoipNotification:(NSDictionary *)payload;
+
+/**
+ *  APPLink 回执
+ *  @param webUrl applink Url
+ *  @return applink 中用户的 payload 信息
+ */
++ (NSString*)handleApplinkFeedback:(NSURL* )webUrl;
 
 /**
  *  SDK发送上行消息结果
@@ -219,19 +232,34 @@ typedef enum {
  */
 + (BOOL)sendFeedbackMessage:(NSInteger)actionId andTaskId:(NSString *)taskId andMsgId:(NSString *)msgId;
 
+
+#pragma mark -
+
+/**
+ *  是否允许SDK 后台运行（默认值：NO）
+ *  备注：可以未启动SDK就调用该方法
+ *  警告：该功能会和音乐播放冲突，使用时请注意
+ *
+ *  @param isEnable 支持当APP进入后台后，个推是否运行,YES.允许
+ */
++ (void)runBackgroundEnable:(BOOL)isEnable;
+
+/**
+ *  地理围栏功能，设置地理围栏是否运行
+ *  备注：SDK可以未启动就调用该方法
+ *
+ *  @param isEnable 设置地理围栏功能是否运行（默认值：NO）
+ *  @param isVerify 设置是否SDK主动弹出用户定位请求（默认值：NO）
+ */
++ (void)lbsLocationEnable:(BOOL)isEnable andUserVerify:(BOOL)isVerify;
+
 /**
  *  清空下拉通知栏全部通知,并将角标置“0”，不显示角标
  */
 + (void)clearAllNotificationForNotificationBar;
 
-/**
- *  APPLink 回执
- *  @param webUrl applink Url
- *  @return applink 中用户的 payload 信息
- */
-+ (NSString*) handleApplinkFeedback:(NSURL* ) webUrl;
-
 @end
+
 
 #pragma mark - SDK Delegate
 
@@ -247,6 +275,13 @@ typedef enum {
  *  注意: 注册成功仅表示推送通道建立，如果appid/appkey/appSecret等验证不通过，依然无法接收到推送消息，请确保验证信息正确。
  */
 - (void)GeTuiSdkDidRegisterClient:(NSString *)clientId;
+
+/**
+ *  SDK运行状态通知
+ *
+ *  @param aStatus 返回SDK运行状态
+ */
+- (void)GeTuiSDkDidNotifySdkState:(SdkStatus)aStatus;
 
 /**
  *  SDK通知收到个推推送的透传消息
@@ -270,20 +305,6 @@ typedef enum {
 - (void)GeTuiSdkDidSendMessage:(NSString *)messageId result:(int)result;
 
 /**
- *  SDK遇到错误消息返回error
- *
- *  @param error SDK内部发生错误，通知第三方，返回错误
- */
-- (void)GeTuiSdkDidOccurError:(NSError *)error;
-
-/**
- *  SDK运行状态通知
- *
- *  @param aStatus 返回SDK运行状态
- */
-- (void)GeTuiSDkDidNotifySdkState:(SdkStatus)aStatus;
-
-/**
  *  SDK设置关闭推送模式回调
  *
  *  @param isModeOff 关闭模式，YES.服务器关闭推送功能 NO.服务器开启推送功能
@@ -300,5 +321,20 @@ typedef enum {
  *  @param aError       成功返回nil, 错误返回相应error信息
  */
 - (void)GeTuiSdkDidAliasAction:(NSString *)action result:(BOOL)isSuccess sequenceNum:(NSString *)aSn error:(NSError *)aError;
+
+/**
+ * 查询当前绑定tag结果返回
+ * @param aTags   当前绑定的 tag 信息
+ * @param aSn     返回 queryTag 接口中携带的请求序列码，标识请求对应的结果返回
+ * @param aError  成功返回nil,错误返回相应error信息
+ */
+- (void)GetuiSdkDidQueryTag:(NSArray*)aTags sequenceNum:(NSString *)aSn error:(NSError *)aError;
+
+/**
+ *  SDK遇到错误消息返回error
+ *
+ *  @param error SDK内部发生错误，通知第三方，返回错误
+ */
+- (void)GeTuiSdkDidOccurError:(NSError *)error;
 
 @end

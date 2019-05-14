@@ -80,6 +80,8 @@ react-native link
 $(SRCROOT)/../node_modules/react-native-getui/ios/RCTGetuiModule
 ````
 
+6、因新版本功能修改，需要添加“libresolv.tbd”库
+
 ### 订阅消息
 
 1.payload透传消息回调
