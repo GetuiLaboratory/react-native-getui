@@ -27,6 +27,23 @@ npm run GetuiConfigure <yourAppId> <yourAppKey> <yourAppSecret>  <yourModuleName
 npm run GetuiConfigure DI1jwW3FtZ6kGDeY5dk0Y9 DQCk2V8Jev9hqhWDU94PF9 Rtyp5trKUt8HSyzD8zRXX7 app
 
 ````
+
+(如果是原生应用集成react-native)使用CocoaPods安装
+
+如果你的 React Native 是通过 Cocoapods 来集成的则使用下面两个步骤来集成，注意： 使用 pod 就不要使用 react-native link 了，不然会有冲突。
+
+1.在Podfile中添加如下代码：
+
+````
+pod 'GtSdkRN', :path => '../node_modules/react-native-getui'
+````
+
+2.终端执行如下命令：
+
+````
+pod install
+````
+
 #### 注意:
 
 - 如果在执行GetuiConfigure 自动安装脚本时发生错误，请使用手动安装方式。
@@ -41,6 +58,7 @@ $(SRCROOT)/../node_modules/react-native-getui/ios/RCTGetuiModule
 ````
 GetuiModule.initPush(this);
 ````
+
 #### 注意：
 
 - 有可能您的MainActivity中未重写onCreate方法，如果未重写，请重写onCreate方法，方法如下：
