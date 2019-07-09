@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6B1E1FDF22D49E7E00A9FB65 /* libGTSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B1E1FDE22D49E7E00A9FB65 /* libGTSDK.a */; };
 		840E2B5E205A8F0D00A09DFC /* RCTGetuiPushBridgeQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 840E2B5D205A8F0D00A09DFC /* RCTGetuiPushBridgeQueue.m */; };
-		8428ABA81F3D783F00E59AE3 /* GTSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8428ABA71F3D783F00E59AE3 /* GTSDK.a */; };
 		84F17A2E1E63FB1B00F97ED1 /* RCTGetuiModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 84F17A2D1E63FB1B00F97ED1 /* RCTGetuiModule.m */; };
 /* End PBXBuildFile section */
 
@@ -26,10 +26,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		6B1E1FDE22D49E7E00A9FB65 /* libGTSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libGTSDK.a; sourceTree = "<group>"; };
 		840E2B5C205A8F0D00A09DFC /* RCTGetuiPushBridgeQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTGetuiPushBridgeQueue.h; sourceTree = "<group>"; };
 		840E2B5D205A8F0D00A09DFC /* RCTGetuiPushBridgeQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTGetuiPushBridgeQueue.m; sourceTree = "<group>"; };
 		8428ABA61F3D783F00E59AE3 /* GeTuiSdk.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeTuiSdk.h; sourceTree = "<group>"; };
-		8428ABA71F3D783F00E59AE3 /* GTSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = GTSDK.a; sourceTree = "<group>"; };
 		84F17A291E63FB1B00F97ED1 /* libRCTGetuiModule.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRCTGetuiModule.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		84F17A2C1E63FB1B00F97ED1 /* RCTGetuiModule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RCTGetuiModule.h; sourceTree = "<group>"; };
 		84F17A2D1E63FB1B00F97ED1 /* RCTGetuiModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RCTGetuiModule.m; sourceTree = "<group>"; };
@@ -40,7 +40,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8428ABA81F3D783F00E59AE3 /* GTSDK.a in Frameworks */,
+				6B1E1FDF22D49E7E00A9FB65 /* libGTSDK.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -66,12 +66,12 @@
 		84F17A2B1E63FB1B00F97ED1 /* RCTGetuiModule */ = {
 			isa = PBXGroup;
 			children = (
+				6B1E1FDE22D49E7E00A9FB65 /* libGTSDK.a */,
 				84F17A2C1E63FB1B00F97ED1 /* RCTGetuiModule.h */,
 				84F17A2D1E63FB1B00F97ED1 /* RCTGetuiModule.m */,
 				840E2B5C205A8F0D00A09DFC /* RCTGetuiPushBridgeQueue.h */,
 				840E2B5D205A8F0D00A09DFC /* RCTGetuiPushBridgeQueue.m */,
 				8428ABA61F3D783F00E59AE3 /* GeTuiSdk.h */,
-				8428ABA71F3D783F00E59AE3 /* GTSDK.a */,
 			);
 			path = RCTGetuiModule;
 			sourceTree = "<group>";
@@ -117,6 +117,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 			);
 			mainGroup = 84F17A201E63FB1B00F97ED1;
