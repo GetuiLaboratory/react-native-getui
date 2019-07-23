@@ -30,26 +30,33 @@
 
     <application android:usesCleartextTraffic="true">
 
-
-
+        <!-- 用户自定义服务继承自GTIntentService,作为SDK与APP桥梁服务,用来接收各种消息和命令回复 -->
+        <service
+            android:name="com.getui.reactnativegetui.PushIntentService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
         <!-- 配置SDK核心服务 -->
+        <service
+            android:name="com.getui.reactnativegetui.DemoPushService"
+            android:exported="true"
+            android:label="PushService"
+            android:process=":pushservice" />
         <service
             android:name="com.igexin.sdk.PushService"
             android:exported="true"
             android:label="NotificationCenter"
+            android:permission="android.permission.BIND_JOB_SERVICE"
             android:process=":pushservice">
             <intent-filter>
-                <action android:name="com.igexin.sdk.action.service.message"/>
+                <action android:name="com.igexin.sdk.action.service.message" />
             </intent-filter>
         </service>
 
-        <receiver android:name="com.igexin.sdk.PushReceiver" >
+        <receiver android:name="com.igexin.sdk.PushReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
                 <action android:name="android.intent.action.USER_PRESENT" />
                 <action android:name="com.igexin.sdk.action.refreshls" />
-                <!-- 以下三项为可选的action声明，可大大提高service存活率和消息到达速度 -->
                 <action android:name="android.intent.action.MEDIA_MOUNTED" />
                 <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
                 <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
@@ -62,25 +69,14 @@
             android:exported="false"
             android:process=":pushservice"
             android:taskAffinity="com.igexin.sdk.PushActivityTask"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
-        </activity>
-
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name="com.igexin.sdk.GActivity"
             android:excludeFromRecents="true"
             android:exported="true"
             android:process=":pushservice"
             android:taskAffinity="com.igexin.sdk.PushActivityTask"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
-
-        <service
-            android:name="com.getui.reactnativegetui.PushService"
-            android:exported="true"
-            android:label="PushService"
-            android:process=":pushservice"/>
-
-        <service android:name="com.getui.reactnativegetui.PushIntentService"/>
-
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <!-- 个推SDK配置结束 -->
 
     </application>
