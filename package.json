@@ -1,6 +1,6 @@
 {
   "name": "react-native-getui",
-  "version": "1.1.30",
+  "version": "1.1.31",
   "description": "Getui push sdk plugin for rect-native",
   "main": "index.js",
   "scripts": {
