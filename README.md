@@ -1,11 +1,13 @@
-# react-native-getui （请使用版本@1.1.25）
+# react-native-getui 
 react-native-getui 是个推官方开发的 React Native 插件，使用该插件可以方便快速地集成推送功能。
+
+多厂商版本请联系技术支持
 
 
 # 环境
 
 - React Native Version ： 0.42(demo中使用的rn版本)，理论上可以任意使用其他任何RN版本
-- react-native-getui >= 1.1.23
+- 当前react-native-getui版本 1.1.31 , GetuiSdk 版本 4.3.5.0
 - taobao的源和npm源版本可能存在不一致
 
 # 安装
