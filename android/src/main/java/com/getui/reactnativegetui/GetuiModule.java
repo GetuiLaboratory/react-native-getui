@@ -71,7 +71,7 @@ public class GetuiModule extends ReactContextBaseJavaModule {
     public static void initPush(Context context){
         mContext = context;
         GetuiLogger.log("initPush, mContext = " + mContext);
-        PushManager.getInstance().initialize(mContext, PushService.class);
+        PushManager.getInstance().initialize(mContext, DemoPushService.class);
         PushManager.getInstance().registerPushIntentService(mContext, PushIntentService.class);
     }
     /**
