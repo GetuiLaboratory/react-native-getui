@@ -24,9 +24,9 @@ typedef enum {
 
 @interface GeTuiSdk : NSObject
 
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
-#error "GeTuiSDK is requested iOS8 or iOS8 above version"
-#endif
+//#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
+//#error "GeTuiSDK is requested iOS8 or iOS8 above version"
+//#endif
 
 
 #pragma mark - 基本功能
