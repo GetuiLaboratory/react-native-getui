@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
   s.license         = pjson["license"]
   s.author          = { "huminios" => "330793655@qq.com" }
   
-  s.ios.deployment_target = '7.0'
+  s.ios.deployment_target = '8.0'
 
   s.source          = { :git => "https://github.com/GetuiLaboratory/react-native-getui.git" }
   s.source_files    = 'ios/RCTGetuiModule/RCTGetuiModule/*.{h,m}'
