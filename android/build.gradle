@@ -33,6 +33,23 @@ android {
             abiFilters "armeabi","armeabi-v7a","arm64-v8a","x86"
         }
 
+        manifestPlaceholders = [
+                GETUI_APP_ID    : "",
+                GETUI_APP_KEY   : "",
+                GETUI_APP_SECRET: "",
+
+                MEIZU_APP_ID    : "",
+                MEIZU_APP_KEY   : "",
+
+                HUAWEI_APP_ID   : "",
+
+                XIAOMI_APP_ID   : "",
+                XIAOMI_APP_KEY  : "",
+
+                OPPO_APP_KEY    : "",
+                OPPO_APP_SECRET : ""
+        ]
+
     }
 
 
@@ -47,4 +64,8 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.android.support:support-v4:25+"
     implementation "com.facebook.react:react-native:+"  // From node_modules
+    implementation 'com.getui:sdk-for-google-play:4.3.5.9'
+    implementation 'com.getui:mzp-for-google-play:1.0.9'
+    implementation 'com.getui:xmp-for-google-play:1.0.6'
+    implementation 'com.getui:hwp-for-google-play:1.0.6'
 }
