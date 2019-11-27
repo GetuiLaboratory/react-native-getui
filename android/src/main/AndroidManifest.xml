@@ -40,16 +40,6 @@
             android:exported="true"
             android:label="PushService"
             android:process=":pushservice" />
-        <service
-            android:name="com.igexin.sdk.PushService"
-            android:exported="true"
-            android:label="NotificationCenter"
-            android:permission="android.permission.BIND_JOB_SERVICE"
-            android:process=":pushservice">
-            <intent-filter>
-                <action android:name="com.igexin.sdk.action.service.message" />
-            </intent-filter>
-        </service>
 
         <receiver android:name="com.igexin.sdk.PushReceiver">
             <intent-filter>
