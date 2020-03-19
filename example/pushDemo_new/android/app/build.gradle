@@ -118,6 +118,9 @@ android {
                 XIAOMI_APP_ID   : "",
                 XIAOMI_APP_KEY  : "",
 
+                VIVO_APP_ID   : "",
+                VIVO_APP_KEY  : "",
+
                 OPPO_APP_KEY    : "",
                 OPPO_APP_SECRET : ""
         ]
