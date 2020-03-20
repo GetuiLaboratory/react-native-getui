@@ -77,7 +77,46 @@ import android.os.Bundle;
 import com.getui.reactnativegetui.GetuiModule;
 ````
 
+####  react-native 0.60.0以上版本在Android上的初始化流程有所变化
+如果你使用0.60.0以上的RN版本，请在MainApplication.java的文件里注册以下信息
+````java
+private final ReactNativeHost mReactNativeHost =
+      new ReactNativeHost(this) {
+        @Override
+        public boolean getUseDeveloperSupport() {
+          return BuildConfig.DEBUG;
+        }
+
+        @Override
+        protected List<ReactPackage> getPackages() {
+          @SuppressWarnings("UnnecessaryLocalVariable")
+          List<ReactPackage> packages = new PackageList(this).getPackages();
+          // Packages that cannot be autolinked yet can be added manually here, for example:
+           // 注册个推插件包
+           packages.add(new GetuiPackage());
+          return packages;
+        }
+
+        @Override
+        protected String getJSMainModuleName() {
+          return "index";
+        }
+      };
+      .......
+       @Override
+  public void onCreate() {
+    super.onCreate();
+    SoLoader.init(this, /* native exopackage */ false);
+    // 初始化个推模块
+    GetuiModule.initPush(this);
+    initializeFlipper(this); // Remove this line if you don't want Flipper enabled
+  }
+
+
+````
+
 ### 手动安装
+
 1、
 ````
 npm install react-native-getui -save
