@@ -11,7 +11,7 @@
     "native-base": "^2.3.9",
     "react": "16.2.0",
     "react-native": "0.53.3",
-    "react-native-getui": "^1.1.33"
+    "react-native-getui": "^1.1.38"
   },
   "devDependencies": {
     "babel-jest": "22.4.1",

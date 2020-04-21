@@ -155,6 +155,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-getui')
     implementation project(':react-native-getui')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.android.support:appcompat-v7:23.0.1"
