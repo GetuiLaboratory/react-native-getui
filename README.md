@@ -7,7 +7,7 @@ react-native-getui 是个推官方开发的 React Native 插件，使用该插�
 # 环境
 
 - React Native Version ： 0.42(demo中使用的rn版本)，理论上可以任意使用其他任何RN版本
-- 当前react-native-getui版本 1.1.31 , GetuiSdk 版本 4.3.5.0
+- 当前react-native-getui版本 1.1.35 , GetuiSdk 版本 4.3.5.9
 - taobao的源和npm源版本可能存在不一致
 
 # 安装
@@ -59,6 +59,12 @@ $(SRCROOT)/../node_modules/react-native-getui/ios/RCTGetuiModule
 - 您的工程目录/android/app/src/main/{您的包名}/MainActivity的onCreate中调用
 ````
 GetuiModule.initPush(this);
+````
+- 本插件采用maven方式引入sdk，故需要在android/build.gradle中添加maven地址
+````
+ maven {
+            url "http://mvn.gt.igexin.com/nexus/content/repositories/releases/"
+        }
 ````
 
 #### 注意：

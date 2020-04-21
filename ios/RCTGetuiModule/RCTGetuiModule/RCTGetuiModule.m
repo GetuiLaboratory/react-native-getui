@@ -291,6 +291,25 @@ RCT_EXPORT_METHOD(setPushModeForOff:(BOOL)isValue)
     [GeTuiSdk setPushModeForOff:isValue];
 }
 
+
+/**
+*   开启推送.
+*/
+RCT_EXPORT_METHOD(turnOnPush)
+{
+    [GeTuiSdk setPushModeForOff:NO];
+}
+
+/**
+*   关闭推送.
+*/
+RCT_EXPORT_METHOD(turnOffPush)
+{
+    [GeTuiSdk setPushModeForOff:YES];
+}
+
+
+
 /**
  *  同步角标值到个推服务器
  *  该方法只是同步角标值到个推服务器，本地仍须调用setApplicationIconBadgeNumber函数
@@ -347,11 +366,11 @@ RCT_EXPORT_METHOD(sendFeedbackMessage:(NSInteger)actionId andTaskId:(NSString *)
 /** 系统返回VOIPToken，并提交个推服务器 */
 
 - (void)pushRegistry:(PKPushRegistry *)registry didUpdatePushCredentials:(PKPushCredentials *)credentials forType:(NSString *)type {
-    NSString *voiptoken = [credentials.token.description stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]];
-    voiptoken = [voiptoken stringByReplacingOccurrencesOfString:@" " withString:@""];
-    NSLog(@"\n>>>[VoIP Token]:%@\n\n",voiptoken);
-    //向个推服务器注册 VoipToken
-    [GeTuiSdk registerVoipToken:voiptoken];
+    // [ GTSDK ]：（新版）向个推服务器注册 VoipToken
+    [GeTuiSdk registerVoipTokenCredentials:credentials.token];
+            
+    // [ 测试代码 ] 日志打印DeviceToken
+    NSLog(@"[ TestDemo ] [ VoipToken(NSData) ]: %@\n\n", credentials.token);
 }
 
 /** 接收VOIP推送中的payload进行业务逻辑处理（一般在这里调起本地通知实现连续响铃、接收视频呼叫请求等操作），并执行个推VOIP回执统计 */

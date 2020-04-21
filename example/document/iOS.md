@@ -81,12 +81,11 @@ Xcode 工程中需要注册个推 SDK 、注册 deviceToken 、监听消息回�
 ````
 - (void)application:(UIApplication *)application
 didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
-  NSString *token = [[deviceToken description] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]];
-    token = [token stringByReplacingOccurrencesOfString:@" " withString:@""];
-    NSLog(@"\n>>>[DeviceToken Success]:%@\n\n", token);
-
-    // [ GTSdk ]：向个推服务器注册deviceToken
-    [GeTuiSdk registerDeviceToken:token];
+  // [ GTSDK ]：（新版）向个推服务器注册deviceToken
+  [GeTuiSdk registerDeviceTokenData:deviceToken];
+     
+  // [ 测试代码 ] 日志打印DeviceToken
+  NSLog(@"[ TestDemo ] [ DeviceToken(NSData) ]: %@\n\n", deviceToken);
 }
 ````
 
