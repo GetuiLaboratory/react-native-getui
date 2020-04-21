@@ -61,6 +61,15 @@ export default class Getui {
 	static resume() {
 		GetuiModule.resume();
 	}
+
+	static turnOnPush() {
+		GetuiModule.turnOnPush();
+	}
+
+	static turnOffPush() {
+		GetuiModule.turnOnPush();
+	}
+
 	/**
 	 *  获取SDK的Cid
 	 *

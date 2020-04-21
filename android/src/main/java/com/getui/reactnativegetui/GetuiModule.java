@@ -98,6 +98,21 @@ public class GetuiModule extends ReactContextBaseJavaModule {
         PushManager.getInstance().turnOnPush(mContext);
     }
 
+    /**
+     * 打开SDK的推送.
+     */
+    @ReactMethod
+    public void turnOnPush(){
+        PushManager.getInstance().turnOnPush(mContext);
+    }
+
+    /**
+     * 关闭SDK的推送.
+     */
+    @ReactMethod
+    public void turnOffPush(){
+        PushManager.getInstance().turnOffPush(mContext);
+    }
 
     /**
      * 获取SDK的Cid

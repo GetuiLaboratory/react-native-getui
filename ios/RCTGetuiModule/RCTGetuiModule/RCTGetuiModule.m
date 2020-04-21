@@ -291,6 +291,25 @@ RCT_EXPORT_METHOD(setPushModeForOff:(BOOL)isValue)
     [GeTuiSdk setPushModeForOff:isValue];
 }
 
+
+/**
+*   开启推送.
+*/
+RCT_EXPORT_METHOD(turnOnPush)
+{
+    [GeTuiSdk setPushModeForOff:NO];
+}
+
+/**
+*   关闭推送.
+*/
+RCT_EXPORT_METHOD(turnOffPush)
+{
+    [GeTuiSdk setPushModeForOff:YES];
+}
+
+
+
 /**
  *  同步角标值到个推服务器
  *  该方法只是同步角标值到个推服务器，本地仍须调用setApplicationIconBadgeNumber函数
