@@ -67,7 +67,7 @@ export default class Getui {
 	}
 
 	static turnOffPush() {
-		GetuiModule.turnOnPush();
+		GetuiModule.turnOffPush();
 	}
 
 	/**
