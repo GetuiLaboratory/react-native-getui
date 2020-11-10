@@ -73,14 +73,14 @@ function insertIOSImplCode(path){
 	//  这个插入代码 didRegisterForRemoteNotificationsWithDeviceToken
 	var rf = fs.readFileSync(path,"utf-8");
 	var search = rf.match(/\n.*didRegisterForRemoteNotificationsWithDeviceToken\:\(NSData \*\)deviceToken[ ]*\{/);
-	var tokenMatchStr = "\n	NSString *token = [[deviceToken description] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@\"<>\"]];\n  token = [token stringByReplacingOccurrencesOfString:@\" \" withString:@\"\"];\n  NSLog(\@\"\>\>\>[DeviceToken Success]:\%\@\", token);\n\/\/ [ GTSdk ]：向个推服务器注册deviceToken\n  [GeTuiSdk registerDeviceToken:token];\n"
+	var tokenMatchStr = "\n	NSString *token = [[deviceToken description] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@\"<>\"]];\n  token = [token stringByReplacingOccurrencesOfString:@\" \" withString:@\"\"];\n  NSLog(\@\"\>\>\>[DeviceToken Success]:\%\@\", token);\n\/\/ [ GTSdk ]：向个推服务器注册deviceToken\n  [GeTuiSdk registerDeviceTokenData:deviceToken];\n"
 	if (search == null) {
 		console.log("没有匹配到 函数 didRegisterForRemoteNotificationsWithDeviceToken");
 		rf = rf.replace(/\@end/,"/** 远程通知注册成功委托 */\n \- \(void\)application\:\(UIApplication \*\)application\ didRegisterForRemoteNotificationsWithDeviceToken\:\(NSData \*\)deviceToken \{"+ tokenMatchStr +"\}\n\@end");
 		// console.log(rf);
 		fs.writeFileSync(path, rf, "utf-8");
 	} else {
-      var oldValue = rf.match(/\[GeTuiSdk registerDeviceToken:token/)
+      var oldValue = rf.match(/\[GeTuiSdk registerDeviceTokenData:deviceToken/)
       if(oldValue == null) {
           rf = rf.replace(search[0], search[0] + tokenMatchStr);
           fs.writeFileSync(path, rf, "utf-8");

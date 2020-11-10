@@ -152,7 +152,6 @@ RCT_EXPORT_MODULE();
 /**
  *  销毁SDK，并且释放资源
  */
-
 RCT_EXPORT_METHOD(destroy)
 {
     [GeTuiSdk destroy];
@@ -161,29 +160,9 @@ RCT_EXPORT_METHOD(destroy)
 /**
  *  恢复SDK运行,IOS7 以后支持Background Fetch方式，后台定期更新数据,该接口需要在Fetch起来后被调用，保证SDK 数据获取。
  */
-
 RCT_EXPORT_METHOD(resume)
 {
     [GeTuiSdk resume];
-}
-/**
- *  获取SDK的Cid
- *
- *  @return Cid值
- */
-RCT_EXPORT_METHOD(clientId:(RCTResponseSenderBlock)callback)
-{
-    NSString *clientId = [GeTuiSdk clientId]?:@"";
-    callback(@[clientId]);
-}
-/**
- *  获取SDK运行状态
- *
- *  @return 运行状态
- */
-RCT_EXPORT_METHOD(status:(RCTResponseSenderBlock)callback)
-{
-    callback(@[[NSString stringWithFormat:@"%d",[GeTuiSdk status]]]);
 }
 
 /**
@@ -196,45 +175,28 @@ RCT_EXPORT_METHOD(version:(RCTResponseSenderBlock)callback)
     callback(@[[GeTuiSdk version]]);
 }
 
-#pragma mark -
 /**
- *  是否允许SDK 后台运行（默认值：NO）
- *  备注：可以未启动SDK就调用该方法
- *  警告：该功能会和音乐播放冲突，使用时请注意
+ *  获取SDK的Cid
  *
- *  @param isEnable 支持当APP进入后台后，个推是否运行,YES.允许
+ *  @return Cid值
  */
-RCT_EXPORT_METHOD(runBackgroundEnable:(BOOL)isEnable)
+RCT_EXPORT_METHOD(clientId:(RCTResponseSenderBlock)callback)
 {
-    [GeTuiSdk runBackgroundEnable:isEnable];
+    NSString *clientId = [GeTuiSdk clientId]?:@"";
+    callback(@[clientId]);
 }
+
 /**
- *  地理围栏功能，设置地理围栏是否运行
- *  备注：SDK可以未启动就调用该方法
+ *  获取SDK运行状态
  *
- *  @param isEnable 设置地理围栏功能是否运行（默认值：NO）
- *  @param isVerify 设置是否SDK主动弹出用户定位请求（默认值：NO）
+ *  @return 运行状态
  */
-RCT_EXPORT_METHOD(lbsLocationEnable:(BOOL)isEnable andUserVerify:(BOOL)isVerify)
+RCT_EXPORT_METHOD(status:(RCTResponseSenderBlock)callback)
 {
-    [GeTuiSdk lbsLocationEnable:isEnable andUserVerify:isVerify];
+    callback(@[[NSString stringWithFormat:@"%lu",(unsigned long)[GeTuiSdk status]]]);
 }
 
 #pragma mark -
-
-/**
- *  设置渠道
- *  备注：SDK可以未启动就调用该方法
- *
- *  SDK-1.5.0+
- *
- *  @param aChannelId 渠道值，可以为空值
- */
-
-RCT_EXPORT_METHOD(setChannelId:(NSString *)aChannelId)
-{
-    [GeTuiSdk setChannelId:aChannelId];
-}
 
 /**
  *  向个推服务器注册DeviceToken
@@ -247,26 +209,50 @@ RCT_EXPORT_METHOD(registerDeviceToken:(NSString *)deviceToken)
 {
     [GeTuiSdk registerDeviceToken:deviceToken];
 }
+
 /**
- *  绑定别名功能:后台可以根据别名进行推送
+ *  向个推服务器注册DeviceToken
+ *  备注：可以未启动SDK就调用该方法
+ *  注：Xcode11、iOS13 DeviceToken适配，至少使用“SDK-2.4.1.0”版本
  *
- *  @param alias 别名字符串
- *  @param aSn   绑定序列码, 不为nil
+ *  @param deviceToken 推送时使用的deviceToken NSData
+ *  @return deviceToken有效判断，YES.有效 NO.无效
+ *
  */
-RCT_EXPORT_METHOD(bindAlias:(NSString *)alias andSequenceNum:(NSString *)aSn)
+RCT_EXPORT_METHOD(registerDeviceTokenData:(NSData *)deviceToken)
 {
-    [GeTuiSdk bindAlias:alias andSequenceNum:aSn];
+    [GeTuiSdk registerDeviceTokenData:deviceToken];
 }
+
 /**
- *  取消绑定别名功能
+ *  向个推服务器注册VoipToken
+ *  备注：可以未启动SDK就调用该方法
  *
- *  @param alias 别名字符串
- *  @param aSn   绑定序列码, 不为nil
+ *  @param voipToken 推送时使用的voipToken NSString
+ *  @return voipToken有效判断，YES.有效 NO.无效
+ *
  */
-RCT_EXPORT_METHOD(unbindAlias:(NSString *)alias andSequenceNum:(NSString *)aSn)
+RCT_EXPORT_METHOD(registerVoipToken:(NSString *)voipToken)
 {
-    [GeTuiSdk unbindAlias:alias andSequenceNum:aSn andIsSelf:YES];
+    [GeTuiSdk registerVoipToken:voipToken];
 }
+
+/**
+ *  向个推服务器注册VoipToken
+ *  备注：可以未启动SDK就调用该方法
+ *  注：Xcode11、iOS13 DeviceToken适配，至少使用“SDK-2.4.1.0”版本
+ *
+ *  @param voipToken 推送时使用的voipToken NSData
+ *  @return voipToken有效判断，YES.有效 NO.无效
+ *
+ */
+RCT_EXPORT_METHOD(registerVoipTokenCredentials:(NSData *)voipToken)
+{
+    [GeTuiSdk registerDeviceTokenData:voipToken];
+}
+
+#pragma mark -
+
 /**
  *  给用户打标签 , 后台可以根据标签进行推送
  *
@@ -278,6 +264,57 @@ RCT_EXPORT_METHOD(setTag:(NSArray *)tags)
 {
     [GeTuiSdk setTags:tags];
 }
+
+/**
+ *  给用户打标签, 后台可以根据标签进行推送
+ *
+ *  @param tags 别名数组
+ *  tag: 只能包含中文字符、英文字母、0-9、+-*_.的组合（不支持空格）
+ *  @param aSn  绑定序列码, 不为nil
+ *  @return 提交结果，YES表示尝试提交成功，NO表示尝试提交失败
+ */
+RCT_EXPORT_METHOD(setTags:(NSArray *)tags andSequenceNum:(NSString *)aSn)
+{
+    [GeTuiSdk setTags:tags andSequenceNum:aSn];
+}
+
+/**
+ *  同步角标值到个推服务器
+ *  该方法只是同步角标值到个推服务器，本地仍须调用setApplicationIconBadgeNumber函数
+ *
+ *  SDK-1.4.0+
+ *
+ *  @param value 角标数值
+ */
+RCT_EXPORT_METHOD(setBadge:(NSUInteger)value)
+{
+    [GeTuiSdk setBadge:value];
+}
+
+/**
+ *  复位角标，等同于"setBadge:0"
+ *
+ *  SDK-1.4.0+
+ *
+ */
+RCT_EXPORT_METHOD(resetBadge)
+{
+    [GeTuiSdk resetBadge];
+}
+
+/**
+ *  设置渠道
+ *  备注：SDK可以未启动就调用该方法
+ *
+ *  SDK-1.5.0+
+ *
+ *  @param aChannelId 渠道值，可以为空值
+ */
+RCT_EXPORT_METHOD(setChannelId:(NSString *)aChannelId)
+{
+    [GeTuiSdk setChannelId:aChannelId];
+}
+
 /**
  *  设置关闭推送模式（默认值：NO）
  *
@@ -290,7 +327,6 @@ RCT_EXPORT_METHOD(setPushModeForOff:(BOOL)isValue)
 {
     [GeTuiSdk setPushModeForOff:isValue];
 }
-
 
 /**
 *   开启推送.
@@ -308,25 +344,26 @@ RCT_EXPORT_METHOD(turnOffPush)
     [GeTuiSdk setPushModeForOff:YES];
 }
 
-
-
 /**
- *  同步角标值到个推服务器
- *  该方法只是同步角标值到个推服务器，本地仍须调用setApplicationIconBadgeNumber函数
+ *  绑定别名功能:后台可以根据别名进行推送
  *
- *  SDK-1.4.0+
- *
- *  @param value 角标数值
+ *  @param alias 别名字符串
+ *  @param aSn   绑定序列码, 不为nil
  */
-
-RCT_EXPORT_METHOD(setBadge:(NSUInteger)value)
+RCT_EXPORT_METHOD(bindAlias:(NSString *)alias andSequenceNum:(NSString *)aSn)
 {
-    [GeTuiSdk setBadge:value];
+    [GeTuiSdk bindAlias:alias andSequenceNum:aSn];
 }
 
-RCT_EXPORT_METHOD(resetBadge)
+/**
+ *  取消绑定别名功能
+ *
+ *  @param alias 别名字符串
+ *  @param aSn   绑定序列码, 不为nil
+ */
+RCT_EXPORT_METHOD(unbindAlias:(NSString *)alias andSequenceNum:(NSString *)aSn)
 {
-    [GeTuiSdk resetBadge];
+    [GeTuiSdk unbindAlias:alias andSequenceNum:aSn andIsSelf:YES];
 }
 
 #pragma mark -
@@ -343,6 +380,7 @@ RCT_EXPORT_METHOD(sendMessage:(NSData *)body error:(NSError **)error)
 {
     [GeTuiSdk sendMessage:body error:error];
 }
+
 /**
  *  上行第三方自定义回执actionid
  *
@@ -357,6 +395,40 @@ RCT_EXPORT_METHOD(sendFeedbackMessage:(NSInteger)actionId andTaskId:(NSString *)
 {
     BOOL isSuccess = [GeTuiSdk sendFeedbackMessage:actionId andTaskId:taskId andMsgId:msgId];
     callback(@[isSuccess?@"true":@"false"]);
+}
+
+#pragma mark -
+
+/**
+ *  是否允许SDK 后台运行（默认值：NO）
+ *  备注：可以未启动SDK就调用该方法
+ *  警告：该功能会和音乐播放冲突，使用时请注意
+ *
+ *  @param isEnable 支持当APP进入后台后，个推是否运行,YES.允许
+ */
+RCT_EXPORT_METHOD(runBackgroundEnable:(BOOL)isEnable)
+{
+    [GeTuiSdk runBackgroundEnable:isEnable];
+}
+
+/**
+ *  地理围栏功能，设置地理围栏是否运行
+ *  备注：SDK可以未启动就调用该方法
+ *
+ *  @param isEnable 设置地理围栏功能是否运行（默认值：NO）
+ *  @param isVerify 设置是否SDK主动弹出用户定位请求（默认值：NO）
+ */
+RCT_EXPORT_METHOD(lbsLocationEnable:(BOOL)isEnable andUserVerify:(BOOL)isVerify)
+{
+    [GeTuiSdk lbsLocationEnable:isEnable andUserVerify:isVerify];
+}
+
+/**
+ *  清空下拉通知栏全部通知,并将角标置“0”，不显示角标
+ */
+RCT_EXPORT_METHOD(clearAllNotificationForNotificationBar)
+{
+    [GeTuiSdk clearAllNotificationForNotificationBar];
 }
 
 #pragma mark - VOIP related

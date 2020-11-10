@@ -30,6 +30,11 @@ npm run GetuiConfigure DI1jwW3FtZ6kGDeY5dk0Y9 DQCk2V8Jev9hqhWDU94PF9 Rtyp5trKUt8
 
 ````
 
+```
+// 链接iOS原生代码
+npx pod-install
+```
+
 (如果是原生应用集成react-native)使用CocoaPods安装
 
 如果你的 React Native 是通过 Cocoapods 来集成的则使用下面两个步骤来集成，注意： 使用 pod 就不要使用 react-native link 了，不然会有冲突。

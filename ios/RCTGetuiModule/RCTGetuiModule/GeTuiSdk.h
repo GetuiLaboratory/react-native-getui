@@ -5,16 +5,16 @@
 //  Created by gexin on 15-5-5.
 //  Copyright (c) 2015年 Gexin Interactive (Beijing) Network Technology Co.,LTD. All rights reserved.
 //
-//  GTSDK-Version: 2.4.1.0
+//  GTSDK-Version: 2.4.6.0-noidfa
 
 #import <Foundation/Foundation.h>
 
-typedef enum {
+typedef NS_ENUM(NSUInteger, SdkStatus) {
     SdkStatusStarting,  // 正在启动
     SdkStatusStarted,   // 启动、在线
     SdkStatusStoped,    // 停止
     SdkStatusOffline,   // 离线
-} SdkStatus;
+};
 
 #define kGtResponseBindType @"bindAlias"
 #define kGtResponseUnBindType @"unbindAlias"
@@ -125,7 +125,7 @@ typedef enum {
 #pragma mark -
 
 /**
- *  给用户打标签 , 后台可以根据标签进行推送
+ *  给用户打标签, 后台可以根据标签进行推送
  *
  *  @param tags 别名数组
  *  tag: 只能包含中文字符、英文字母、0-9、+-*_.的组合（不支持空格）
@@ -133,6 +133,16 @@ typedef enum {
  *  @return 提交结果，YES表示尝试提交成功，NO表示尝试提交失败
  */
 + (BOOL)setTags:(NSArray *)tags;
+ 
+/**
+ *  给用户打标签, 后台可以根据标签进行推送
+ *
+ *  @param tags 别名数组
+ *  tag: 只能包含中文字符、英文字母、0-9、+-*_.的组合（不支持空格）
+ *  @param aSn  绑定序列码, 不为nil
+ *  @return 提交结果，YES表示尝试提交成功，NO表示尝试提交失败
+ */
++ (BOOL)setTags:(NSArray *)tags andSequenceNum:(NSString *)aSn;
 
 /**
  *  同步角标值到个推服务器
@@ -244,7 +254,7 @@ typedef enum {
 /**
  *  是否允许SDK 后台运行（默认值：NO）
  *  备注：可以未启动SDK就调用该方法
- *  警告：该功能会和音乐播放冲突，使用时请注意
+ *  警告：该功能会和音乐播放冲突，使用时请注意。 需开启Signing & Capabilities > Background Modes > Auido, Airplay and Picture in Picture。
  *
  *  @param isEnable 支持当APP进入后台后，个推是否运行,YES.允许
  */
@@ -327,6 +337,15 @@ typedef enum {
  *  @param aError       成功返回nil, 错误返回相应error信息
  */
 - (void)GeTuiSdkDidAliasAction:(NSString *)action result:(BOOL)isSuccess sequenceNum:(NSString *)aSn error:(NSError *)aError;
+
+/**
+ *  设置标签回调
+ *
+ *  @param sequenceNum  请求的序列码
+ *  @param isSuccess    成功返回 YES, 失败返回 NO
+ *  @param aError       成功返回 nil, 错误返回相应error信息
+ */
+- (void)GeTuiSdkDidSetTagsAction:(NSString *)sequenceNum result:(BOOL)isSuccess error:(NSError *)aError;
 
 /**
  * 查询当前绑定tag结果返回
