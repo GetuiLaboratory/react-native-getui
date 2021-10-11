@@ -3,7 +3,7 @@ pjson = JSON.parse(File.read('package.json'))
 
 Pod::Spec.new do |s|
 
-  s.name            = "GtSdkRN"
+  s.name            = "RCTGetuiModule"
   s.version         = pjson["version"]
   s.homepage        = "https://github.com/GetuiLaboratory/react-native-getui"
   s.summary         = pjson["description"]

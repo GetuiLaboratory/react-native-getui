@@ -47,7 +47,7 @@ getPackageJson("./../..", function (f, s) {
     var rf = fs.readFileSync(f, "utf-8");
     var searchKey = rf.match(/\n.*\"scripts\"\: \{\n/);
 
-    if (/configureJPush/.test(rf)) {
+    if (/GetuiConfigure/.test(rf)) {
       return;
     }
 
