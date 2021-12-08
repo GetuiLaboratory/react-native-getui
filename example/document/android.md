@@ -56,6 +56,15 @@ import android.os.Bundle;
 import com.getui.reactnativegetui.GetuiModule;
 ````
 
+6、在android/app/src/main/{您的包名}/MainApplication 中加入
+````
+import com.getui.reactnativegetui.GetuiPackage;
+````
+在getPackages()中加入
+````
+new GetuiPackage(),
+````
+
 #JS 使用
 
 主要的消息通知回调使用如下，其他的接口均可在 [index.js](https://github.com/GetuiLaboratory/react-native-getui/blob/master/index.js) 查看。
