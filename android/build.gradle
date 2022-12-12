@@ -34,9 +34,7 @@ android {
         }
 
         manifestPlaceholders = [
-                GETUI_APP_ID    : "",
-                GETUI_APP_KEY   : "",
-                GETUI_APP_SECRET: "",
+                GETUI_APPID    : "",
 
                 MEIZU_APP_ID    : "",
                 MEIZU_APP_KEY   : "",
@@ -67,10 +65,14 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.android.support:support-v4:25+"
     implementation "com.facebook.react:react-native:+"  // From node_modules
-    implementation 'com.getui:sdk-for-google-play:4.3.5.9'
-    implementation 'com.getui:mzp-for-google-play:1.0.9'
-    implementation 'com.getui:xmp-for-google-play:1.0.6'
-    implementation 'com.getui:hwp-for-google-play:1.0.6'
-    implementation 'com.assist:oppo-for-google-play:1.0.6'
-    implementation 'com.assist:vivo-for-google-play:1.0.4'
+
+    implementation 'com.getui:gtsdk:3.2.13.0'  //个推SDK
+    implementation 'com.getui:gtc:3.1.12.0'    //个推核心组件
+
+    implementation 'com.getui.opt:hwp:3.1.1'   // 华为
+    implementation 'com.getui.opt:xmp:3.3.0'   // 小米
+    implementation 'com.assist-v3:oppo:3.2.0'  // oppo
+    implementation 'com.assist-v3:vivo:3.1.1'  // vivo
+    implementation 'com.getui.opt:mzp:3.2.2'   // 魅族
+    implementation 'com.getui.opt:ups:3.0.3'   // ups，ups目前支持坚果，索尼，海信手机
 }

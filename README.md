@@ -68,7 +68,7 @@ GetuiModule.initPush(this);
 - 本插件采用maven方式引入sdk，故需要在android/build.gradle中添加maven地址
 ````
  maven {
-            url "http://mvn.gt.igexin.com/nexus/content/repositories/releases/"
+            url "https://mvn.getui.com/nexus/content/repositories/releases/"
         }
 ````
 

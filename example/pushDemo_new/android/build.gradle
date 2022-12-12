@@ -30,7 +30,7 @@ allprojects {
             name 'Google'
         }
         maven {
-            url "http://mvn.gt.igexin.com/nexus/content/repositories/releases/"
+            url "https://mvn.getui.com/nexus/content/repositories/releases/"
         }
     }
 }

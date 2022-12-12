@@ -79,7 +79,7 @@ public class GetuiModule extends ReactContextBaseJavaModule {
      */
     @ReactMethod
     public void destroy(){
-        PushManager.getInstance().stopService(mContext);
+        // PushManager.getInstance().stopService(mContext);
     }
 
     /**
@@ -87,7 +87,7 @@ public class GetuiModule extends ReactContextBaseJavaModule {
      */
     @ReactMethod
     public void stop(){
-        PushManager.getInstance().stopService(mContext);
+        // PushManager.getInstance().stopService(mContext);
     }
 
     /**
