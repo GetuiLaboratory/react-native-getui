@@ -7,7 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "RCTGetuiPushBridgeQueue.h"
 
 #if __has_include(<React/RCTBridgeModule.h>)
 #import <React/RCTBridgeModule.h>
@@ -17,13 +16,10 @@
 #import "React/RCTBridgeModule.h"
 #endif
 
-#import "GeTuiSdk.h"
+#import <GTSDK/GeTuiSdk.h>
 
-// 收到apn推送
-#define GT_DID_RECEIVE_REMOTE_NOTIFICATION  @"CCPDidReceiveApnsNotification"
-#define GT_DID_CLICK_NOTIFICATION  @"CCPDidOpenApnsNotification"
-#define GT_DID_REGISTE_CLIENTID @"GtDidRegisteClient"
+@interface RCTGetuiModule : NSObject <RCTBridgeModule, GeTuiSdkDelegate>
 
++ (instancetype)sharedGetuiModule;
 
-@interface RCTGetuiModule : NSObject <RCTBridgeModule>
 @end

@@ -35,7 +35,7 @@ export default class pushDemo extends Component {
        //订阅消息通知
        var { NativeAppEventEmitter } = require('react-native');
        var resigsteClientIdSub = NativeAppEventEmitter.addListener(
-         'registeClientId',
+         'GeTuiSdkDidRegisterClient',
          (clientId) => {
            Alert.alert(clientId);
            this.setState({
@@ -45,23 +45,22 @@ export default class pushDemo extends Component {
          
        )
        var receiveRemoteNotificationSub = NativeAppEventEmitter.addListener(
-          'receiveRemoteNotification',
+          'GeTuiSdkDidReceiveSlience',
           (notification) => {
-            //消息类型分为 APNs 和 payload 透传消息，具体的消息体格式会有差异
-            switch (notification.type) {
-                case "apns":
-                    Alert.alert('APNs 消息通知',JSON.stringify(notification))
-                    break;
-                case "payload":
-                    Alert.alert('payload 消息通知',JSON.stringify(notification))
-                    break;
-                default:
-            }
+              /// 收到透传消息
+              /// 推送消息内容
+              /// @param fromGetui   YES: 个推通道  NO：苹果apns通道
+              /// @param offLine     是否是离线消息，YES.是离线消息
+              /// @param appId       应用的appId
+              /// @param taskId      推送消息的任务id
+              /// @param msgId       推送消息的messageid
+              /// @param completionHandler 用来在后台状态下进行操作（通过苹果apns通道的消息 才有此参数值）
+              Alert.alert('点击通知',JSON.stringify(notification))
           }
         );
 
         var clickRemoteNotificationSub = NativeAppEventEmitter.addListener(
-            'clickRemoteNotification',
+            'GeTuiSdkDidReceiveNotification',
             (notification) => {
                 Alert.alert('点击通知',JSON.stringify(notification))
             }

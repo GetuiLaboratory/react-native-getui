@@ -209,6 +209,7 @@ export default class Getui {
 	static sendMessage(body, error) {
 		GetuiModule.sendMessage(body, error);
 	}
+
 	/**
 	 *  上行第三方自定义回执actionid
 	 *

@@ -15,10 +15,12 @@ Pod::Spec.new do |s|
   s.source          = { :git => "https://github.com/GetuiLaboratory/react-native-getui.git" }
   s.source_files    = 'ios/RCTGetuiModule/RCTGetuiModule/*.{h,m}'
   s.preserve_paths  = "*.js"
-  s.frameworks      = 'UIKit','CFNetwork','CoreFoundation','CoreTelephony','SystemConfiguration','CoreGraphics','Foundation','Security'
-  s.weak_frameworks = 'UserNotifications'
-  s.libraries       = 'z','resolv'
-  s.vendored_libraries = "ios/RCTGetuiModule/RCTGetuiModule/*.a"
+  s.frameworks      = 'SystemConfiguration', 'CFNetwork','CoreTelephony','CoreLocation','AVFoundation','Security','AdSupport'
+  s.weak_frameworks = 'UserNotifications','AppTrackingTransparency','Network'
+  s.libraries       = 'z','sqlite3.0','c++','resolv'
+  s.vendored_frameworks = "ios/RCTGetuiModule/RCTGetuiModule/GTSDK.xcframework"
+  s.requires_arc = true
+  s.swift_versions = ['5']
 
   s.dependency 'React'
 end
