@@ -18,9 +18,10 @@ Pod::Spec.new do |s|
   s.frameworks      = 'SystemConfiguration', 'CFNetwork','CoreTelephony','CoreLocation','AVFoundation','Security','AdSupport'
   s.weak_frameworks = 'UserNotifications','AppTrackingTransparency','Network'
   s.libraries       = 'z','sqlite3.0','c++','resolv'
-  s.vendored_frameworks = "ios/RCTGetuiModule/RCTGetuiModule/GTSDK.xcframework"
   s.requires_arc = true
   s.swift_versions = ['5']
 
   s.dependency 'React'
+  s.dependency 'GTSDK'
+
 end
