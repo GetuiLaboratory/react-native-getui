@@ -13,20 +13,67 @@
 #import <React/RCTRootView.h>
 #import <React/RCTBridge.h>
 #import <React/RCTLog.h>
-
+#import <React/RCTEventEmitter.h>
 #elif __has_include("RCTBridge.h")
 #import "RCTEventDispatcher.h"
 #import "RCTRootView.h"
 #import "RCTBridge.h"
 #import "RCTLog.h"
+#import "RCTEventEmitter.h"
 #elif __has_include("React/RCTBridge.h")
 #import "React/RCTEventDispatcher.h"
 #import "React/RCTRootView.h"
 #import "React/RCTBridge.h"
 #import "React/RCTLog.h"
+#import "React/RCTEventEmitter.h"
 #endif
 
 #import <PushKit/PushKit.h>
+
+@interface RCTGetuiBridgeTools : RCTEventEmitter
+
++ (RCTGetuiBridgeTools *)sharedInstance;
+
+@end
+
+@implementation RCTGetuiBridgeTools
+
+RCT_EXPORT_MODULE();
+
++ (RCTGetuiBridgeTools *)sharedInstance
+{
+    static RCTGetuiBridgeTools * tools = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        tools = [[RCTGetuiBridgeTools alloc] init];
+    });
+    return tools;
+}
+
+- (NSArray<NSString *> *)supportedEvents
+{
+    return @[@"GeTuiSdkDidRegisterClient",
+             @"GeTuiSDkDidNotifySdkState",
+             @"GeTuiSdkDidOccurError",
+             @"GetuiSdkGrantAuthorization",
+             @"GeTuiSdkwillPresentNotification",
+             @"GeTuiSdkDidReceiveNotification",
+             @"GeTuiSdkDidReceiveSlience",
+             @"GeTuiSdkOpenSettingsForNotification",
+             @"GeTuiSdkDidSendMessage",
+             @"GeTuiSdkDidSetPushMode",
+             @"GeTuiSdkDidAlias",
+             @"GeTuiSdkDidSetTags",
+             @"GetuiSdkDidQueryTag",
+             @"voipPushPayload"];
+}
+
+- (void)getui_sendAppEventWithName:(NSString *)name body:(id)body {
+    [self.bridge.eventDispatcher sendAppEventWithName:name body:body];
+}
+
+@end
+
 
 @interface RCTGetuiModuleEvent : NSObject
 @property (nonatomic, copy) NSString *name;
@@ -99,8 +146,7 @@ RCT_EXPORT_MODULE();
     NSLog(@"name:%@ body:%@", name, body);
 #endif
     if(self.isJsLoad) {
-        [self.bridge.eventDispatcher sendAppEventWithName:name
-                                                     body:body];
+        [[RCTGetuiBridgeTools sharedInstance] getui_sendAppEventWithName:name body:body];
     }else {
         RCTGetuiModuleEvent *event = [[RCTGetuiModuleEvent alloc] init];
         event.name = name;
@@ -207,7 +253,7 @@ RCT_EXPORT_MODULE();
 
 - (void)GeTuiSdkNotificationCenter:(UNUserNotificationCenter *)center openSettingsForNotification:(UNNotification *)notification {
     // [ 参考代码，开发者注意根据实际需求自行修改 ] 根据APP需要自行修改参数值
-    [self getui_sendAppEventWithName:@"GeTuiSdkOpenSettingsForNotificatio" body:notification.request.content.userInfo];
+    [self getui_sendAppEventWithName:@"GeTuiSdkOpenSettingsForNotification" body:notification.request.content.userInfo];
 }
 
 //MARK: - 发送上行消息
