@@ -45,9 +45,13 @@ RCT_EXPORT_MODULE();
     static RCTGetuiBridgeTools * tools = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        tools = [[RCTGetuiBridgeTools alloc] init];
+        tools = [[super allocWithZone:NULL] init];
     });
     return tools;
+}
+
++ (instancetype)allocWithZone:(struct _NSZone *)zone {
+    return [self sharedInstance];
 }
 
 - (NSArray<NSString *> *)supportedEvents
