@@ -39,7 +39,7 @@ npx pod-install
 
 如果你的 React Native 是通过 Cocoapods 来集成的则使用下面两个步骤来集成，注意： 使用 pod 就不要使用 react-native link 了，不然会有冲突。
 
-1.在Podfile中添加如下代码：
+1.在Podfile中添加如下代码（需要写在对应的 target 里）：
 
 ````
 pod 'GtSdkRN', :path => '../node_modules/react-native-getui'
