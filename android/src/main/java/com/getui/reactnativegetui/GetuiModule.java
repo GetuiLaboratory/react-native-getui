@@ -338,7 +338,9 @@ public class GetuiModule extends ReactContextBaseJavaModule {
      * @param params
      */
     public static void sendEvent(String eventName, @Nullable WritableMap params){
-        mRAC.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+        if (mRAC != null && mRAC.hasActiveCatalystInstance()) {
+            mRAC.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
                 .emit(eventName, params);
+        }
     }
 }
