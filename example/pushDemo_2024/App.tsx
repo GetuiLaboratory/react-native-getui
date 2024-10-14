@@ -31,15 +31,15 @@ import Getui from 'react-native-getui';
 
 
 //监听方式一：
-import { NativeEventEmitter, NativeModules } from 'react-native';
-const { GetuiModule } = NativeModules;
-const GetuiEmitter = new NativeEventEmitter(NativeModules.GetuiModule);
-const subscription = GetuiEmitter.addListener(
-  'GeTuiSdkDidRegisterClient',
-  (message) => {
-    console.log("receive cid " + message)
-  }
-);
+// import { NativeEventEmitter, NativeModules } from 'react-native';
+// const { GetuiModule } = NativeModules;
+// const GetuiEmitter = new NativeEventEmitter(NativeModules.GetuiModule);
+// const subscription = GetuiEmitter.addListener(
+//   'GeTuiSdkDidRegisterClient',
+//   (message) => {
+//     console.log("receive cid " + message)
+//   }
+// );
 // 别忘了取消订阅，通常在componentWillUnmount生命周期方法中实现。
 // subscription.remove();
 
@@ -60,7 +60,9 @@ let names: string[] = [
   "GeTuiSdkDidAlias",
   "GeTuiSdkDidSetTags",
   "GetuiSdkDidQueryTag",
-  "voipPushPayload"];
+  "voipPushPayload",
+  "GeTuiSdkDidRegisterLiveActivity",
+  "GeTuiSdkDidRegisterPushToStartToken"];
 
 // 监听个推回调
 const listenerCallBack = (eventName: string, message: any) => {
@@ -200,6 +202,7 @@ function App(): React.JSX.Element {
                 const result = Getui.setTag(tags);
                 console.log("Set tag result:", result);
               }}
+              //需要监听回调GeTuiSdkDidSetTags
             />
           </Section>
           <Section title="Alias">
@@ -208,12 +211,14 @@ function App(): React.JSX.Element {
               onPress={() => {
                 Getui.bindAlias("alias", "sn");
               }}
+              //需要监听回调GeTuiSdkDidAlias
             />
             <Button
               title="unbindAlias"
               onPress={() => {
                 Getui.unbindAlias("alias", "sn");
               }}
+              //需要监听回调GeTuiSdkDidAlias
             />
           </Section>
           <Section title="SendMsg">
@@ -223,6 +228,7 @@ function App(): React.JSX.Element {
                 Getui.sendMessage("message_body", (result) => {
                   console.log("Send message result:", result);
                 });
+                //需要监听回调GeTuiSdkDidSendMessage
               }}
             />
             <Button
@@ -236,31 +242,50 @@ function App(): React.JSX.Element {
           </Section>
 
           <Section title="Switch">
-
             <Button
               title="turnOnPush"
               onPress={() => {
                 Getui.turnOnPush();
               }}
-            />  <Button
+            />
+            <Button
               title="turnOffPush"
               onPress={() => {
                 Getui.turnOffPush();
               }}
             />
           </Section>
-          <Section title="badge">
+          <Section title="Badge">
             <Button
               title="setBadge"
               onPress={() => {
                 Getui.setBadge(5);
               }}
             />
-
             <Button
               title="resetBadge"
               onPress={() => {
                 Getui.resetBadge();
+              }}
+            />
+          </Section>
+          <Section title="LiveActivity">
+            <Button
+              title="registerLiveActivity"
+              onPress={() => {
+                Getui.registerLiveActivity("liveActivityId", "token", "sn", (result) => {
+                  console.log("registerLiveActivity result:", result);
+                });
+                //需要监听回调GeTuiSdkDidRegisterLiveActivity
+              }}
+            />
+            <Button
+              title="registerPushToStartToken"
+              onPress={() => {
+                Getui.registerPushToStartToken("activityAttributes", "pushToStartToken", "sn", (result) => {
+                  console.log("registerPushToStartToken result:", result);
+                });
+                //需要监听回调GeTuiSdkDidRegisterPushToStartToken
               }}
             />
           </Section>

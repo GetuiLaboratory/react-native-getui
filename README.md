@@ -11,7 +11,7 @@ react-native-getui 是个推官方开发的 React Native 插件，使用该插�
 "react-native": "0.75.4",
 (demo中使用的rn版本)，理论上可以任意使用其他任何RN版本
 
-- 当前react-native-getui版本 1.1.46
+- 当前react-native-getui版本 1.1.47
 - taobao的源和npm源版本可能存在不一致
 
 # 安装
@@ -196,7 +196,9 @@ let names: string[] = [
   "GeTuiSdkDidAlias",
   "GeTuiSdkDidSetTags",
   "GetuiSdkDidQueryTag",
-  "voipPushPayload"];
+  "voipPushPayload",
+  "GeTuiSdkDidRegisterLiveActivity",
+  "GeTuiSdkDidRegisterPushToStartToken"];
 
 // 监听个推回调
 const listenerCallBack = (eventName: string, message: any) => {
