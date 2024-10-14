@@ -73,7 +73,18 @@ RCT_EXPORT_MODULE();
 }
 
 - (void)getui_sendAppEventWithName:(NSString *)name body:(id)body {
-    [self.bridge.eventDispatcher sendAppEventWithName:name body:body];
+    if (!self.bridge) {
+        id delegate = [UIApplication sharedApplication].delegate;
+        if ([delegate respondsToSelector:@selector(bridge)] && [delegate bridge]) {
+            NSLog(@"GTSDK>>>fill back bridge %@", [delegate bridge]);
+            self.bridge = [delegate bridge];
+        }
+    }
+    if (self.bridge) {
+        [self.bridge.eventDispatcher sendAppEventWithName:name body:body];
+    } else {
+        NSLog(@"GTSDK>>>bridge is nil!, plz check");
+    }
 }
 
 @end
@@ -147,7 +158,7 @@ RCT_EXPORT_MODULE();
 
 - (void)getui_sendAppEventWithName:(NSString *)name body:(id)body {
 #if DEBUG
-    NSLog(@"name:%@ body:%@", name, body);
+    NSLog(@"GTSDK>>>sendEvent name:%@ body:%@", name, body);
 #endif
     if(self.isJsLoad) {
         [[RCTGetuiBridgeTools sharedInstance] getui_sendAppEventWithName:name body:body];
@@ -163,17 +174,20 @@ RCT_EXPORT_MODULE();
 
 /// [ GTSDK回调 ] SDK启动成功返回cid
 - (void)GeTuiSdkDidRegisterClient:(NSString *)clientId {
+    NSLog(@"GTSDK>>>GeTuiSdkDidRegisterClient %@",clientId);
     [self getui_sendAppEventWithName:@"GeTuiSdkDidRegisterClient"
                                 body:clientId];
 }
 
 /// [ GTSDK回调 ] SDK运行状态通知
 - (void)GeTuiSDkDidNotifySdkState:(SdkStatus)aStatus {
+    NSLog(@"GTSDK>>>GeTuiSDkDidNotifySdkState %@",@(aStatus));
     [self getui_sendAppEventWithName:@"GeTuiSDkDidNotifySdkState"
                                 body:@(aStatus)];
 }
 
 - (void)GeTuiSdkDidOccurError:(NSError *)error {
+    NSLog(@"GTSDK>>>GeTuiSdkDidOccurError %@", error);
     [self getui_sendAppEventWithName:@"GeTuiSdkDidOccurError"
                                 body:error.description];
 }
@@ -184,6 +198,7 @@ RCT_EXPORT_MODULE();
 /// @param granted 用户是否允许通知
 /// @param error 错误信息
 - (void)GetuiSdkGrantAuthorization:(BOOL)granted error:(NSError *)error {
+    NSLog(@"GTSDK>>>GetuiSdkGrantAuthorization %@ error:%@",@(granted), error);
     [self getui_sendAppEventWithName:@"GetuiSdkGrantAuthorization"
                                 body:@(granted)];
 }
@@ -193,6 +208,7 @@ RCT_EXPORT_MODULE();
 /// @param notification notification
 /// @param completionHandler completionHandler
 - (void)GeTuiSdkNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification completionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler {
+    NSLog(@"GTSDK>>>willPresentNotification");
     [self getui_sendAppEventWithName:@"GeTuiSdkwillPresentNotification" body:notification.request.content.userInfo];
     // [ 参考代码，开发者注意根据实际需求自行修改 ] 根据APP需要，判断是否要提示用户Badge、Sound、Alert等
     //completionHandler(UNNotificationPresentationOptionNone); 若不显示通知，则无法点击通知
@@ -207,13 +223,13 @@ RCT_EXPORT_MODULE();
 /// @param response UNNotificationResponse（iOS10及以上版本）
 /// @param completionHandler 用来在后台状态下进行操作（iOS10以下版本）
 - (void)GeTuiSdkDidReceiveNotification:(NSDictionary *)userInfo notificationCenter:(UNUserNotificationCenter *)center response:(UNNotificationResponse *)response fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
+    NSLog(@"GTSDK>>>GeTuiSdkDidReceiveNotification userinfo:%@", userInfo);
     [self getui_sendAppEventWithName:@"GeTuiSdkDidReceiveNotification" body:userInfo];
     if(completionHandler) {
         // [ 参考代码，开发者注意根据实际需求自行修改 ] 根据APP需要自行修改参数值
         completionHandler(UIBackgroundFetchResultNoData);
     }
 }
-
 
 /// 收到透传消息
 /// @param userInfo    推送消息内容
@@ -248,6 +264,8 @@ RCT_EXPORT_MODULE();
     dic[@"appId"] = appId;
     dic[@"taskId"] = taskId;
     dic[@"msgId"] = msgId;
+    NSLog(@"GTSDK>>>GeTuiSdkDidReceiveSlience fromGetui:%@ appId:%@ offLine:%@ taskId:%@ msgId:%@ fetchCompletionHandler：%@ userInfo:%@ ", fromGetui ? @"个推消息" : @"APNs消息", appId, offLine ? @"离线" : @"在线", taskId, msgId, completionHandler, userInfo);
+    
     [self getui_sendAppEventWithName:@"GeTuiSdkDidReceiveSlience" body:dic];
     if(completionHandler) {
         // [ 参考代码，开发者注意根据实际需求自行修改 ] 根据APP需要自行修改参数值
@@ -257,6 +275,7 @@ RCT_EXPORT_MODULE();
 
 - (void)GeTuiSdkNotificationCenter:(UNUserNotificationCenter *)center openSettingsForNotification:(UNNotification *)notification {
     // [ 参考代码，开发者注意根据实际需求自行修改 ] 根据APP需要自行修改参数值
+    NSLog(@"GTSDK>>>openSettingsForNotification");
     [self getui_sendAppEventWithName:@"GeTuiSdkOpenSettingsForNotification" body:notification.request.content.userInfo];
 }
 
@@ -267,6 +286,7 @@ RCT_EXPORT_MODULE();
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
     dic[@"messageId"] = messageId;
     dic[@"isSuccess"] = @(isSuccess);
+    NSLog(@"GTSDK>>>GeTuiSdkDidSendMessage msgId:%@ isSuccess:%@ error:%@", messageId, @(isSuccess), aError);
     [self getui_sendAppEventWithName:@"GeTuiSdkDidSendMessage" body:dic];
 }
 
@@ -275,6 +295,7 @@ RCT_EXPORT_MODULE();
 
 /// [ GTSDK回调 ] SDK设置推送模式回调
 - (void)GeTuiSdkDidSetPushMode:(BOOL)isModeOff error:(NSError *)error {
+    NSLog(@"GTSDK>>>GeTuiSdkDidSetPushMode %@ error:%@",@(isModeOff), error);
     [self getui_sendAppEventWithName:@"GeTuiSdkDidSetPushMode" body:@(isModeOff)];
 }
 
@@ -298,6 +319,7 @@ RCT_EXPORT_MODULE();
     dic[@"action"] = action;
     dic[@"isSuccess"] = @(isSuccess);
     dic[@"aSn"] = aSn;
+    NSLog(@"GTSDK>>>GeTuiSdkDidAliasAction action:%@ isSuccess:%@ sn:%@ error:%@", action, @(isSuccess), aSn, aError);
     [self getui_sendAppEventWithName:@"GeTuiSdkDidAlias" body:dic];
 }
 
@@ -325,6 +347,7 @@ RCT_EXPORT_MODULE();
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
     dic[@"sequenceNum"] = sequenceNum;
     dic[@"isSuccess"] = @(isSuccess);
+    NSLog(@"GTSDK>>>GeTuiSdkDidSetTagsAction sn:%@ isSuccess:%@ error:%@",sequenceNum, @(isSuccess), aError);
     [self getui_sendAppEventWithName:@"GeTuiSdkDidSetTags" body:dic];
 }
 
@@ -339,6 +362,7 @@ RCT_EXPORT_MODULE();
     dic[@"tags"] = aTags;
     dic[@"sn"] = aSn;
     dic[@"error"] = aError.userInfo;
+    NSLog(@"GTSDK>>>GetuiSdkDidQueryTag tags:%@ sn:%@ error:%@",aTags, aSn, aError);
     [self getui_sendAppEventWithName:@"GetuiSdkDidQueryTag" body:dic];
 }
 
@@ -350,6 +374,7 @@ RCT_EXPORT_MODULE();
  */
 RCT_EXPORT_METHOD(destroy)
 {
+    NSLog(@"GTSDK>>>destroy");
     [GeTuiSdk destroy];
 }
 
@@ -358,6 +383,7 @@ RCT_EXPORT_METHOD(destroy)
  */
 RCT_EXPORT_METHOD(resume)
 {
+    NSLog(@"GTSDK>>>resume");
     [GeTuiSdk resume];
 }
 
@@ -368,6 +394,7 @@ RCT_EXPORT_METHOD(resume)
  */
 RCT_EXPORT_METHOD(version:(RCTResponseSenderBlock)callback)
 {
+    NSLog(@"GTSDK>>>version");
     callback(@[[GeTuiSdk version]]);
 }
 
@@ -378,6 +405,7 @@ RCT_EXPORT_METHOD(version:(RCTResponseSenderBlock)callback)
  */
 RCT_EXPORT_METHOD(clientId:(RCTResponseSenderBlock)callback)
 {
+    NSLog(@"GTSDK>>>clientId");
     NSString *clientId = [GeTuiSdk clientId]?:@"";
     callback(@[clientId]);
 }
@@ -389,6 +417,7 @@ RCT_EXPORT_METHOD(clientId:(RCTResponseSenderBlock)callback)
  */
 RCT_EXPORT_METHOD(status:(RCTResponseSenderBlock)callback)
 {
+    NSLog(@"GTSDK>>>status");
     callback(@[[NSString stringWithFormat:@"%lu",(unsigned long)[GeTuiSdk status]]]);
 }
 
@@ -403,6 +432,7 @@ RCT_EXPORT_METHOD(status:(RCTResponseSenderBlock)callback)
  */
 RCT_EXPORT_METHOD(registerDeviceToken:(NSString *)deviceToken)
 {
+    NSLog(@"GTSDK>>>registerDeviceToken %@", deviceToken);
     [GeTuiSdk registerDeviceToken:deviceToken];
 }
 
@@ -417,6 +447,7 @@ RCT_EXPORT_METHOD(registerDeviceToken:(NSString *)deviceToken)
  */
 RCT_EXPORT_METHOD(registerDeviceTokenData:(NSData *)deviceToken)
 {
+    NSLog(@"GTSDK>>>registerDeviceTokenData");
     [GeTuiSdk registerDeviceTokenData:deviceToken];
 }
 
@@ -430,6 +461,7 @@ RCT_EXPORT_METHOD(registerDeviceTokenData:(NSData *)deviceToken)
  */
 RCT_EXPORT_METHOD(registerVoipToken:(NSString *)voipToken)
 {
+    NSLog(@"GTSDK>>>registerVoipToken");
     [GeTuiSdk registerVoipToken:voipToken];
 }
 
@@ -444,6 +476,7 @@ RCT_EXPORT_METHOD(registerVoipToken:(NSString *)voipToken)
  */
 RCT_EXPORT_METHOD(registerVoipTokenCredentials:(NSData *)voipToken)
 {
+    NSLog(@"GTSDK>>>registerVoipTokenCredentials voipToken:%@",voipToken);
     [GeTuiSdk registerVoipTokenCredentials:voipToken];
 }
 
@@ -458,6 +491,7 @@ RCT_EXPORT_METHOD(registerVoipTokenCredentials:(NSData *)voipToken)
  */
 RCT_EXPORT_METHOD(setTag:(NSArray *)tags)
 {
+    NSLog(@"GTSDK>>>setTag %@",tags);
     [GeTuiSdk setTags:tags];
 }
 
@@ -471,6 +505,7 @@ RCT_EXPORT_METHOD(setTag:(NSArray *)tags)
  */
 RCT_EXPORT_METHOD(setTags:(NSArray *)tags andSequenceNum:(NSString *)aSn)
 {
+    NSLog(@"GTSDK>>>setTags %@ %@",tags,aSn);
     [GeTuiSdk setTags:tags andSequenceNum:aSn];
 }
 
@@ -484,6 +519,7 @@ RCT_EXPORT_METHOD(setTags:(NSArray *)tags andSequenceNum:(NSString *)aSn)
  */
 RCT_EXPORT_METHOD(setBadge:(NSUInteger)value)
 {
+    NSLog(@"GTSDK>>>setBadge %@",@(value));
     [GeTuiSdk setBadge:value];
 }
 
@@ -495,6 +531,7 @@ RCT_EXPORT_METHOD(setBadge:(NSUInteger)value)
  */
 RCT_EXPORT_METHOD(resetBadge)
 {
+    NSLog(@"GTSDK>>>resetBadge");
     [GeTuiSdk resetBadge];
 }
 
@@ -508,6 +545,7 @@ RCT_EXPORT_METHOD(resetBadge)
  */
 RCT_EXPORT_METHOD(setChannelId:(NSString *)aChannelId)
 {
+    NSLog(@"GTSDK>>>setChannelId %@",aChannelId);
     [GeTuiSdk setChannelId:aChannelId];
 }
 
@@ -521,6 +559,7 @@ RCT_EXPORT_METHOD(setChannelId:(NSString *)aChannelId)
  */
 RCT_EXPORT_METHOD(setPushModeForOff:(BOOL)isValue)
 {
+    NSLog(@"GTSDK>>>setPushModeForOff %@",@(isValue));
     [GeTuiSdk setPushModeForOff:isValue];
 }
 
@@ -529,6 +568,7 @@ RCT_EXPORT_METHOD(setPushModeForOff:(BOOL)isValue)
 */
 RCT_EXPORT_METHOD(turnOnPush)
 {
+    NSLog(@"GTSDK>>>turnOnPush");
     [GeTuiSdk setPushModeForOff:NO];
 }
 
@@ -537,6 +577,7 @@ RCT_EXPORT_METHOD(turnOnPush)
 */
 RCT_EXPORT_METHOD(turnOffPush)
 {
+    NSLog(@"GTSDK>>>turnOffPush");
     [GeTuiSdk setPushModeForOff:YES];
 }
 
@@ -548,6 +589,7 @@ RCT_EXPORT_METHOD(turnOffPush)
  */
 RCT_EXPORT_METHOD(bindAlias:(NSString *)alias andSequenceNum:(NSString *)aSn)
 {
+    NSLog(@"GTSDK>>>bindAlias %@, %@",alias, aSn);
     [GeTuiSdk bindAlias:alias andSequenceNum:aSn];
 }
 
@@ -559,6 +601,7 @@ RCT_EXPORT_METHOD(bindAlias:(NSString *)alias andSequenceNum:(NSString *)aSn)
  */
 RCT_EXPORT_METHOD(unbindAlias:(NSString *)alias andSequenceNum:(NSString *)aSn)
 {
+    NSLog(@"GTSDK>>>unbindAlias %@ %@",alias, aSn);
     [GeTuiSdk unbindAlias:alias andSequenceNum:aSn andIsSelf:YES];
 }
 
@@ -572,10 +615,11 @@ RCT_EXPORT_METHOD(unbindAlias:(NSString *)alias andSequenceNum:(NSString *)aSn)
  *
  *  @return 消息的msgId
  */
-RCT_EXPORT_METHOD(sendMessage:(NSData *)body error:(NSError **)error)
-{
-    [GeTuiSdk sendMessage:body error:error];
-}
+//RCT_EXPORT_METHOD(sendMessage:(NSData *)body error:(NSError **)error)
+//{
+//    NSLog(@"GTSDK>>>sendMessage %@", body);
+//    [GeTuiSdk sendMessage:body error:error];
+//}
 
 /**
  *  SDK发送上行消息结果
@@ -584,9 +628,11 @@ RCT_EXPORT_METHOD(sendMessage:(NSData *)body error:(NSError **)error)
  *
  *  @return 消息的msgId
  */
-RCT_EXPORT_METHOD(sendMessage:(NSData *)body)
+RCT_EXPORT_METHOD(sendMessage:(NSData *)body callback:(RCTResponseSenderBlock)callback)
 {
-    [GeTuiSdk sendMessage:body];
+    NSLog(@"GTSDK>>>sendMessage %@", body);
+    NSString *msgId = [GeTuiSdk sendMessage:body];
+    callback(@[msgId?:@""]);
 }
 
 /**
@@ -601,6 +647,7 @@ RCT_EXPORT_METHOD(sendMessage:(NSData *)body)
  */
 RCT_EXPORT_METHOD(sendFeedbackMessage:(NSInteger)actionId andTaskId:(NSString *)taskId andMsgId:(NSString *)msgId callback:(RCTResponseSenderBlock)callback)
 {
+    NSLog(@"GTSDK>>>sendFeedbackMessage actionId:%@ taskId:%@ msgId:%@",@(actionId), taskId, msgId);
     BOOL isSuccess = [GeTuiSdk sendFeedbackMessage:actionId andTaskId:taskId andMsgId:msgId];
     callback(@[isSuccess?@"true":@"false"]);
 }
@@ -616,6 +663,7 @@ RCT_EXPORT_METHOD(sendFeedbackMessage:(NSInteger)actionId andTaskId:(NSString *)
  */
 RCT_EXPORT_METHOD(runBackgroundEnable:(BOOL)isEnable)
 {
+    NSLog(@"GTSDK>>>runBackgroundEnable %@", @(isEnable));
     [GeTuiSdk runBackgroundEnable:isEnable];
 }
 
@@ -628,6 +676,7 @@ RCT_EXPORT_METHOD(runBackgroundEnable:(BOOL)isEnable)
  */
 RCT_EXPORT_METHOD(lbsLocationEnable:(BOOL)isEnable andUserVerify:(BOOL)isVerify)
 {
+    NSLog(@"GTSDK>>>lbsLocationEnable %@ %@",@(isEnable), @(isVerify));
     [GeTuiSdk lbsLocationEnable:isEnable andUserVerify:isVerify];
 }
 
@@ -636,6 +685,7 @@ RCT_EXPORT_METHOD(lbsLocationEnable:(BOOL)isEnable andUserVerify:(BOOL)isVerify)
  */
 RCT_EXPORT_METHOD(clearAllNotificationForNotificationBar)
 {
+    NSLog(@"GTSDK>>>clearAllNotificationForNotificationBar");
     [GeTuiSdk clearAllNotificationForNotificationBar];
 }
 
@@ -647,6 +697,7 @@ RCT_EXPORT_METHOD(clearAllNotificationForNotificationBar)
 
 - (void)pushRegistry:(PKPushRegistry *)registry didUpdatePushCredentials:(PKPushCredentials *)credentials forType:(NSString *)type {
     // [ GTSDK ]：（新版）向个推服务器注册 VoipToken
+    NSLog(@"GTSDK>>>voip didUpdatePushCredentials");
     [GeTuiSdk registerVoipTokenCredentials:credentials.token];
             
     // [ 测试代码 ] 日志打印DeviceToken
@@ -656,6 +707,7 @@ RCT_EXPORT_METHOD(clearAllNotificationForNotificationBar)
 /** 接收VOIP推送中的payload进行业务逻辑处理（一般在这里调起本地通知实现连续响铃、接收视频呼叫请求等操作），并执行个推VOIP回执统计 */
 - (void)pushRegistry:(PKPushRegistry *)registry didReceiveIncomingPushWithPayload:(PKPushPayload *)payload forType:(NSString *)type {
     //个推VOIP回执统计
+    NSLog(@"GTSDK>>>didReceiveIncomingPushWithPayload");
     [GeTuiSdk handleVoipNotification:payload.dictionaryPayload];
     
     //TODO:接受 VoIP 推送中的 payload 内容进行具体业务逻辑处理
