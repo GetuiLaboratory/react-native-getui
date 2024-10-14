@@ -6,8 +6,12 @@ react-native-getui 是个推官方开发的 React Native 插件，使用该插�
 
 # 环境
 
-- React Native Version ： 0.42(demo中使用的rn版本)，理论上可以任意使用其他任何RN版本
-- 当前react-native-getui版本 1.1.35 , GetuiSdk 版本 4.3.5.9
+- React Native Version 
+"react": "18.3.1",
+"react-native": "0.75.4",
+(demo中使用的rn版本)，理论上可以任意使用其他任何RN版本
+
+- 当前react-native-getui版本 1.1.46
 - taobao的源和npm源版本可能存在不一致
 
 # 安装
@@ -17,23 +21,27 @@ react-native-getui 是个推官方开发的 React Native 插件，使用该插�
 在您的项目根目录下执行
 
 ````
+step1:添加npm包依赖
 npm install react-native-getui -save
-````
-````
+
+
+step2:iOS, pod项目, 链接iOS原生代码
+npx pod-install
+
+
+step2:iOS, 非pod项目, 链接
 react-native link
-````
-````
+
+
+step3: 自动添加GTSDK配置代码
 npm run GetuiConfigure <yourAppId> <yourAppKey> <yourAppSecret>  <yourModuleName>
+
 // yourModuleName 指的是你的 Android 项目中的模块名称（对 iOS 没有影响，不填写的话默认值为 app）
 // 举个列子：
 npm run GetuiConfigure DI1jwW3FtZ6kGDeY5dk0Y9 DQCk2V8Jev9hqhWDU94PF9 Rtyp5trKUt8HSyzD8zRXX7 app
 
 ````
 
-```
-// 链接iOS原生代码
-npx pod-install
-```
 
 (如果是原生应用集成react-native)使用CocoaPods安装
 
@@ -154,54 +162,89 @@ $(SRCROOT)/../node_modules/react-native-getui/ios/RCTGetuiModule
 
 ### 订阅消息
 
-1.payload透传消息回调
-
-2.cid 拿到clientId的回调
-
-3.notificationArrived通知消息到达的回调
-
-4.notificationClicked通知消息点击的回调
+订阅来自GTSDK的回调，方式有两种，分别如下：
 
 ````javascript
+
+//订阅方式一：
+import { NativeEventEmitter, NativeModules } from 'react-native';
+const { GetuiModule } = NativeModules;
+const GetuiEmitter = new NativeEventEmitter(NativeModules.GetuiModule);
+const subscription = GetuiEmitter.addListener(
+  'GeTuiSdkDidRegisterClient',
+  (message) => {
+    console.log("receive cid " + message)
+  }
+);
+// 别忘了取消订阅，通常在componentWillUnmount生命周期方法中实现。
+// subscription.remove();
+
+
+// 监听方式二：
 var { NativeAppEventEmitter } = require('react-native');
+let names: string[] = [
+  "GeTuiSdkDidRegisterClient",
+  "GeTuiSDkDidNotifySdkState",
+  "GeTuiSdkDidOccurError",
+  "GetuiSdkGrantAuthorization",
+  "GeTuiSdkwillPresentNotification",
+  "GeTuiSdkDidReceiveNotification",
+  "GeTuiSdkDidReceiveSlience",
+  "GeTuiSdkOpenSettingsForNotification",
+  "GeTuiSdkDidSendMessage",
+  "GeTuiSdkDidSetPushMode",
+  "GeTuiSdkDidAlias",
+  "GeTuiSdkDidSetTags",
+  "GetuiSdkDidQueryTag",
+  "voipPushPayload"];
 
-var receiveRemoteNotificationSub = NativeAppEventEmitter.addListener(
-    'receiveRemoteNotification',
-    (notification) => {
-        switch (notification.type) {
-            case "cid":
-                Alert.alert('初始化获取到cid',JSON.stringify(notification))
-                break;
-            case 'payload':
-                Alert.alert('payload 消息通知',JSON.stringify(notification))
-                break
-            case 'cmd':
-                Alert.alert('cmd 消息通知', 'cmd action = ' + notification.cmd)
-                break
-            case 'notificationArrived':
-                Alert.alert('notificationArrived 通知到达',JSON.stringify(notification))
-                break
-            case 'notificationClicked':
-                Alert.alert('notificationArrived 通知点击',JSON.stringify(notification))
-                break
-            default:
-                break
-        }
-    }
-);
+// 监听个推回调
+const listenerCallBack = (eventName: string, message: any) => {
+  console.log('Event Received', `Event: ${eventName}\nMessage: ${JSON.stringify(message)}`);
+  Alert.alert('Event Received', `Event: ${eventName}\nMessage: ${JSON.stringify(message)}`);
+  switch (eventName) {
+    case 'GeTuiSdkDidRegisterClient':
+      console.log("收到cid回调", message)
+      break;
+    case 'GeTuiSdkwillPresentNotification':
+      console.log("收到通知展示")
+      break;
+    case 'GeTuiSdkDidReceiveNotification':
+      console.log("收到通知点击")
+      break;
+    case 'GeTuiSdkDidReceiveSlience':
+      console.log("收到透传")
+      break;
+    //...开发者自行处理
+  }
+};
 
-var clickRemoteNotificationSub = NativeAppEventEmitter.addListener(
-    'clickRemoteNotification',
-    (notification) => {
-        Alert.alert('点击通知',JSON.stringify(notification))
-    }
-);
 ````
+
+
+
+## iOS注意事项
+
+项目需要打开通知能力，才能获取DeviceToken用于通知展示点击等业务。Xcode打开工程,Signing & Capabilities中添加Push Notification和Background Modes如下：
+
+<img src="./pics/xcode1.png" width="800px"/>
+
+
+
+
+
+上述GetuiConfigure指令会在AppDelegate中插入初始化GTSDK代码，具体如下：
+
+<img src="./pics/xcode2.png" width="800px"/>
+
+
+
+<img src="./pics/xcode3.png" width="800px"/>
+
+
 
 # 示例
 
-* 我们提供了一个demo供开发者参考对照 [demo](https://github.com/GetuiLaboratory/react-native-getui/tree/master/example/pushDemo)
-
-
 * 新版本插件[new demo](https://github.com/GetuiLaboratory/react-native-getui/tree/master/example/pushDemo_new)
 
+* iOS 最新[参考Demo](https://github.com/GetuiLaboratory/react-native-getui/tree/master/example/pushDemo_2024)
