@@ -10,7 +10,7 @@ const GetuiModule = NativeModules.GetuiModule;
  * @param  {string} message
  */
 const log = (message) => {
-		console.log(`[Getui] ${message}`);
+	console.log(`[Getui] ${message}`);
 }
 
 export default class Getui {
