@@ -69,7 +69,9 @@ RCT_EXPORT_MODULE();
              @"GeTuiSdkDidAlias",
              @"GeTuiSdkDidSetTags",
              @"GetuiSdkDidQueryTag",
-             @"voipPushPayload"];
+             @"voipPushPayload",
+             @"GeTuiSdkDidRegisterLiveActivity",
+             @"GeTuiSdkDidRegisterPushToStartToken"];
 }
 
 - (void)getui_sendAppEventWithName:(NSString *)name body:(id)body {
@@ -279,6 +281,17 @@ RCT_EXPORT_MODULE();
     [self getui_sendAppEventWithName:@"GeTuiSdkOpenSettingsForNotification" body:notification.request.content.userInfo];
 }
 
+- (void)GeTuiSdkDidRegisterLiveActivity:(NSString *)sequenceNum result:(BOOL)isSuccess error:(NSError *)error {
+    NSLog(@"GTSDK>>>GeTuiSdkDidRegisterLiveActivity %@ %@", sequenceNum, @(isSuccess));
+    
+    [self getui_sendAppEventWithName:@"GeTuiSdkDidRegisterLiveActivity" body:@{@"result":@(isSuccess),@"sn":sequenceNum}];
+}
+
+- (void)GeTuiSdkDidRegisterPushToStartToken:(NSString *)sequenceNum result:(BOOL)isSuccess error:(NSError *)error {
+    NSLog(@"GTSDK>>>GeTuiSdkDidRegisterPushToStartToken %@ %@", sequenceNum, @(isSuccess));
+    
+    [self getui_sendAppEventWithName:@"GeTuiSdkDidRegisterPushToStartToken" body:@{@"result":@(isSuccess),@"sn":sequenceNum}];
+}
 //MARK: - 发送上行消息
 
 /// [ GTSDK回调 ] SDK收到sendMessage消息回调
@@ -687,6 +700,16 @@ RCT_EXPORT_METHOD(clearAllNotificationForNotificationBar)
 {
     NSLog(@"GTSDK>>>clearAllNotificationForNotificationBar");
     [GeTuiSdk clearAllNotificationForNotificationBar];
+}
+
+RCT_EXPORT_METHOD(registerLiveActivity:(NSString *)liveActivityId token:(NSString*)token sn:(NSString*)sn callback:(RCTResponseSenderBlock)callback) {
+    NSLog(@"GTSDK>>>registerLiveActivity liveActivityId:%@ token:%@ sn:%@",liveActivityId,token,sn);
+    [GeTuiSdk registerLiveActivity:liveActivityId activityToken:token sequenceNum:sn];
+}
+
+RCT_EXPORT_METHOD(registerPushToStartToken:(NSString *)activityAttributes pushToStartToken:(NSString*)pushToStartToken sn:(NSString*)sn callback:(RCTResponseSenderBlock)callback) {
+    NSLog(@"GTSDK>>>registerPushToStartToken activityAttributes:%@ pushToStartToken:%@ sn:%@",activityAttributes,pushToStartToken,sn);
+    [GeTuiSdk registerLiveActivity:activityAttributes pushToStartToken:pushToStartToken sequenceNum:sn];
 }
 
 #pragma mark - VOIP related

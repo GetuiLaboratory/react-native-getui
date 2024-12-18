@@ -235,7 +235,21 @@ export default class Getui {
 	static voipRegistration() {
 		GetuiModule.voipRegistration();
 	}
+	static registerLiveActivity(liveActivityId, token, sn, cb) {
+		GetuiModule.registerLiveActivity(liveActivityId, token, sn, (param)=>{
+			cb(param)
+		});
+	}
+	static registerPushToStartToken(activityAttributes, pushToStartToken, sn, cb) {
+		GetuiModule.registerPushToStartToken(activityAttributes, pushToStartToken, sn, (param)=>{
+			cb(param)
+		});
+	}
+	// static registerLiveActivity(liveActivityId: string, token: string, sn: string, cb: (param: boolean)=> void): string;
 
+	// static registerPushToStartToken(activityAttributes: string, pushToStartToken: string, sn: string, cb: (param: boolean)=> void): string;
+
+	
 	/*****************  deprecated ******************/
 	/*
 	*  React-native 只能 callback 一次，因此移除该形式，改用订阅模式监听消息

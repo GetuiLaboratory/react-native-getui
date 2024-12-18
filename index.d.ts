@@ -137,7 +137,7 @@ export default class Getui {
 	 *
 	 * @return 消息的msgId
 	 */
-	static sendMessage(body: string, cb: (param: boolean)): string;
+	static sendMessage(body: string, cb: (param: boolean) => void): string;
 
 	/**
 	 * 上行第三方自定义回执actionid
@@ -151,4 +151,24 @@ export default class Getui {
 	 * 该方法需要在回调方法“GeTuiSdkDidReceivePayload:andTaskId:andMessageId:andOffLine:fromApplication:”使用
 	 */
 	static sendFeedbackMessage(actionId: number, taskId: string, msgId: string, cb: (param: boolean) => void): void;
+
+	/**
+	 * 注册实时活动token（灵动岛）
+	 * @param liveActivityId  业务id，用于绑定token的业务关系
+	 * @param token liveActivity推送时使用的pushToken
+	 * @param sn 请求序列码, 不为nil
+	 * @param cb 回调函数，接收提交结果
+	 */
+	static registerLiveActivity(liveActivityId: string, token: string, sn: string, cb: (param: boolean) => void): string;
+
+	/**
+	 * 注册实时活动PushToStartToken（灵动岛）
+	 * @param activityAttributes  实时活动的属性
+	 * @param pushToStartToken 推送时使用的pushToStartToken
+	 * @param sn 请求序列码, 不为nil
+	 * @param cb 回调函数，接收提交结果
+	 */
+	static registerPushToStartToken(activityAttributes: string, pushToStartToken: string, sn: string, cb: (param: boolean) => void): string;
+
+
 }
