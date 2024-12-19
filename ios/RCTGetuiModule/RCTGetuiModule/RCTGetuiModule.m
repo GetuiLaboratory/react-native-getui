@@ -85,7 +85,8 @@ RCT_EXPORT_MODULE();
     if (self.bridge) {
         [self.bridge.eventDispatcher sendAppEventWithName:name body:body];
     } else {
-        NSLog(@"GTSDK>>>bridge is nil!, plz check");
+        NSLog(@"GTSDK>>>bridge is nil!");
+        [self sendEventWithName:name body:body];
     }
 }
 
