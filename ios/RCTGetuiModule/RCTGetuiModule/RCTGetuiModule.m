@@ -82,15 +82,21 @@ RCT_EXPORT_MODULE();
             self.bridge = [delegate bridge];
         }
     }
+  
     if (!self.bridge &&
-        [[RCTGetuiModule sharedGetuiModule] respondsToSelector:@selector(bridge)]) {
+        [UIApplication sharedApplication].delegate &&
+        [UIApplication sharedApplication].delegate.window &&
+        [UIApplication sharedApplication].delegate.window.rootViewController.view &&
+        [[UIApplication sharedApplication].delegate.window.rootViewController.view isKindOfClass:[RCTRootView class]]) {
+        RCTRootView *v = (RCTRootView *)[UIApplication sharedApplication].delegate.window.rootViewController.view;
         /*
-         根据客户反馈，在下面环境时，self.bridge为nil。（TODO: 暂无环境可以测试这段代码,需要开发者配合测试）
+         根据客户反馈，在下面环境时，self.bridge为nil。
          "react": "16.13.1",
          "react-native": "0.63.5",
          */
-        NSLog(@"GTSDK>>>fill back getui bridge %@", [RCTGetuiModule sharedGetuiModule].bridge);
-        self.bridge = [RCTGetuiModule sharedGetuiModule].bridge;
+        NSLog(@"GTSDK>>>fill back appdelegate view bridge %@", v.bridge);
+        NSLog(@"%@",v.bridge);
+        self.bridge = v.bridge;
     }
     
     if (self.bridge) {
