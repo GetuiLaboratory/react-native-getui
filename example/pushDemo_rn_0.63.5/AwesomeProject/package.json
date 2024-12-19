@@ -1,0 +1,28 @@
+{
+  "name": "AwesomeProject",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "GetuiConfigure": "node node_modules/react-native-getui/GetuiConfiguration.js",
+    "GetuiConfigure": "node node_modules/react-native-getui/GetuiConfiguration.js",
+    "android": "react-native run-android",
+    "ios": "react-native run-ios",
+    "start": "react-native start",
+    "test": "jest",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "react": "16.13.1",
+    "react-native": "0.63.5",
+    "react-native-getui": "^1.1.49"
+  },
+  "devDependencies": {
+
+  },
+  "jest": {
+    "preset": "react-native"
+  },
+  "engines": {
+    "node": ">=16"
+  }
+}
