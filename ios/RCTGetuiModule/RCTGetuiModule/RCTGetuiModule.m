@@ -78,15 +78,26 @@ RCT_EXPORT_MODULE();
     if (!self.bridge) {
         id delegate = [UIApplication sharedApplication].delegate;
         if ([delegate respondsToSelector:@selector(bridge)] && [delegate bridge]) {
-            NSLog(@"GTSDK>>>fill back bridge %@", [delegate bridge]);
+            NSLog(@"GTSDK>>>fill back appdelegate bridge %@", [delegate bridge]);
             self.bridge = [delegate bridge];
         }
     }
+    if (!self.bridge &&
+        [[RCTGetuiModule sharedGetuiModule] respondsToSelector:@selector(bridge)]) {
+        /*
+         根据客户反馈，在下面环境时，self.bridge为nil。（TODO: 暂无环境可以测试这段代码,需要开发者配合测试）
+         "react": "16.13.1",
+         "react-native": "0.63.5",
+         */
+        NSLog(@"GTSDK>>>fill back getui bridge %@", [RCTGetuiModule sharedGetuiModule].bridge);
+        self.bridge = [RCTGetuiModule sharedGetuiModule].bridge;
+    }
+    
     if (self.bridge) {
         [self.bridge.eventDispatcher sendAppEventWithName:name body:body];
     } else {
         NSLog(@"GTSDK>>>bridge is nil!");
-        [self sendEventWithName:name body:body];
+        //[self sendEventWithName:name body:body];//crash
     }
 }
 
@@ -141,10 +152,10 @@ RCT_EXPORT_MODULE();
 }
 
 - (void)jsDidLoadNoti {
-    self.isJsLoad = YES;
     dispatch_async(self.methodQueue, ^{
         [self performCachedEvents];
     });
+    self.isJsLoad = YES;
 }
 
 - (void)performCachedEvents {

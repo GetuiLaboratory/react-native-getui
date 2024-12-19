@@ -9,4 +9,4 @@ build-res/
 *.DS_Store
 *.log
 
-example/pushDemo/ios/Pods/
+example/pushDemo
