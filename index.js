@@ -15,36 +15,37 @@ const log = (message) => {
 
 export default class Getui {
 	//监听消息通知
-			// var { NativeAppEventEmitter } = require('react-native');
-			// var receiveRemoteNotificationSub = NativeAppEventEmitter.addListener(
-			// 	 'receiveRemoteNotification',
-			// 	 (notification) => {
-			// 		 //消息类型分为 APNs 和 payload 透传消息，具体的消息体格式会有差异
-			// 		 switch (notification.type) {
-			// 				 case "apns":
-			// 						 Alert.alert('APNs 消息通知',JSON.stringify(notification))
-			// 						 break;
-			// 				 case "payload":
-			// 						 Alert.alert('payload 消息通知',JSON.stringify(notification))
-			// 						 break;
-			// 				 default:
-			// 		 }
-			// 	 }
-			//  );
-			//
-			//  var clickRemoteNotificationSub = NativeAppEventEmitter.addListener(
-			// 		 'clickRemoteNotification',
-			// 		 (notification) => {
-			// 				 Alert.alert('点击通知',JSON.stringify(notification))
-			// 		 }
-			//  );
-			//
-			// //记得在 componentWillUnMount 移除监听
-	    //     receiveRemoteNotificationSub.remove()
-	    //     clickRemoteNotificationSub.remove()
+	// var { NativeAppEventEmitter } = require('react-native');
+	// var receiveRemoteNotificationSub = NativeAppEventEmitter.addListener(
+	// 	 'receiveRemoteNotification',
+	// 	 (notification) => {
+	// 		 //消息类型分为 APNs 和 payload 透传消息，具体的消息体格式会有差异
+	// 		 switch (notification.type) {
+	// 				 case "apns":
+	// 						 Alert.alert('APNs 消息通知',JSON.stringify(notification))
+	// 						 break;
+	// 				 case "payload":
+	// 						 Alert.alert('payload 消息通知',JSON.stringify(notification))
+	// 						 break;
+	// 				 default:
+	// 		 }
+	// 	 }
+	//  );
+	//
+	//  var clickRemoteNotificationSub = NativeAppEventEmitter.addListener(
+	// 		 'clickRemoteNotification',
+	// 		 (notification) => {
+	// 				 Alert.alert('点击通知',JSON.stringify(notification))
+	// 		 }
+	//  );
+	//
+
+	// //记得在 componentWillUnMount 移除监听
+	//     receiveRemoteNotificationSub.remove()
+	//     clickRemoteNotificationSub.remove()
 
     /**
-	 * 初始化推送服务
+	 * 初始化推送服务 只有Android,  IOS在AppDelegate中初始化
      */
     static initPush(){
     	GetuiModule.initPush();

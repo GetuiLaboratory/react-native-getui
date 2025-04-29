@@ -1,78 +1,57 @@
+apply plugin: 'com.android.library'
+
 def safeExtGet(prop, fallback) {
     rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
 }
-buildscript {
-    repositories {
-        jcenter()
-
-    }
-
-    dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.3'
-    }
-}
-
-apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion safeExtGet('compileSdkVersion', 25)
-    buildToolsVersion safeExtGet('buildToolsVersion', '25.0.2')
+    compileSdkVersion safeExtGet('compileSdkVersion', 34)
+
+    namespace 'com.getui.reactnativegetui'
 
     defaultConfig {
-        minSdkVersion safeExtGet('minSdkVersion', 16)
-        targetSdkVersion safeExtGet('targetSdkVersion', 22)
+        minSdkVersion safeExtGet('minSdkVersion', 23)
+        targetSdkVersion safeExtGet('targetSdkVersion', 34)
         versionCode 1
         versionName "1.0"
-
-        lintOptions {
-            abortOnError false
-            warning 'InvalidPackage'
-        }
-
-        ndk {
-            abiFilters "armeabi","armeabi-v7a","arm64-v8a","x86"
-        }
-
-        manifestPlaceholders = [
-                GETUI_APPID    : "",
-
-                MEIZU_APP_ID    : "",
-                MEIZU_APP_KEY   : "",
-
-                HUAWEI_APP_ID   : "",
-
-                XIAOMI_APP_ID   : "",
-                XIAOMI_APP_KEY  : "",
-                
-                VIVO_APP_ID   : "",
-                VIVO_APP_KEY  : "",
-
-                OPPO_APP_KEY    : "",
-                OPPO_APP_SECRET : ""
-        ]
-
     }
-
-
-
 }
 
 repositories {
-    mavenCentral()
+    maven {
+        url "https://mvn.getui.com/nexus/content/repositories/releases/"
+    }
+    maven { url 'https://maven.aliyun.com/repository/google' }
+    maven { url 'https://maven.aliyun.com/repository/public' }
+    mavenLocal()
+    maven {
+        url("$rootDir/../node_modules/jsc-android/dist")
+    }
+    maven {
+        url "https://www.jitpack.io"
+    }
+    maven {
+        url "$rootDir/../node_modules/react-native/android"
+    }
+    maven {
+        url 'https://maven.google.com/'
+        name 'Google'
+    }
+
+    maven {url 'https://developer.huawei.com/repo/'}
 }
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation "com.android.support:support-v4:25+"
     implementation "com.facebook.react:react-native:+"  // From node_modules
 
-    implementation 'com.getui:gtsdk:3.2.13.0'  //个推SDK
-    implementation 'com.getui:gtc:3.1.12.0'    //个推核心组件
 
-    implementation 'com.getui.opt:hwp:3.1.1'   // 华为
-    implementation 'com.getui.opt:xmp:3.3.0'   // 小米
-    implementation 'com.assist-v3:oppo:3.2.0'  // oppo
-    implementation 'com.assist-v3:vivo:3.1.1'  // vivo
-    implementation 'com.getui.opt:mzp:3.2.2'   // 魅族
-    implementation 'com.getui.opt:ups:3.0.3'   // ups，ups目前支持坚果，索尼，海信手机
+//    implementation 'com.getui.opt:hwp:3.1.2'   // 华为
+//    implementation 'com.getui.opt:xmp:3.3.3'   // 小米
+//    implementation 'com.assist-v3:oppo:3.5.0'  // oppo
+//    implementation 'com.assist-v3:vivo:3.2.0'  // vivo
+//    implementation 'com.getui.opt:mzp:3.2.4'   // 魅族
+//    implementation 'com.getui.opt:ups:3.0.3'   // ups，ups目前支持坚果，索尼，海信手机
+//    implementation 'com.getui.opt:honor:3.6.0' // 荣耀
+
 }

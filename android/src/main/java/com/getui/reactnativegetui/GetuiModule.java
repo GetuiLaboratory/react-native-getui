@@ -1,9 +1,6 @@
 package com.getui.reactnativegetui;
 
 import android.content.Context;
-
-import android.support.annotation.Nullable;
-
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -12,6 +9,8 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
+import com.getui.gtc.base.util.CommonUtil;
+import com.igexin.sdk.IUserLoggerInterface;
 import com.igexin.sdk.PushManager;
 import com.igexin.sdk.Tag;
 
@@ -22,7 +21,6 @@ import com.igexin.sdk.Tag;
 
 public class GetuiModule extends ReactContextBaseJavaModule {
 
-    private static final String TAG = "GetuiModule";
 
     public static final String EVENT_RECEIVE_REMOTE_NOTIFICATION = "receiveRemoteNotification";
 
@@ -34,9 +32,9 @@ public class GetuiModule extends ReactContextBaseJavaModule {
 
     private static ReactApplicationContext mRAC;
 
-    private static GetuiModule mModule;
 
-    private static Context mContext;
+
+  
 
     public GetuiModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -56,30 +54,34 @@ public class GetuiModule extends ReactContextBaseJavaModule {
     @Override
     public void initialize() {
         super.initialize();
-        mModule = this;
     }
 
     @Override
     public void onCatalystInstanceDestroy() {
         super.onCatalystInstanceDestroy();
-        mModule = null;
     }
 
     /**
      * 初始化推送服务
      */
-    public static void initPush(Context context){
-        mContext = context;
-        GetuiLogger.log("initPush, mContext = " + mContext);
-        PushManager.getInstance().initialize(mContext, DemoPushService.class);
-        PushManager.getInstance().registerPushIntentService(mContext, PushIntentService.class);
+    @ReactMethod
+    public  void initPush(){
+        PushManager.getInstance().setDebugLogger(mRAC, new IUserLoggerInterface() {
+            @Override
+            public void log(String s) {
+                GetuiLogger.logE(s);
+            }
+        });
+        GetuiLogger.log("initPush, mRAC = " + mRAC);
+        PushManager.getInstance().initialize(mRAC, DemoPushService.class);
+        PushManager.getInstance().registerPushIntentService(mRAC, PushIntentService.class);
     }
     /**
      * Android 不存在 destroy方法，仅停止推送服务
      */
     @ReactMethod
     public void destroy(){
-        // PushManager.getInstance().stopService(mContext);
+        // PushManager.getInstance().stopService(mRAC);
     }
 
     /**
@@ -87,7 +89,7 @@ public class GetuiModule extends ReactContextBaseJavaModule {
      */
     @ReactMethod
     public void stop(){
-        // PushManager.getInstance().stopService(mContext);
+        // PushManager.getInstance().stopService(mRAC);
     }
 
     /**
@@ -95,7 +97,7 @@ public class GetuiModule extends ReactContextBaseJavaModule {
      */
     @ReactMethod
     public void resume(){
-        PushManager.getInstance().turnOnPush(mContext);
+        PushManager.getInstance().turnOnPush(mRAC);
     }
 
     /**
@@ -103,7 +105,7 @@ public class GetuiModule extends ReactContextBaseJavaModule {
      */
     @ReactMethod
     public void turnOnPush(){
-        PushManager.getInstance().turnOnPush(mContext);
+        PushManager.getInstance().turnOnPush(mRAC);
     }
 
     /**
@@ -111,7 +113,7 @@ public class GetuiModule extends ReactContextBaseJavaModule {
      */
     @ReactMethod
     public void turnOffPush(){
-        PushManager.getInstance().turnOffPush(mContext);
+        PushManager.getInstance().turnOffPush(mRAC);
     }
 
     /**
@@ -121,7 +123,7 @@ public class GetuiModule extends ReactContextBaseJavaModule {
      */
     @ReactMethod
     public void clientId(Callback callback){
-        String clientId = PushManager.getInstance().getClientid(mContext);
+        String clientId = PushManager.getInstance().getClientid(mRAC);
         GetuiLogger.log("clientId = " + clientId);
         callback.invoke(clientId);
     }
@@ -133,7 +135,7 @@ public class GetuiModule extends ReactContextBaseJavaModule {
      */
     @ReactMethod
     public void status(Callback callback){
-        boolean isPushTurnOn = PushManager.getInstance().isPushTurnedOn(mContext);
+        boolean isPushTurnOn = PushManager.getInstance().isPushTurnedOn(mRAC);
         GetuiLogger.log("isPushTurnOn = " + isPushTurnOn);
         callback.invoke(isPushTurnOn ? "1" : "2" );
     }
@@ -145,7 +147,7 @@ public class GetuiModule extends ReactContextBaseJavaModule {
      */
     @ReactMethod
     public void version(Callback callback){
-        String version = PushManager.getInstance().getVersion(mContext);
+        String version = PushManager.getInstance().getVersion(mRAC);
         GetuiLogger.log("version = " + version);
         callback.invoke(version);
     }
@@ -206,7 +208,7 @@ public class GetuiModule extends ReactContextBaseJavaModule {
      */
     @ReactMethod
     public void bindAlias(String alias, String aSn){
-        PushManager.getInstance().bindAlias(mContext, alias);
+        PushManager.getInstance().bindAlias(mRAC, alias);
     }
 
     /**
@@ -217,7 +219,7 @@ public class GetuiModule extends ReactContextBaseJavaModule {
      */
     @ReactMethod
     public void unbindAlias(String alias, String aSn){
-        PushManager.getInstance().unBindAlias(mContext, alias, false);
+        PushManager.getInstance().unBindAlias(mRAC, alias, false);
     }
 
     /**
@@ -238,7 +240,7 @@ public class GetuiModule extends ReactContextBaseJavaModule {
             tagArray[i] = tag;
         }
 
-        PushManager.getInstance().setTag(mContext, tagArray, "setTag");
+        PushManager.getInstance().setTag(mRAC, tagArray, "setTag");
     }
 
     /**
@@ -259,7 +261,7 @@ public class GetuiModule extends ReactContextBaseJavaModule {
      */
     @ReactMethod
     public void setBadge(int value){
-        // Empty
+        PushManager.getInstance().setBadgeNum(mRAC,value);
     }
 
     /**
@@ -269,7 +271,7 @@ public class GetuiModule extends ReactContextBaseJavaModule {
      */
     @ReactMethod
     public void resetBadge(int badge){
-        //Empty
+        PushManager.getInstance().setBadgeNum(mRAC,badge);
     }
 
 
@@ -296,7 +298,7 @@ public class GetuiModule extends ReactContextBaseJavaModule {
      */
     @ReactMethod
     public void sendFeedbackMessage(int actionId, String taskId, String msgId, Callback callback){
-        callback.invoke(PushManager.getInstance().sendFeedbackMessage(mContext, taskId, msgId, actionId));
+        callback.invoke(PushManager.getInstance().sendFeedbackMessage(mRAC, taskId, msgId, actionId));
     }
 
     /**
@@ -307,7 +309,7 @@ public class GetuiModule extends ReactContextBaseJavaModule {
      */
     @ReactMethod
     public void sendSilentTime(int beginHour, int duration, Callback callback){
-        callback.invoke(PushManager.getInstance().setSilentTime(mContext, beginHour, duration));
+        callback.invoke(PushManager.getInstance().setSilentTime(mRAC, beginHour, duration));
     }
 
 
@@ -317,7 +319,7 @@ public class GetuiModule extends ReactContextBaseJavaModule {
      */
     @ReactMethod
     public void setSocketTimeout(int times){
-        PushManager.getInstance().setSocketTimeout(mContext, times);
+        PushManager.getInstance().setSocketTimeout(mRAC, times);
     }
 
     /**
@@ -337,7 +339,7 @@ public class GetuiModule extends ReactContextBaseJavaModule {
      * @param eventName
      * @param params
      */
-    public static void sendEvent(String eventName, @Nullable WritableMap params){
+    public static void sendEvent(String eventName,  WritableMap params){
         mRAC.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
                 .emit(eventName, params);
     }

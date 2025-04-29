@@ -17,4 +17,10 @@ public class GetuiLogger {
             Log.d(TAG, message);
         }
     }
+    public static void logE(String message){
+        if (ENABLE){
+            Log.e(TAG, message);
+        }
+    }
+
 }

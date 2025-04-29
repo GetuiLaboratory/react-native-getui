@@ -1,5 +1,0 @@
-rootProject.name = 'AwesomeProject'
-include ':react-native-getui'
-project(':react-native-getui').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-getui/android')
-
-include ':app'

@@ -1,6 +1,29 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.getui.reactnativegetui">
 
+    <!-- 个推SDK权限配置开始 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <!-- oppo android12  需要 alarm权限 -->
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="getui.permission.GetuiService.${applicationId}" />
+    <!-- vivo角标 -->
+    <uses-permission android:name="com.vivo.notification.permission.BADGE_ICON" />
+
+    <permission
+        android:name="getui.permission.GetuiService.${applicationId}"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+
+
     <application>
 
         <!-- 用户自定义服务继承自GTIntentService,作为SDK与APP桥梁服务,用来接收各种消息和命令回复 -->
@@ -13,8 +36,57 @@
             android:label="PushService"
             android:process=":pushservice" />
 
-        
+        <!-- 配置SDK核心服务 -->
+        <service
+            android:name="com.igexin.sdk.PushService"
+            android:exported="false"
+            android:label="NotificationCenter"
+            android:process=":pushservice" />
+        <service
+            android:name="com.igexin.sdk.GTIntentService"
+            android:exported="true" />
+        <service
+            android:name="com.igexin.sdk.GService"
+            android:exported="true"
+            android:process=":pushservice" >
+            <intent-filter>
+                <action android:name="com.getui.sdk.action" />
+            </intent-filter>
+        </service>
+
+        <activity
+            android:name="com.igexin.sdk.GetuiActivity"
+            android:exported="true"
+            android:process=":pushservice"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+            <intent-filter>
+                <action android:name="com.getui.sdk.action" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.igexin.sdk.PopupActivity"
+            android:configChanges="screenSize|orientation"
+            android:exported="false"
+            android:process=":pushservice"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <meta-data
+            android:name="GTSDK_VERSION"
+            android:value="3.3.11.0" />
         <!-- 个推SDK配置结束 -->
+
+        <service
+            android:name="com.getui.gtc.GtcService"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.getui.gtc.sdk.service.action" />
+            </intent-filter>
+        </service>
+
+        <provider
+            android:name="com.getui.gtc.base.GtcProvider"
+            android:authorities="${applicationId}.getui.gtc.provider"
+            android:exported="false" />
 
     </application>
 

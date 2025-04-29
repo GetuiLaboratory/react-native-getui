@@ -2,7 +2,7 @@
 
 export default class Getui {
 	/**
-	 * 初始化推送服务
+	 * 初始化推送服务 只有Android,  IOS在AppDelegate中初始化
 	 */
 	static initPush(): void;
 
