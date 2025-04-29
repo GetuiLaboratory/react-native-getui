@@ -46,7 +46,7 @@ npm run GetuiConfigure DI1jwW3FtZ6kGDeY5dk0Y9 DQCk2V8Jev9hqhWDU94PF9 Rtyp5trKUt8
 
 * 新版本插件[AndroidDemo](https://github.com/GetuiLaboratory/react-native-getui/tree/master/example/AndroidDemo)
 
-* iOS 最新[参考Demo](https://github.com/GetuiLaboratory/react-native-getui/tree/master/example/pushDemo_2024)
+* iOS 最新[参考Demo](https://github.com/GetuiLaboratory/react-native-getui/tree/master/example/IosDemo)
 
 
 # 2. 配置
@@ -62,7 +62,7 @@ npm run GetuiConfigure DI1jwW3FtZ6kGDeY5dk0Y9 DQCk2V8Jev9hqhWDU94PF9 Rtyp5trKUt8
   ```xml
   <manifest>
    <application>
-  				<meta-data android:name="PUSH_APPID" android:value="你的appid"/>
+  		  <meta-data android:name="PUSH_APPID" android:value="你的appid"/>
           <meta-data android:name="PUSH_APPKEY" android:value="你的appkey"/>
           <meta-data android:name="PUSH_APPSECRET" android:value="你的appSecret"/>
      </application>
