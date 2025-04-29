@@ -1,0 +1,3 @@
+/Users/yangsihao/Downloads/AndroidStudioProjects/getuiSDk/rn/AndroidDemo/android/app/.cxx/Debug/6w1n6239/arm64-v8a/CMakeFiles/appmodules.dir
+/Users/yangsihao/Downloads/AndroidStudioProjects/getuiSDk/rn/AndroidDemo/android/app/.cxx/Debug/6w1n6239/arm64-v8a/CMakeFiles/edit_cache.dir
+/Users/yangsihao/Downloads/AndroidStudioProjects/getuiSDk/rn/AndroidDemo/android/app/.cxx/Debug/6w1n6239/arm64-v8a/CMakeFiles/rebuild_cache.dir
