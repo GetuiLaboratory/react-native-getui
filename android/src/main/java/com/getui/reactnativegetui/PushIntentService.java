@@ -82,6 +82,7 @@ public class PushIntentService extends GTIntentService {
         param.putString("messageId",message.getMessageId());
         param.putString("title",message.getTitle());
         param.putString("content",message.getContent());
+        param.putString("payload",message.getPayload());
         GetuiModule.sendEvent(GetuiModule.EVENT_RECEIVE_REMOTE_NOTIFICATION,param);
     }
 
@@ -102,6 +103,7 @@ public class PushIntentService extends GTIntentService {
         param.putString("messageId",message.getMessageId());
         param.putString("title",message.getTitle());
         param.putString("content",message.getContent());
+        param.putString("payload",message.getPayload());
         GetuiModule.sendEvent(GetuiModule.EVENT_RECEIVE_REMOTE_NOTIFICATION,param);
     }
 
