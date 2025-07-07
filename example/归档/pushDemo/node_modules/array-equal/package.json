@@ -1,0 +1,24 @@
+{
+  "name": "array-equal",
+  "description": "Check if two arrays are equal",
+  "version": "1.0.2",
+  "author": {
+    "name": "Jonathan Ong",
+    "email": "me@jongleberry.com",
+    "url": "http://jongleberry.com",
+    "twitter": "https://twitter.com/jongleberry"
+  },
+  "license": "MIT",
+  "repository": "sindresorhus/array-equal",
+  "funding": "https://github.com/sponsors/sindresorhus",
+  "keywords": [
+    "array",
+    "equal",
+    "equals",
+    "same",
+    "identical",
+    "equality",
+    "compare",
+    "validate"
+  ]
+}

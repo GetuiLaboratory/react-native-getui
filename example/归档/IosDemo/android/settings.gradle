@@ -1,0 +1,8 @@
+pluginManagement { includeBuild("../node_modules/@react-native/gradle-plugin") }
+plugins { id("com.facebook.react.settings") }
+extensions.configure(com.facebook.react.ReactSettingsExtension){ ex -> ex.autolinkLibrariesFromCommand() }
+rootProject.name = 'AwesomeProject'
+include ':app', ':react-native-getui'
+project(':react-native-getui').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-getui/android')
+
+includeBuild('../node_modules/@react-native/gradle-plugin')

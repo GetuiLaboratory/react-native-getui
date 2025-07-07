@@ -1,0 +1,63 @@
+{
+  "name": "react-native-easy-grid",
+  "description": "Easy React Native Layout & Grid for the Dumb",
+  "version": "0.2.2",
+  "private": false,
+  "dependencies": {
+    "lodash": "^4.17.15"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "jest": {
+    "preset": "react-native",
+    "modulePathIgnorePatterns": [
+      "acorn",
+      "core-js",
+      "isarray",
+      "wordwrap",
+      "convert-source-map",
+      "source-map",
+      "which",
+      "assert-plus",
+      "esprima",
+      "path-exists",
+      "glob",
+      "object-assign",
+      "repeating",
+      "supports-color",
+      "json-stable-stringify",
+      "minimist",
+      "duplexer2",
+      "readable-stream",
+      "extend",
+      "lru-cache",
+      "minimatch",
+      "async",
+      "punycode",
+      "clone",
+      "graceful-fs",
+      "strip-bom",
+      "through2",
+      "vinyl",
+      "camelcase"
+    ]
+  },
+  "devDependencies": {
+    "babel-eslint": "^6.0.4",
+    "babel-jest": "23.2.0",
+    "babel-preset-react-native": "4.0.0",
+    "eslint": "^2.9.0",
+    "eslint-plugin-react": "^5.0.1",
+    "eslint-plugin-react-native": "^1.0.0",
+    "jest": "23.3.0",
+    "react": "16.4.1",
+    "react-native": "^0.60.4",
+    "react-test-renderer": "16.4.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/GeekyAnts/react-native-easy-grid.git"
+  },
+  "main": "index.js"
+}

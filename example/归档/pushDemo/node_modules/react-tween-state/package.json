@@ -1,0 +1,46 @@
+{
+  "name": "react-tween-state",
+  "version": "0.1.5",
+  "description": "React animation.",
+  "main": "lib/index.js",
+  "directories": {
+    "examples": "examples"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack -p",
+    "start": "webpack -w -d"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chenglou/react-tween-state.git"
+  },
+  "keywords": [
+    "react",
+    "animation",
+    "tween",
+    "transition",
+    "state",
+    "interactive",
+    "mixin",
+    "interpolation"
+  ],
+  "author": "Cheng Lou",
+  "license": "BSD",
+  "bugs": {
+    "url": "https://github.com/chenglou/react-tween-state/issues"
+  },
+  "homepage": "https://github.com/chenglou/react-tween-state",
+  "devDependencies": {
+    "babel-core": "^5.6.1",
+    "babel-loader": "^5.1.4",
+    "node-libs-browser": "^0.5.2",
+    "webpack": "^1.9.11",
+    "react-dom": ">=0.14",
+    "react": ">=0.14"
+  },
+  "dependencies": {
+    "raf": "^3.1.0",
+    "tween-functions": "^1.0.1"
+  }
+}

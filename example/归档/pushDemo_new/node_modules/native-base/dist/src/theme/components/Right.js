@@ -1,0 +1,2 @@
+Object.defineProperty(exports,"__esModule",{value:true});exports.default=function(){var rightTheme={'NativeBase.Button':{alignSelf:null},flex:1,alignSelf:'center',alignItems:'flex-end'};return rightTheme;};
+//# sourceMappingURL=Right.js.map

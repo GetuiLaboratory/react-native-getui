@@ -1,0 +1,63 @@
+{
+  "name": "print-message",
+  "version": "2.1.0",
+  "description": "NodeJS module for printing out beautiful messages in console",
+  "main": "lib/print.js",
+  "scripts": {
+    "compile": "babel src --out-dir lib",
+    "coveralls": "cat coverage/lcov.info | coveralls",
+    "prepublish": "npm run compile",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post",
+    "test": "babel-node ./node_modules/.bin/isparta cover _mocha"
+  },
+  "keywords": [
+    "print-message",
+    "print",
+    "log",
+    "message",
+    "border",
+    "console",
+    "beautiful",
+    "nice"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ghaiklor/node-print-message.git"
+  },
+  "author": {
+    "name": "Eugene Obrezkov",
+    "email": "ghaiklor@gmail.com",
+    "url": "https://github.com/ghaiklor"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ghaiklor/node-print-message/issues"
+  },
+  "homepage": "https://github.com/ghaiklor/node-print-message",
+  "dependencies": {
+    "chalk": "1.1.1"
+  },
+  "devDependencies": {
+    "babel-cli": "6.4.5",
+    "babel-plugin-add-module-exports": "0.1.2",
+    "babel-preset-es2015": "6.3.13",
+    "chai": "3.4.1",
+    "coveralls": "2.11.6",
+    "cz-conventional-changelog": "1.1.5",
+    "isparta": "4.0.0",
+    "mocha": "2.4.2",
+    "semantic-release": "4.3.5",
+    "sinon": "1.17.3"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "publishConfig": {
+    "tag": "latest"
+  },
+  "release": {
+    "branch": "master"
+  }
+}

@@ -1,0 +1,98 @@
+{
+  "name": "native-base",
+  "description": "Essential cross-platform UI components for React Native",
+  "keywords": [
+    "android",
+    "ios",
+    "react",
+    "native",
+    "react-native",
+    "native-modules",
+    "react-component",
+    "navbar",
+    "packager"
+  ],
+  "scripts": {
+    "compile": "rm -rf dist/* && babel . --out-dir dist --ignore node_modules,dist --source-maps ",
+    "lint": "eslint \"src/**/*.{js, json}\"",
+    "transpile": "npm run compile && cp src/basic/Icon/selection.json dist/src/basic/Icon/selection.json && cp src/basic/Icon/NBIcons.json dist/src/basic/Icon",
+    "prepublish": "npm run transpile",
+    "postinstall": "node addEjectScript.js && opencollective-postinstall",
+    "flow": "flow"
+  },
+  "jest": {
+    "preset": "react-native",
+    "transformIgnorePatterns": [
+      "node_modules/(?!react-native|@shoutem|react-clone-referenced-element|native-base-shoutem-theme)"
+    ]
+  },
+  "version": "2.15.2",
+  "license": "Apache-2.0",
+  "private": false,
+  "dependencies": {
+    "@codler/react-native-keyboard-aware-scroll-view": "1.0.1",
+    "@react-native-community/datetimepicker": "^3.0.2",
+    "@react-native-picker/picker": "^1.9.7",
+    "blueimp-md5": "^2.5.0",
+    "clamp": "^1.0.1",
+    "color": "~3.1.2",
+    "create-react-class": "^15.6.3",
+    "eslint-config-prettier": "^6.0.0",
+    "fs-extra": "^2.0.0",
+    "jest-react-native": "^18.0.0",
+    "lodash": "^4.17.14",
+    "native-base-shoutem-theme": "0.3.1",
+    "opencollective-postinstall": "^2.0.2",
+    "print-message": "^2.1.0",
+    "prop-types": "^15.5.10",
+    "react-native-drawer": "2.5.1",
+    "react-native-easy-grid": "0.2.2",
+    "react-native-vector-icons": "^7.0.0",
+    "react-tween-state": "^0.1.5",
+    "tween-functions": "^1.0.1"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.18.0",
+    "babel-eslint": "^7.2.3",
+    "babel-jest": "^24.8.0",
+    "babel-preset-react-native": "4.0.0",
+    "eslint": "^3.5.0",
+    "eslint-config-airbnb": "^11.1.0",
+    "eslint-plugin-import": "^1.14.0",
+    "eslint-plugin-jsx-a11y": "^2.2.1",
+    "eslint-plugin-react": "^7.16.0",
+    "eslint-plugin-react-native": "^2.0.0",
+    "eslint-watch": "^5.1.2",
+    "flow-bin": "0.47.0",
+    "husky": "^3.0.9",
+    "jest": "^24.8.0",
+    "prettier": "^1.18.2",
+    "pretty-quick": "^1.11.1",
+    "react": "16.4.1",
+    "react-native": "^0.60.4",
+    "react-test-renderer": "16.4.1"
+  },
+  "gitHead": "5bbeacc403ba97622703699132c55d8359344004",
+  "homepage": "https://github.com/GeekyAnts/NativeBase#readme",
+  "main": "dist/src/index.js",
+  "typings": "./index.d.ts",
+  "optionalDependencies": {},
+  "peerDependencies": {
+    "react": ">=16.4.1",
+    "react-native": ">=0.56.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint && pretty-quick --staged --pattern \"src/**/*.{js, json}\""
+    }
+  },
+  "readmeFilename": "README.md",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GeekyAnts/NativeBase.git"
+  },
+  "collective": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/NativeBase"
+  }
+}

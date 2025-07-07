@@ -1,0 +1,40 @@
+{
+  "name": "react-native-drawer",
+  "version": "2.5.1",
+  "description": "React Native Drawer",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:rt2zz/react-native-drawer.git"
+  },
+  "dependencies": {
+    "tween-functions": "^1.0.1",
+    "prop-types": "^15.5.8"
+  },
+  "devDependencies": {
+    "babel-eslint": "^4.1.8",
+    "eslint": "^1.10.3",
+    "eslint-config-rackt": "^1.1.1",
+    "eslint-config-standard-react": "^1.2.1",
+    "eslint-plugin-react": "^3.14.0",
+    "eslint-plugin-standard": "^1.3.1"
+  },
+  "keywords": [
+    "react",
+    "react-native",
+    "react-component",
+    "drawer",
+    "side-menu",
+    "menu",
+    "ios",
+    "android",
+    "material design"
+  ],
+  "author": "rt2zz <zack@root-two.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rt2zz/react-native-drawer/issues"
+  },
+  "homepage": "https://github.com/rt2zz/react-native-drawer"
+}
