@@ -63,6 +63,11 @@ export default class Getui {
 		GetuiModule.resume();
 	}
 
+	static clearAllNotificationForNotificationBar() {
+		clearAllNotificationForNotificationBar();
+	}
+
+
 	static turnOnPush() {
 		GetuiModule.turnOnPush();
 	}

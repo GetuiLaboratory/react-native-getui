@@ -18,8 +18,12 @@
 
 #import <GTSDK/GeTuiSdk.h>
 
-@interface RCTGetuiModule : NSObject <RCTBridgeModule, GeTuiSdkDelegate>
+@interface RCTGetuiModule : NSObject<RCTBridgeModule>
 
+@end
+
+@interface RCTGetuiModule3 : NSObject <RCTBridgeModule, GeTuiSdkDelegate>
+@property (nonatomic, assign) BOOL isJsLoad;
 + (instancetype)sharedGetuiModule;
-
+- (void)setupBridge:(RCTBridge*)b;
 @end

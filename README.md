@@ -12,8 +12,9 @@
    "react-native": "0.75.4"
 2. 当前react-native-getui版本 1.1.51
 
-<u>注意:  taobao的源和npm源版本可能存在不一致</u>
 
+注意：
+插件版本1.1.53 是expo App定制版本。
 
 
 # 1.安装

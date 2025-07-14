@@ -16,6 +16,8 @@ export default class Getui {
 	 */
 	static resume(): void;
 
+	static clearAllNotificationForNotificationBar(): void;
+
 	/**
 	 * 打开推送服务
 	 */

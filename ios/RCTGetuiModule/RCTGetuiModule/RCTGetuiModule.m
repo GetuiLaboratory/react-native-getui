@@ -1,6 +1,6 @@
 //
-//  RCTGetuiModule.m
-//  RCTGetuiModule
+//  RCTGetuiModule3.m
+//  RCTGetuiModule3
 //
 //  Created by admin on 17/2/27.
 //  Copyright © 2017年 getui. All rights reserved.
@@ -14,6 +14,7 @@
 #import <React/RCTBridge.h>
 #import <React/RCTLog.h>
 #import <React/RCTEventEmitter.h>
+
 #elif __has_include("RCTBridge.h")
 #import "RCTEventDispatcher.h"
 #import "RCTRootView.h"
@@ -26,23 +27,43 @@
 #import "React/RCTBridge.h"
 #import "React/RCTLog.h"
 #import "React/RCTEventEmitter.h"
+
 #endif
+// MyTurboModule.h
 
 #import <PushKit/PushKit.h>
 
-@interface RCTGetuiBridgeTools : RCTEventEmitter
+static RCTBridge *__theBridge = NULL;
 
-+ (RCTGetuiBridgeTools *)sharedInstance;
+
+@interface RCTGetuiModuleEvent : NSObject
+@property (nonatomic, copy) NSString *name;
+@property (nonatomic) id body;
+@end
+@implementation RCTGetuiModuleEvent
+@end
+
+
+@interface RCTGetuiModule3 ()<PKPushRegistryDelegate>
+
+@property (nonatomic, strong) NSMutableArray<RCTGetuiModuleEvent *> *cachedEvents;
+- (void)performCachedEvents;
+//@property (nonatomic, assign) BOOL isJsLoad;
 
 @end
 
-@implementation RCTGetuiBridgeTools
 
-RCT_EXPORT_MODULE();
+@interface RCTGetuiModule ()
+@end
 
-+ (RCTGetuiBridgeTools *)sharedInstance
+
+@implementation RCTGetuiModule
+
+@synthesize bridge = _bridge;
+
++ (RCTGetuiModule *)sharedInstance
 {
-    static RCTGetuiBridgeTools * tools = nil;
+    static RCTGetuiModule * tools = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         tools = [[super allocWithZone:NULL] init];
@@ -54,352 +75,73 @@ RCT_EXPORT_MODULE();
     return [self sharedInstance];
 }
 
-- (NSArray<NSString *> *)supportedEvents
-{
-    return @[@"GeTuiSdkDidRegisterClient",
-             @"GeTuiSDkDidNotifySdkState",
-             @"GeTuiSdkDidOccurError",
-             @"GetuiSdkGrantAuthorization",
-             @"GeTuiSdkwillPresentNotification",
-             @"GeTuiSdkDidReceiveNotification",
-             @"GeTuiSdkDidReceiveSlience",
-             @"GeTuiSdkOpenSettingsForNotification",
-             @"GeTuiSdkDidSendMessage",
-             @"GeTuiSdkDidSetPushMode",
-             @"GeTuiSdkDidAlias",
-             @"GeTuiSdkDidSetTags",
-             @"GetuiSdkDidQueryTag",
-             @"voipPushPayload",
-             @"GeTuiSdkDidRegisterLiveActivity",
-             @"GeTuiSdkDidRegisterPushToStartToken"];
-}
-
-- (void)getui_sendAppEventWithName:(NSString *)name body:(id)body {
-    if (!self.bridge) {
-        id delegate = [UIApplication sharedApplication].delegate;
-        if ([delegate respondsToSelector:@selector(bridge)] && [delegate bridge]) {
-            NSLog(@"GTSDK>>>fill back appdelegate bridge %@", [delegate bridge]);
-            self.bridge = [delegate bridge];
-        }
-    }
-  
-    if (!self.bridge &&
-        [UIApplication sharedApplication].delegate &&
-        [UIApplication sharedApplication].delegate.window &&
-        [UIApplication sharedApplication].delegate.window.rootViewController.view &&
-        [[UIApplication sharedApplication].delegate.window.rootViewController.view isKindOfClass:[RCTRootView class]]) {
-        RCTRootView *v = (RCTRootView *)[UIApplication sharedApplication].delegate.window.rootViewController.view;
-        /*
-         根据客户反馈，在下面环境时，self.bridge为nil。
-         "react": "16.13.1",
-         "react-native": "0.63.5",
-         */
-        NSLog(@"GTSDK>>>fill back appdelegate view bridge %@", v.bridge);
-        NSLog(@"%@",v.bridge);
-        self.bridge = v.bridge;
-    }
-    
-    if (self.bridge) {
-        [self.bridge.eventDispatcher sendAppEventWithName:name body:body];
-    } else {
-        NSLog(@"GTSDK>>>bridge is nil!");
-        //[self sendEventWithName:name body:body];//crash
-    }
-}
-
-@end
-
-
-@interface RCTGetuiModuleEvent : NSObject
-@property (nonatomic, copy) NSString *name;
-@property (nonatomic) id body;
-@end
-@implementation RCTGetuiModuleEvent
-@end
-
-@interface RCTGetuiModule ()<PKPushRegistryDelegate>
-
-@property (nonatomic, strong) NSMutableArray<RCTGetuiModuleEvent *> *cachedEvents;
-
-@property (nonatomic, assign) BOOL isJsLoad;
-
-@end
-
-@implementation RCTGetuiModule
-
 RCT_EXPORT_MODULE();
 
-+ (instancetype)sharedGetuiModule {
-    static RCTGetuiModule *module;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        module = [[super allocWithZone:NULL] init];
-        [module setup];
+//需要等待bridge被RN初始化后，才能回调JS
+- (void)setBridge:(RCTBridge *)bridge {
+    NSLog(@"GTSDK>>>setBridge %@", bridge);
+    _bridge = bridge;
+    __theBridge = bridge;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [[RCTGetuiModule3 sharedGetuiModule] performCachedEvents];
     });
-    return module;
+//    dispatch_async(self.methodQueue, ^{
+//        [[RCTGetuiModule3 sharedGetuiModule] performCachedEvents];
+//    });
 }
 
-+ (id)allocWithZone:(NSZone *)zone {
-    return [self sharedGetuiModule];
+- (RCTBridge *)bridge {
+    return _bridge;
 }
 
-- (void)setup
+- (instancetype)init {
+    if ((self = [super init])) {
+        NSLog(@"GTSDK>>> init self:%@",self);
+    }
+    return self;
+    
+}
+
+
+//RCT_EXPORT_METHOD(createClient:(NSDictionary *) options
+//                  resolver:(RCTPromiseResolveBlock)resolve
+//                  rejecter:(RCTPromiseRejectBlock)reject) {
+//
+//
+//    NSLog(@"GTSDK>>> createClient bridge:%@ self:%@",[self bridge], self);
+//    resolve([NSNumber numberWithInt:123]);
+//}
+//
+//RCT_EXPORT_METHOD(removeClient:(int) clientRef
+//                  resolver:(RCTPromiseResolveBlock)resolve
+//                  rejecter:(RCTPromiseRejectBlock)reject) {
+//
+//    [[self clients] removeObjectForKey:[NSNumber numberWithInt:clientRef]];
+//    resolve([NSNumber numberWithInt:clientRef]);
+//
+//}
+
+RCT_EXPORT_METHOD(resume)
 {
-    self.cachedEvents = [NSMutableArray array];
-    
-    NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
-    
-    [defaultCenter removeObserver:self];
-    
-    [defaultCenter addObserver:self
-                      selector:@selector(jsDidLoadNoti)
-                          name:RCTJavaScriptDidLoadNotification
-                        object:nil];
-}
-
-- (void)jsDidLoadNoti {
-    dispatch_async(self.methodQueue, ^{
-        [self performCachedEvents];
-    });
-    self.isJsLoad = YES;
-}
-
-- (void)performCachedEvents {
-    for (RCTGetuiModuleEvent *event in self.cachedEvents) {
-        [self getui_sendAppEventWithName:event.name body:event.body];
-    }
-    [self.cachedEvents removeAllObjects];
-}
-
-- (dispatch_queue_t)methodQueue
-{
-    return dispatch_get_main_queue();
-}
-
-- (void)getui_sendAppEventWithName:(NSString *)name body:(id)body {
-#if DEBUG
-    NSLog(@"GTSDK>>>sendEvent name:%@ body:%@", name, body);
-#endif
-    if(self.isJsLoad) {
-        [[RCTGetuiBridgeTools sharedInstance] getui_sendAppEventWithName:name body:body];
-    }else {
-        RCTGetuiModuleEvent *event = [[RCTGetuiModuleEvent alloc] init];
-        event.name = name;
-        event.body = body;
-        [self.cachedEvents addObject:event];
-    }
-}
-
-#pragma mark - GeTuiSdkDelegate
-
-/// [ GTSDK回调 ] SDK启动成功返回cid
-- (void)GeTuiSdkDidRegisterClient:(NSString *)clientId {
-    NSLog(@"GTSDK>>>GeTuiSdkDidRegisterClient %@",clientId);
-    [self getui_sendAppEventWithName:@"GeTuiSdkDidRegisterClient"
-                                body:clientId];
-}
-
-/// [ GTSDK回调 ] SDK运行状态通知
-- (void)GeTuiSDkDidNotifySdkState:(SdkStatus)aStatus {
-    NSLog(@"GTSDK>>>GeTuiSDkDidNotifySdkState %@",@(aStatus));
-    [self getui_sendAppEventWithName:@"GeTuiSDkDidNotifySdkState"
-                                body:@(aStatus)];
-}
-
-- (void)GeTuiSdkDidOccurError:(NSError *)error {
-    NSLog(@"GTSDK>>>GeTuiSdkDidOccurError %@", error);
-    [self getui_sendAppEventWithName:@"GeTuiSdkDidOccurError"
-                                body:error.description];
-}
-
-//MARK: - 通知回调
-
-/// 通知授权结果（iOS10及以上版本）
-/// @param granted 用户是否允许通知
-/// @param error 错误信息
-- (void)GetuiSdkGrantAuthorization:(BOOL)granted error:(NSError *)error {
-    NSLog(@"GTSDK>>>GetuiSdkGrantAuthorization %@ error:%@",@(granted), error);
-    [self getui_sendAppEventWithName:@"GetuiSdkGrantAuthorization"
-                                body:@(granted)];
-}
-
-/// 通知展示（iOS10及以上版本）
-/// @param center center
-/// @param notification notification
-/// @param completionHandler completionHandler
-- (void)GeTuiSdkNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification completionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler {
-    NSLog(@"GTSDK>>>willPresentNotification");
-    [self getui_sendAppEventWithName:@"GeTuiSdkwillPresentNotification" body:notification.request.content.userInfo];
-    // [ 参考代码，开发者注意根据实际需求自行修改 ] 根据APP需要，判断是否要提示用户Badge、Sound、Alert等
-    //completionHandler(UNNotificationPresentationOptionNone); 若不显示通知，则无法点击通知
-    if(completionHandler) {
-        completionHandler(UNNotificationPresentationOptionBadge | UNNotificationPresentationOptionSound | UNNotificationPresentationOptionAlert);
-    }
-}
- 
-/// 收到通知信息
-/// @param userInfo apns通知内容
-/// @param center UNUserNotificationCenter（iOS10及以上版本）
-/// @param response UNNotificationResponse（iOS10及以上版本）
-/// @param completionHandler 用来在后台状态下进行操作（iOS10以下版本）
-- (void)GeTuiSdkDidReceiveNotification:(NSDictionary *)userInfo notificationCenter:(UNUserNotificationCenter *)center response:(UNNotificationResponse *)response fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
-    NSLog(@"GTSDK>>>GeTuiSdkDidReceiveNotification userinfo:%@", userInfo);
-    [self getui_sendAppEventWithName:@"GeTuiSdkDidReceiveNotification" body:userInfo];
-    if(completionHandler) {
-        // [ 参考代码，开发者注意根据实际需求自行修改 ] 根据APP需要自行修改参数值
-        completionHandler(UIBackgroundFetchResultNoData);
-    }
-}
-
-/// 收到透传消息
-/// @param userInfo    推送消息内容
-/// @param fromGetui   YES: 个推通道  NO：苹果apns通道
-/// @param offLine     是否是离线消息，YES.是离线消息
-/// @param appId       应用的appId
-/// @param taskId      推送消息的任务id
-/// @param msgId       推送消息的messageid
-/// @param completionHandler 用来在后台状态下进行操作（通过苹果apns通道的消息 才有此参数值）
-- (void)GeTuiSdkDidReceiveSlience:(NSDictionary *)userInfo fromGetui:(BOOL)fromGetui offLine:(BOOL)offLine appId:(NSString *)appId taskId:(NSString *)taskId msgId:(NSString *)msgId fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
-    // [ GTSDK ]：汇报个推自定义事件(反馈透传消息)，开发者可以根据项目需要决定是否使用, 非必须
-    // [GeTuiSdk sendFeedbackMessage:90001 andTaskId:taskId andMsgId:msgId];
-    /* demo逻辑 供开发者自行决定
-    NSString *msg = [NSString stringWithFormat:@"[ TestDemo ] [APN] %@ \nReceive Slience: fromGetui:%@ appId:%@ offLine:%@ taskId:%@ msgId:%@ userInfo:%@ ", NSStringFromSelector(_cmd), fromGetui ? @"个推消息" : @"APNs消息", appId, offLine ? @"离线" : @"在线", taskId, msgId, userInfo];
-    本地通知UserInfo参数
-    NSDictionary *dic = nil;
-    if (fromGetui) {
-        //个推在线透传
-        dic = @{@"_gmid_": [NSString stringWithFormat:@"%@:%@", taskId ?: @"", msgId ?: @""]};
-    } else {
-        //APNs静默通知
-        dic = userInfo;
-    }
-    if (fromGetui && offLine == NO) {
-        //个推通道+在线，建议发起本地通知 开发者自行确定
-    }
-     */
-    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-    [dic addEntriesFromDictionary:userInfo];
-    dic[@"fromGetui"] = @(fromGetui);
-    dic[@"offLine"] = @(offLine);
-    dic[@"appId"] = appId;
-    dic[@"taskId"] = taskId;
-    dic[@"msgId"] = msgId;
-    NSLog(@"GTSDK>>>GeTuiSdkDidReceiveSlience fromGetui:%@ appId:%@ offLine:%@ taskId:%@ msgId:%@ fetchCompletionHandler：%@ userInfo:%@ ", fromGetui ? @"个推消息" : @"APNs消息", appId, offLine ? @"离线" : @"在线", taskId, msgId, completionHandler, userInfo);
-    
-    [self getui_sendAppEventWithName:@"GeTuiSdkDidReceiveSlience" body:dic];
-    if(completionHandler) {
-        // [ 参考代码，开发者注意根据实际需求自行修改 ] 根据APP需要自行修改参数值
-        completionHandler(UIBackgroundFetchResultNoData);
-    }
-}
-
-- (void)GeTuiSdkNotificationCenter:(UNUserNotificationCenter *)center openSettingsForNotification:(UNNotification *)notification {
-    // [ 参考代码，开发者注意根据实际需求自行修改 ] 根据APP需要自行修改参数值
-    NSLog(@"GTSDK>>>openSettingsForNotification");
-    [self getui_sendAppEventWithName:@"GeTuiSdkOpenSettingsForNotification" body:notification.request.content.userInfo];
-}
-
-- (void)GeTuiSdkDidRegisterLiveActivity:(NSString *)sequenceNum result:(BOOL)isSuccess error:(NSError *)error {
-    NSLog(@"GTSDK>>>GeTuiSdkDidRegisterLiveActivity %@ %@", sequenceNum, @(isSuccess));
-    
-    [self getui_sendAppEventWithName:@"GeTuiSdkDidRegisterLiveActivity" body:@{@"result":@(isSuccess),@"sn":sequenceNum}];
-}
-
-- (void)GeTuiSdkDidRegisterPushToStartToken:(NSString *)sequenceNum result:(BOOL)isSuccess error:(NSError *)error {
-    NSLog(@"GTSDK>>>GeTuiSdkDidRegisterPushToStartToken %@ %@", sequenceNum, @(isSuccess));
-    
-    [self getui_sendAppEventWithName:@"GeTuiSdkDidRegisterPushToStartToken" body:@{@"result":@(isSuccess),@"sn":sequenceNum}];
-}
-//MARK: - 发送上行消息
-
-/// [ GTSDK回调 ] SDK收到sendMessage消息回调
-- (void)GeTuiSdkDidSendMessage:(NSString *)messageId result:(BOOL)isSuccess error:(NSError *)aError {
-    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-    dic[@"messageId"] = messageId;
-    dic[@"isSuccess"] = @(isSuccess);
-    NSLog(@"GTSDK>>>GeTuiSdkDidSendMessage msgId:%@ isSuccess:%@ error:%@", messageId, @(isSuccess), aError);
-    [self getui_sendAppEventWithName:@"GeTuiSdkDidSendMessage" body:dic];
-}
-
-
-//MARK: - 开关设置
-
-/// [ GTSDK回调 ] SDK设置推送模式回调
-- (void)GeTuiSdkDidSetPushMode:(BOOL)isModeOff error:(NSError *)error {
-    NSLog(@"GTSDK>>>GeTuiSdkDidSetPushMode %@ error:%@",@(isModeOff), error);
-    [self getui_sendAppEventWithName:@"GeTuiSdkDidSetPushMode" body:@(isModeOff)];
-}
-
-
-//MARK: - 别名设置
-
-- (void)GeTuiSdkDidAliasAction:(NSString *)action result:(BOOL)isSuccess sequenceNum:(NSString *)aSn error:(NSError *)aError {
-    /*
-     参数说明
-     isSuccess: YES: 操作成功 NO: 操作失败
-     aError.code:
-     30001：绑定别名失败，频率过快，两次调用的间隔需大于 5s
-     30002：绑定别名失败，参数错误
-     30003：绑定别名请求被过滤
-     30004：绑定别名失败，未知异常
-     30005：绑定别名时，cid 未获取到
-     30006：绑定别名时，发生网络错误
-     30007：别名无效
-     30008：sn 无效 */
-    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-    dic[@"action"] = action;
-    dic[@"isSuccess"] = @(isSuccess);
-    dic[@"aSn"] = aSn;
-    NSLog(@"GTSDK>>>GeTuiSdkDidAliasAction action:%@ isSuccess:%@ sn:%@ error:%@", action, @(isSuccess), aSn, aError);
-    [self getui_sendAppEventWithName:@"GeTuiSdkDidAlias" body:dic];
-}
-
-
-//MARK: - 标签设置
-
-- (void)GeTuiSdkDidSetTagsAction:(NSString *)sequenceNum result:(BOOL)isSuccess error:(NSError *)aError {
-    /*
-     参数说明
-     sequenceNum: 请求的序列码
-     isSuccess: 操作成功 YES, 操作失败 NO
-     aError.code:
-     20001：tag 数量过大（单次设置的 tag 数量不超过 100)
-     20002：调用次数超限（默认一天只能成功设置一次）
-     20003：标签重复
-     20004：服务初始化失败
-     20005：setTag 异常
-     20006：tag 为空
-     20007：sn 为空
-     20008：离线，还未登陆成功
-     20009：该 appid 已经在黑名单列表（请联系技术支持处理）
-     20010：已存 tag 数目超限
-     20011：tag 内容格式不正确
-     */
-    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-    dic[@"sequenceNum"] = sequenceNum;
-    dic[@"isSuccess"] = @(isSuccess);
-    NSLog(@"GTSDK>>>GeTuiSdkDidSetTagsAction sn:%@ isSuccess:%@ error:%@",sequenceNum, @(isSuccess), aError);
-    [self getui_sendAppEventWithName:@"GeTuiSdkDidSetTags" body:dic];
-}
-
-/**
- * 查询当前绑定tag结果返回
- * @param aTags   当前绑定的 tag 信息
- * @param aSn     返回 queryTag 接口中携带的请求序列码，标识请求对应的结果返回
- * @param aError  成功返回nil,错误返回相应error信息
- */
-- (void)GetuiSdkDidQueryTag:(NSArray *)aTags sequenceNum:(NSString *)aSn error:(nullable NSError *)aError {
-    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-    dic[@"tags"] = aTags;
-    dic[@"sn"] = aSn;
-    dic[@"error"] = aError.userInfo;
-    NSLog(@"GTSDK>>>GetuiSdkDidQueryTag tags:%@ sn:%@ error:%@",aTags, aSn, aError);
-    [self getui_sendAppEventWithName:@"GetuiSdkDidQueryTag" body:dic];
+   NSLog(@"GTSDK>>>resume self:%@",self);
+    [self.bridge.eventDispatcher sendDeviceEventWithName:@"GeTuiSdkDidRegisterClient"
+                                                    body:@{@"event": @"test"
+                                                           }];
 }
 
 #pragma mark -- JSTONATIVE
 
 #pragma -- JSTONATIVE
+
+RCT_EXPORT_METHOD(voipRegistration)
+{
+    dispatch_queue_t mainQueue = dispatch_get_main_queue();
+    PKPushRegistry *voipRegistry = [[PKPushRegistry alloc] initWithQueue:mainQueue];
+    voipRegistry.delegate = self;
+    // Set the push type to VoIP
+    voipRegistry.desiredPushTypes = [NSSet setWithObject:PKPushTypeVoIP];
+}
+
 /**
  *  销毁SDK，并且释放资源
  */
@@ -412,11 +154,11 @@ RCT_EXPORT_METHOD(destroy)
 /**
  *  恢复SDK运行,IOS7 以后支持Background Fetch方式，后台定期更新数据,该接口需要在Fetch起来后被调用，保证SDK 数据获取。
  */
-RCT_EXPORT_METHOD(resume)
-{
-    NSLog(@"GTSDK>>>resume");
-    [GeTuiSdk resume];
-}
+//RCT_EXPORT_METHOD(resume)
+//{
+//    NSLog(@"GTSDK>>>resume");
+//    [GeTuiSdk resume];
+//}
 
 /**
  *  获取SDK版本号
@@ -729,6 +471,376 @@ RCT_EXPORT_METHOD(registerPushToStartToken:(NSString *)activityAttributes pushTo
     NSLog(@"GTSDK>>>registerPushToStartToken activityAttributes:%@ pushToStartToken:%@ sn:%@",activityAttributes,pushToStartToken,sn);
     [GeTuiSdk registerLiveActivity:activityAttributes pushToStartToken:pushToStartToken sequenceNum:sn];
 }
+@end
+
+
+
+@interface RCTGetuiBridgeTools : RCTEventEmitter
+
++ (RCTGetuiBridgeTools *)sharedInstance;
+
+@end
+
+@implementation RCTGetuiBridgeTools
+
+RCT_EXPORT_MODULE();
+
++ (RCTGetuiBridgeTools *)sharedInstance
+{
+    static RCTGetuiBridgeTools * tools = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        tools = [[super allocWithZone:NULL] init];
+    });
+    return tools;
+}
+
++ (instancetype)allocWithZone:(struct _NSZone *)zone {
+    return [self sharedInstance];
+}
+
+- (NSArray<NSString *> *)supportedEvents
+{
+    return @[@"GeTuiSdkDidRegisterClient",
+             @"GeTuiSDkDidNotifySdkState",
+             @"GeTuiSdkDidOccurError",
+             @"GetuiSdkGrantAuthorization",
+             @"GeTuiSdkwillPresentNotification",
+             @"GeTuiSdkDidReceiveNotification",
+             @"GeTuiSdkDidReceiveSlience",
+             @"GeTuiSdkOpenSettingsForNotification",
+             @"GeTuiSdkDidSendMessage",
+             @"GeTuiSdkDidSetPushMode",
+             @"GeTuiSdkDidAlias",
+             @"GeTuiSdkDidSetTags",
+             @"GetuiSdkDidQueryTag",
+             @"voipPushPayload",
+             @"GeTuiSdkDidRegisterLiveActivity",
+             @"GeTuiSdkDidRegisterPushToStartToken"];
+}
+
+- (void)getui_sendAppEventWithName:(NSString *)name body:(id)body {
+    NSLog(@"GTSDK>>>getui_sendAppEventWithName %@",name);
+    if (!self.bridge) {
+        id delegate = [UIApplication sharedApplication].delegate;
+        if ([delegate respondsToSelector:@selector(bridge)] && [delegate bridge]) {
+            NSLog(@"GTSDK>>>fill back appdelegate bridge %@", [delegate bridge]);
+            self.bridge = [delegate bridge];
+        }
+    }
+  
+    if (!self.bridge &&
+        [UIApplication sharedApplication].delegate &&
+        [UIApplication sharedApplication].delegate.window &&
+        [UIApplication sharedApplication].delegate.window.rootViewController.view &&
+        [[UIApplication sharedApplication].delegate.window.rootViewController.view isKindOfClass:[RCTRootView class]]) {
+        RCTRootView *v = (RCTRootView *)[UIApplication sharedApplication].delegate.window.rootViewController.view;
+        /*
+         根据客户反馈，在下面环境时，self.bridge为nil。
+         "react": "16.13.1",
+         "react-native": "0.63.5",
+         */
+        NSLog(@"GTSDK>>>fill back appdelegate view bridge %@", v.bridge);
+        NSLog(@"%@",v.bridge);
+        self.bridge = v.bridge;
+    }
+    
+    if (self.bridge) {
+        [self.bridge.eventDispatcher sendAppEventWithName:name body:body];
+    } else {
+        NSLog(@"GTSDK>>>bridge is nil!");
+        //[self sendEventWithName:name body:body];//crash
+    }
+}
+@end
+
+
+
+@implementation RCTGetuiModule3
+
+RCT_EXPORT_MODULE();
+
++ (instancetype)sharedGetuiModule {
+    static RCTGetuiModule3 *module;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        module = [[super allocWithZone:NULL] init];
+        [module setup];
+    });
+    return module;
+}
+
++ (id)allocWithZone:(NSZone *)zone {
+    return [self sharedGetuiModule];
+}
+
+- (void)setupBridge:(RCTBridge*)b {
+    
+    NSLog(@"GTSDK>>>setupBridge");
+    //self.isJsLoad = YES;
+    //[RCTGetuiBridgeTools sharedInstance].bridge = b;
+}
+
+- (void)setup
+{
+    NSLog(@"GTSDK>>>setup");
+    self.cachedEvents = [NSMutableArray array];
+    
+    NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
+    
+    [defaultCenter removeObserver:self];
+    
+    [defaultCenter addObserver:self
+                      selector:@selector(jsDidLoadNoti)
+                          name:RCTJavaScriptDidLoadNotification
+                        object:nil];
+    
+}
+
+
+- (void)jsDidLoadNoti {
+    NSLog(@"GTSDK>>>jsDidLoadNoti");
+    dispatch_async(self.methodQueue, ^{
+        [self performCachedEvents];
+    });
+    self.isJsLoad = YES;
+}
+
+- (void)performCachedEvents {
+    for (RCTGetuiModuleEvent *event in self.cachedEvents) {
+        [self getui_sendAppEventWithName:event.name body:event.body];
+    }
+    [self.cachedEvents removeAllObjects];
+}
+
+- (dispatch_queue_t)methodQueue
+{
+    return dispatch_get_main_queue();
+}
+
+- (void)getui_sendAppEventWithName:(NSString *)name body:(id)body {
+#if DEBUG
+    NSLog(@"GTSDK>>>sendEvent name:%@ body:%@", name, body);
+#endif
+    
+    
+    if(__theBridge) {
+        [__theBridge.eventDispatcher sendDeviceEventWithName:name body:body];
+    }else {
+        RCTGetuiModuleEvent *event = [[RCTGetuiModuleEvent alloc] init];
+        event.name = name;
+        event.body = body;
+        [self.cachedEvents addObject:event];
+    }
+}
+
+#pragma mark - GeTuiSdkDelegate
+
+/// [ GTSDK回调 ] SDK启动成功返回cid
+- (void)GeTuiSdkDidRegisterClient:(NSString *)clientId {
+    NSLog(@"GTSDK>>>GeTuiSdkDidRegisterClient %@",clientId);
+    [self getui_sendAppEventWithName:@"GeTuiSdkDidRegisterClient"
+                                body:clientId];
+}
+
+/// [ GTSDK回调 ] SDK运行状态通知
+- (void)GeTuiSDkDidNotifySdkState:(SdkStatus)aStatus {
+    NSLog(@"GTSDK>>>GeTuiSDkDidNotifySdkState %@",@(aStatus));
+    [self getui_sendAppEventWithName:@"GeTuiSDkDidNotifySdkState"
+                                body:@(aStatus)];
+}
+
+- (void)GeTuiSdkDidOccurError:(NSError *)error {
+    NSLog(@"GTSDK>>>GeTuiSdkDidOccurError %@", error);
+    [self getui_sendAppEventWithName:@"GeTuiSdkDidOccurError"
+                                body:error.description];
+}
+
+//MARK: - 通知回调
+
+/// 通知授权结果（iOS10及以上版本）
+/// @param granted 用户是否允许通知
+/// @param error 错误信息
+- (void)GetuiSdkGrantAuthorization:(BOOL)granted error:(NSError *)error {
+    NSLog(@"GTSDK>>>GetuiSdkGrantAuthorization %@ error:%@",@(granted), error);
+    [self getui_sendAppEventWithName:@"GetuiSdkGrantAuthorization"
+                                body:@(granted)];
+}
+
+/// 通知展示（iOS10及以上版本）
+/// @param center center
+/// @param notification notification
+/// @param completionHandler completionHandler
+- (void)GeTuiSdkNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification completionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler {
+    NSLog(@"GTSDK>>>willPresentNotification");
+    [self getui_sendAppEventWithName:@"GeTuiSdkwillPresentNotification" body:notification.request.content.userInfo];
+    // [ 参考代码，开发者注意根据实际需求自行修改 ] 根据APP需要，判断是否要提示用户Badge、Sound、Alert等
+    //completionHandler(UNNotificationPresentationOptionNone); 若不显示通知，则无法点击通知
+    if(completionHandler) {
+        completionHandler(UNNotificationPresentationOptionBadge | UNNotificationPresentationOptionSound | UNNotificationPresentationOptionAlert);
+    }
+}
+ 
+/// 收到通知信息
+/// @param userInfo apns通知内容
+/// @param center UNUserNotificationCenter（iOS10及以上版本）
+/// @param response UNNotificationResponse（iOS10及以上版本）
+/// @param completionHandler 用来在后台状态下进行操作（iOS10以下版本）
+- (void)GeTuiSdkDidReceiveNotification:(NSDictionary *)userInfo notificationCenter:(UNUserNotificationCenter *)center response:(UNNotificationResponse *)response fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
+    NSLog(@"GTSDK>>>GeTuiSdkDidReceiveNotification userinfo:%@", userInfo);
+    [self getui_sendAppEventWithName:@"GeTuiSdkDidReceiveNotification" body:userInfo];
+    if(completionHandler) {
+        // [ 参考代码，开发者注意根据实际需求自行修改 ] 根据APP需要自行修改参数值
+        completionHandler(UIBackgroundFetchResultNoData);
+    }
+}
+
+/// 收到透传消息
+/// @param userInfo    推送消息内容
+/// @param fromGetui   YES: 个推通道  NO：苹果apns通道
+/// @param offLine     是否是离线消息，YES.是离线消息
+/// @param appId       应用的appId
+/// @param taskId      推送消息的任务id
+/// @param msgId       推送消息的messageid
+/// @param completionHandler 用来在后台状态下进行操作（通过苹果apns通道的消息 才有此参数值）
+- (void)GeTuiSdkDidReceiveSlience:(NSDictionary *)userInfo fromGetui:(BOOL)fromGetui offLine:(BOOL)offLine appId:(NSString *)appId taskId:(NSString *)taskId msgId:(NSString *)msgId fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
+    // [ GTSDK ]：汇报个推自定义事件(反馈透传消息)，开发者可以根据项目需要决定是否使用, 非必须
+    // [GeTuiSdk sendFeedbackMessage:90001 andTaskId:taskId andMsgId:msgId];
+    /* demo逻辑 供开发者自行决定
+    NSString *msg = [NSString stringWithFormat:@"[ TestDemo ] [APN] %@ \nReceive Slience: fromGetui:%@ appId:%@ offLine:%@ taskId:%@ msgId:%@ userInfo:%@ ", NSStringFromSelector(_cmd), fromGetui ? @"个推消息" : @"APNs消息", appId, offLine ? @"离线" : @"在线", taskId, msgId, userInfo];
+    本地通知UserInfo参数
+    NSDictionary *dic = nil;
+    if (fromGetui) {
+        //个推在线透传
+        dic = @{@"_gmid_": [NSString stringWithFormat:@"%@:%@", taskId ?: @"", msgId ?: @""]};
+    } else {
+        //APNs静默通知
+        dic = userInfo;
+    }
+    if (fromGetui && offLine == NO) {
+        //个推通道+在线，建议发起本地通知 开发者自行确定
+    }
+     */
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    [dic addEntriesFromDictionary:userInfo];
+    dic[@"fromGetui"] = @(fromGetui);
+    dic[@"offLine"] = @(offLine);
+    dic[@"appId"] = appId;
+    dic[@"taskId"] = taskId;
+    dic[@"msgId"] = msgId;
+    NSLog(@"GTSDK>>>GeTuiSdkDidReceiveSlience fromGetui:%@ appId:%@ offLine:%@ taskId:%@ msgId:%@ fetchCompletionHandler：%@ userInfo:%@ ", fromGetui ? @"个推消息" : @"APNs消息", appId, offLine ? @"离线" : @"在线", taskId, msgId, completionHandler, userInfo);
+    
+    [self getui_sendAppEventWithName:@"GeTuiSdkDidReceiveSlience" body:dic];
+    if(completionHandler) {
+        // [ 参考代码，开发者注意根据实际需求自行修改 ] 根据APP需要自行修改参数值
+        completionHandler(UIBackgroundFetchResultNoData);
+    }
+}
+
+- (void)GeTuiSdkNotificationCenter:(UNUserNotificationCenter *)center openSettingsForNotification:(UNNotification *)notification {
+    // [ 参考代码，开发者注意根据实际需求自行修改 ] 根据APP需要自行修改参数值
+    NSLog(@"GTSDK>>>openSettingsForNotification");
+    [self getui_sendAppEventWithName:@"GeTuiSdkOpenSettingsForNotification" body:notification.request.content.userInfo];
+}
+
+- (void)GeTuiSdkDidRegisterLiveActivity:(NSString *)sequenceNum result:(BOOL)isSuccess error:(NSError *)error {
+    NSLog(@"GTSDK>>>GeTuiSdkDidRegisterLiveActivity %@ %@", sequenceNum, @(isSuccess));
+    
+    [self getui_sendAppEventWithName:@"GeTuiSdkDidRegisterLiveActivity" body:@{@"result":@(isSuccess),@"sn":sequenceNum}];
+}
+
+- (void)GeTuiSdkDidRegisterPushToStartToken:(NSString *)sequenceNum result:(BOOL)isSuccess error:(NSError *)error {
+    NSLog(@"GTSDK>>>GeTuiSdkDidRegisterPushToStartToken %@ %@", sequenceNum, @(isSuccess));
+    
+    [self getui_sendAppEventWithName:@"GeTuiSdkDidRegisterPushToStartToken" body:@{@"result":@(isSuccess),@"sn":sequenceNum}];
+}
+//MARK: - 发送上行消息
+
+/// [ GTSDK回调 ] SDK收到sendMessage消息回调
+- (void)GeTuiSdkDidSendMessage:(NSString *)messageId result:(BOOL)isSuccess error:(NSError *)aError {
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    dic[@"messageId"] = messageId;
+    dic[@"isSuccess"] = @(isSuccess);
+    NSLog(@"GTSDK>>>GeTuiSdkDidSendMessage msgId:%@ isSuccess:%@ error:%@", messageId, @(isSuccess), aError);
+    [self getui_sendAppEventWithName:@"GeTuiSdkDidSendMessage" body:dic];
+}
+
+
+//MARK: - 开关设置
+
+/// [ GTSDK回调 ] SDK设置推送模式回调
+- (void)GeTuiSdkDidSetPushMode:(BOOL)isModeOff error:(NSError *)error {
+    NSLog(@"GTSDK>>>GeTuiSdkDidSetPushMode %@ error:%@",@(isModeOff), error);
+    [self getui_sendAppEventWithName:@"GeTuiSdkDidSetPushMode" body:@(isModeOff)];
+}
+
+
+//MARK: - 别名设置
+
+- (void)GeTuiSdkDidAliasAction:(NSString *)action result:(BOOL)isSuccess sequenceNum:(NSString *)aSn error:(NSError *)aError {
+    /*
+     参数说明
+     isSuccess: YES: 操作成功 NO: 操作失败
+     aError.code:
+     30001：绑定别名失败，频率过快，两次调用的间隔需大于 5s
+     30002：绑定别名失败，参数错误
+     30003：绑定别名请求被过滤
+     30004：绑定别名失败，未知异常
+     30005：绑定别名时，cid 未获取到
+     30006：绑定别名时，发生网络错误
+     30007：别名无效
+     30008：sn 无效 */
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    dic[@"action"] = action;
+    dic[@"isSuccess"] = @(isSuccess);
+    dic[@"aSn"] = aSn;
+    NSLog(@"GTSDK>>>GeTuiSdkDidAliasAction action:%@ isSuccess:%@ sn:%@ error:%@", action, @(isSuccess), aSn, aError);
+    [self getui_sendAppEventWithName:@"GeTuiSdkDidAlias" body:dic];
+}
+
+
+//MARK: - 标签设置
+
+- (void)GeTuiSdkDidSetTagsAction:(NSString *)sequenceNum result:(BOOL)isSuccess error:(NSError *)aError {
+    /*
+     参数说明
+     sequenceNum: 请求的序列码
+     isSuccess: 操作成功 YES, 操作失败 NO
+     aError.code:
+     20001：tag 数量过大（单次设置的 tag 数量不超过 100)
+     20002：调用次数超限（默认一天只能成功设置一次）
+     20003：标签重复
+     20004：服务初始化失败
+     20005：setTag 异常
+     20006：tag 为空
+     20007：sn 为空
+     20008：离线，还未登陆成功
+     20009：该 appid 已经在黑名单列表（请联系技术支持处理）
+     20010：已存 tag 数目超限
+     20011：tag 内容格式不正确
+     */
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    dic[@"sequenceNum"] = sequenceNum;
+    dic[@"isSuccess"] = @(isSuccess);
+    NSLog(@"GTSDK>>>GeTuiSdkDidSetTagsAction sn:%@ isSuccess:%@ error:%@",sequenceNum, @(isSuccess), aError);
+    [self getui_sendAppEventWithName:@"GeTuiSdkDidSetTags" body:dic];
+}
+
+/**
+ * 查询当前绑定tag结果返回
+ * @param aTags   当前绑定的 tag 信息
+ * @param aSn     返回 queryTag 接口中携带的请求序列码，标识请求对应的结果返回
+ * @param aError  成功返回nil,错误返回相应error信息
+ */
+- (void)GetuiSdkDidQueryTag:(NSArray *)aTags sequenceNum:(NSString *)aSn error:(nullable NSError *)aError {
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    dic[@"tags"] = aTags;
+    dic[@"sn"] = aSn;
+    dic[@"error"] = aError.userInfo;
+    NSLog(@"GTSDK>>>GetuiSdkDidQueryTag tags:%@ sn:%@ error:%@",aTags, aSn, aError);
+    [self getui_sendAppEventWithName:@"GetuiSdkDidQueryTag" body:dic];
+}
+
 
 #pragma mark - VOIP related
 
@@ -762,14 +874,89 @@ RCT_EXPORT_METHOD(registerPushToStartToken:(NSString *)activityAttributes pushTo
     [self getui_sendAppEventWithName:@"voipPushPayload" body:ret];
 }
 
-RCT_EXPORT_METHOD(voipRegistration)
-{
-    dispatch_queue_t mainQueue = dispatch_get_main_queue();
-    PKPushRegistry *voipRegistry = [[PKPushRegistry alloc] initWithQueue:mainQueue];
-    voipRegistry.delegate = self;
-    // Set the push type to VoIP
-    voipRegistry.desiredPushTypes = [NSSet setWithObject:PKPushTypeVoIP];
-}
 
 @end
 
+//
+//// MyTurboModule.h// 报错'React/RCTTurboModule.h' file not found
+//#import <React/RCTBridgeModule.h>
+////#import <React/RCTTurboModule.h>
+//
+//NS_ASSUME_NONNULL_BEGIN
+//
+//@interface MyTurboModule : NSObject <RCTTurboModule>
+//
+//// 同步方法示例
+//- (NSString *)getAppName;
+//
+//// 异步回调方法示例
+//- (void)fetchData:(RCTResponseSenderBlock)callback;
+//
+//// Promise 方法示例
+//- (void)fetchDataWithPromise:(RCTPromiseResolveBlock)resolve
+//                    rejecter:(RCTPromiseRejectBlock)reject;
+//
+//// 发送事件到 JS
+//- (void)sendEventToJS;
+//
+//@end
+//
+//NS_ASSUME_NONNULL_END
+//
+//
+//// MyTurboModule.m
+////#import "MyTurboModule.h"
+//#import <React/RCTBridge.h>
+//#import <React/RCTEventDispatcher.h>
+//
+//@implementation MyTurboModule {
+//    RCTBridge *_bridge;
+//}
+//
+//// 初始化方法（新架构要求）
+//- (instancetype)initWithBridge:(RCTBridge *)bridge {
+//    if (self = [super init]) {
+//        _bridge = bridge;
+//    }
+//    return self;
+//}
+//
+//// 同步方法实现
+//- (NSString *)getAppName {
+//    return @"My RN App";
+//}
+//
+//// 异步回调方法实现
+//- (void)fetchData:(RCTResponseSenderBlock)callback {
+//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//        // 模拟异步操作
+//        NSDictionary *data = @{@"key": @"value"};
+//        callback(@[NSNull.null, data]);
+//    });
+//}
+//
+//// Promise 方法实现
+//- (void)fetchDataWithPromise:(RCTPromiseResolveBlock)resolve
+//                    rejecter:(RCTPromiseRejectBlock)reject {
+//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//        @try {
+//            // 模拟可能出错的操作
+//            NSDictionary *result = @{@"success": @YES};
+//            resolve(result);
+//        } @catch (NSException *exception) {
+//            reject(@"ERROR", exception.reason, exception);
+//        }
+//    });
+//}
+//
+//// 发送事件到 JS
+//- (void)sendEventToJS {
+//    NSString *eventName = @"MyCustomEvent";
+//    NSDictionary *eventData = @{@"message": @"Hello from Native"};
+//    [_bridge.eventDispatcher sendAppEventWithName:eventName body:eventData];
+////    [_bridge.eventDispatcher sendEventWithName:eventName
+////                                          body:eventData
+////                                coalescingKey:nil];
+//}
+//
+//@end
