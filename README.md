@@ -4,19 +4,17 @@
 * 多厂商版本请联系技术支持
 
 
-
 # 环境
 
 1. React Native Version 
    "react": "18.3.1"
    "react-native": "0.75.4"
-2. 当前react-native-getui版本 1.1.51
+2. 当前react-native-getui版本 1.1.55
 
 
 注意：
 - react-native 版本>=0.76，建议使用插件版本>=1.1.54
 - 插件版本1.1.53 是expo App定制版本。
-
 
 
 # 1.安装
@@ -76,7 +74,11 @@ npm run GetuiConfigure DI1jwW3FtZ6kGDeY5dk0Y9 DQCk2V8Jev9hqhWDU94PF9 Rtyp5trKUt8
 
 * 默认不混淆, 如果开启了混淆
   将插件中proguard.txt的内容, 复制到Android工程的proguard-rules.pro中
-
+  ```txt
+    -keep class com.igexin.** { *; }
+    -keep class com.getui.gtc.** {*;}
+    //如果接入厂商,查看proguard.txt
+  ```
 
 
 ## 2.2 IOS

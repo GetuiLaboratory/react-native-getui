@@ -1,5 +1,4 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.getui.reactnativegetui">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- 个推SDK权限配置开始 -->
     <uses-permission android:name="android.permission.INTERNET" />

@@ -1,17 +1,20 @@
 
-#个推
--dontwarn com.igexin.**
+#厂商
 -dontwarn com.huawei.hms.**
 -dontwarn com.meizu.**
 -dontwarn com.xiaomi.push.**
-
--keep class com.igexin.** { *; }
--keep class org.json.** { *; }
 -keep class com.huawei.hms.** { *; }
 -keep class com.meizu.** { *; }
 -keep class com.xiaomi.** { *; }
--keep class org.apache.thrift.** { *; }
+-keep class org.json.** { *; }
+#厂商结束
 
+
+
+#个推
+-dontwarn com.igexin.**
+-keep class com.igexin.** { *; }
+-keep class org.apache.thrift.** { *; }
 -keep class com.getui.gtc.** {*;}
 
 -keepattributes Signature, InnerClasses, EnclosingMethod, Exceptions, *Annotation*
