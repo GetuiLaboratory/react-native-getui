@@ -1,0 +1,35 @@
+{
+  "name": "gt-push-ohos-plugin",
+  "version": "1.0.0",
+  "description": "push for ohos",
+  "main": "index.ts",
+  "keywords": [],
+  "author": "yangshgetui",
+  "license": "ISC",
+  "harmony": {
+    "alias": "gt-push-ohos-plugin",
+    "codegenConfig": [
+      {
+        "version": 1,
+        "specPaths": [
+          "./src/specs/v1"
+        ],
+        "des": "version：表示版本，需要强调一下，这里的版本并没有新旧之说，它们只是使用场景不同而已。\"version\": 1 适用于创建 TurboModule 或者是 ArkTS 组件的场景；\n\"version\": 2 则适用于创建 CAPI 组件的场景。"
+      }
+    ]
+  },
+  "files": [
+    "index.ts",
+    "src/*",
+    "harmony"
+  ],
+  "peerDependencies": {
+    "react": "*",
+    "react-native": "*"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.47",
+    "react": "18.2.0",
+    "react-native": "0.72.5"
+  }
+}

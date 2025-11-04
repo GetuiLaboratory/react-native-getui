@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "GetuiConfigure": "node node_modules/react-native-getui/GetuiConfiguration.js",
-    "postinstall": "node postInstall.js"
-  },
+    "postinstall": "node postInstall.js",
+   },
   "repository": {
     "type": "git",
     "url": "git@github.com:GetuiLaboratory/react-native-getui.git"
@@ -52,5 +52,6 @@
     }
   },
   "dependencies": {
-  }
+  },
+
 }

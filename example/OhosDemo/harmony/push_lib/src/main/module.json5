@@ -1,0 +1,9 @@
+{
+  "module": {
+    "name": "GtPushOhosSdk",
+    "type": "har",
+    "deviceTypes": [
+      "default"
+    ]
+  }
+}

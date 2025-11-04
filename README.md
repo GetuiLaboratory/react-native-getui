@@ -184,3 +184,5 @@ android 与 ios 有部分API不同, 查看插件的index.js 或 index.d.ts中API
 
 
 
+## 4 ohos
+查看文档 [README.md](react-native-harmony-push/README.md)
