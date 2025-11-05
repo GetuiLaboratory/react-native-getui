@@ -1,7 +1,8 @@
 # react-native-getui 
 * react-native-getui 是个推官方开发的 React Native 插件，使用该插件可以方便快速地集成推送功能。
-
 * 多厂商版本请联系技术支持
+* ohos单独看[README.md](react-native-harmony-push/README.md)
+
 
 
 # 环境
@@ -18,6 +19,7 @@
 
 
 # 1.安装
+
 
 ### 1.1 使用 npm 自动安装
 
