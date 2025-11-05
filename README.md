@@ -144,7 +144,7 @@ pod install
 
   
 
-## 2.3 手动安装
+### 2.2.3 手动安装
 
  替换 step3: 自动添加GTSDK配置代码手动安装
 
@@ -163,14 +163,25 @@ pod install
 
 
 
-### 2.4 API调用与订阅消息
+
+## 2.3 Ohos
+
+查看文档 [README.md](react-native-harmony-push/README.md)
+
+
+
+## 2.4 API调用与订阅消息
+
+
 
 查看示例
 
 android 与 ios 有部分API不同, 查看插件的index.js 或 index.d.ts中API的注释
 
 
-## 3.iOS注意事项
+
+
+# 3.iOS注意事项
 
 项目需要打开通知能力，才能获取DeviceToken用于通知展示点击等业务。Xcode打开工程,Signing & Capabilities中添加Push Notification和Background Modes如下：
 
@@ -183,6 +194,3 @@ android 与 ios 有部分API不同, 查看插件的index.js 或 index.d.ts中API
 <img src="./pics/xcode3.png" width="800px"/>
 
 
-
-## 4 ohos
-查看文档 [README.md](react-native-harmony-push/README.md)

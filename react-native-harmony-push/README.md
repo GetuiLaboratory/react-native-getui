@@ -1,8 +1,8 @@
- [Github 地址](https://github.com/GetuiLaboratory/react-native-idosdk/tree/main/react-native-harmony-ido)
+ [Github 地址](https://github.com/GetuiLaboratory/react-native-getui/tree/master/react-native-harmony-push)
 
 ## 安装与使用
-* 下载鸿蒙插件工程[gt-push-ohos-plugin-1.0.0.tgz](gt-ido-ohos-plugin-1.0.0.tgz)
-* 将gt-push-ohos-plugin-1.0.1.tgz放到RN工程下
+* 下载鸿蒙插件工程[gt-push-ohos-plugin-1.0.0.tgz](gt-push-ohos-plugin-1.0.0.tgz)
+* 将gt-push-ohos-plugin-1.0.0.tgz放到RN工程下
 * 安装 , 如:npm install file:gt-push-ohos-plugin/gt-push-ohos-plugin-1.0.0.tgz
 
 
@@ -12,68 +12,98 @@
 > [!WARNING] 使用时 import 的库名不变。
 
 ```js
-import { GetuiIdo } from "gt-ido-ohos-plugin";
-//....省略
+import { GetuiPush } from 'gt-push-ohos-plugin';
 function App(): React.JSX.Element {
-    const isDarkMode = useColorScheme() === 'dark';
-    const [gtcid, setGtcid] = useState<string | null>(null); // 存储 gtcid
-    const [version, setVersion] = useState<string>('未知'); // 存储版本号
-    
-    // 初始化运营工具
-    const initIdo = () => {
-        try {
-            // 获取版本号
-            GetuiIdo.version((ver: string) => {
-                setVersion(ver);
-            });
+  const isDarkMode = useColorScheme() === 'dark';
+  const eventListener = useRef<EmitterSubscription | null>(null);
+  const [cid, setCid] = useState<string>('');
+  const [version, setVersion] = useState<string>('');
+  const [tag, setTagValue] = useState<string>(''); // 补充缺失的 tag 状态及更新函数
 
-            const appId = 'djYjSlFVMf6p5YOy2OQUs8';
-            const channel = 'rn';
-            GetuiIdo.setDebugEnable(true)
+  // 初始化推送服务
+  const initPush = (): void => {
+    GetuiPush.initPush(
+      (cid: string) => {
+        console.log('initPush cid : ' + cid);
+      },
+      (error: string) => {
+        console.log('initPush error : ' + error);
+      }
+    );
+  };
 
-            GetuiIdo.startSdk(appId, channel);
+  // 设置标签
+  const setTag = (): void => {
+    GetuiPush.setTag(['李四', '张三'], '123');
+  };
 
-            setTimeout((): void => {
-                // 获取 gtcid
-                GetuiIdo.gtcid((id: string) => {
-                    Alert.alert('成功', '运营工具初始化成功 \n '+id);
-                    setGtcid(id);
-                });
-            }, 1000);
-            
-            // 开启调试模式（可选）
-            GetuiIdo.setDebugEnable(true);
-            // 设置其他可选配置（根据需求调整，时间单位为毫秒）
-            GetuiIdo.setSessionTime(30000); // 设置会话时间（毫秒）
-            GetuiIdo.setMinAppActiveDuration(60000); // 设置最小活跃时长（毫秒）
-            GetuiIdo.setMaxAppActiveDuration(3600000); // 设置最大活跃时长（毫秒）
-            GetuiIdo.setEventUploadInterval(300000); // 设置事件上传间隔（毫秒）
-            GetuiIdo.setEventForceUploadSize(50); // 设置强制上传事件数量
-            GetuiIdo.setProfileUploadInterval(600000); // 设置用户画像上传间隔（毫秒）
-            GetuiIdo.setProfileForceUploadSize(20); // 设置用户画像强制上传数量
+  // 查询标签
+  const queryTag = (): void => {
+    GetuiPush.queryTag('123');
+  };
 
-            const profiles = {
-                "userId": 123,
-                "name": "Alice",
-                "isActive": true
-            };
+  // 设置事件监听
+  const setCallback = (): void => {
+    DeviceEventEmitter.addListener('receiveRemoteNotification', (data) => {
+      console.log('listener  接收到透传消息 : ' + data);
+    });
 
-            GetuiIdo.setProfile(profiles,  "sss");
-        } catch (error) {
-            Alert.alert('错误', '初始化运营工具失败: ' + error);
+    DeviceEventEmitter.addListener('onReceiveClientId', (data) => {
+      console.log('listener cid : ' + data);
+      setCid(data);
+    });
+
+    DeviceEventEmitter.addListener('onReceiveDeviceToken', (data) => {
+      console.log('listener 厂商token : ' + data);
+    });
+
+    DeviceEventEmitter.addListener('onReceiveOnlineState', (data) => {
+      console.log('listener 在线状态 : ' + data);
+    });
+
+    DeviceEventEmitter.addListener('onReceiveCommandResult', (data) => {
+      console.log('listener 指令回执(setTag 、bindAlias...) : ' + data);
+      // action
+      // SET_TAG_RESULT = 10009;  setTag
+      // QUERY_TAG_RESULT = 10012; queryTag
+      // BIND_ALIAS_RESULT = 10010; bindAlias
+      // UNBIND_ALIAS_RESULT = 10011; unbindAlias
+      try {
+        const command = JSON.parse(data); // 注意：原代码用了未定义的 jsonString，这里改用 data
+        if (command.action === 10012) {
+          console.log('listener queryTag : ' + data);
+          setTagValue(JSON.stringify(command.tags) )
         }
-    };
-    const trackCountEvent = () =>{
-        const profiles = {
-            "userId": 123,
-            "name": "Alice",
-            "isActive": true
-        };
+      } catch (e) {
+        console.error('解析 command 数据失败', e);
+      }
+    });
 
-        GetuiIdo.trackCountEvent("123",profiles,"ss");
+    DeviceEventEmitter.addListener('onNotificationMessageArrived', (data) => {
+      console.log('listener 接受到通知 : ' + data);
+    });
+
+    DeviceEventEmitter.addListener('onNotificationMessageClicked', (data) => {
+      console.log('listener 通知被点击 : ' + data);
+    });
+
+    DeviceEventEmitter.addListener('onNotificationsEnabled', (data) => {
+      console.log('listener 系统通知开关状态 : ' + data);
+    });
+  };
+
+  // 组件生命周期管理
+  useEffect(() => {
+    setCallback();
+    GetuiPush.version((version: string) => {
+      setVersion(version);
+    });
+
+    // 卸载时清理监听
+    return () => {
+      // eventListener.current?.remove();
     };
-);
-}
+  }, []);
 //....省略
 export default App;
 
@@ -82,6 +112,7 @@ export default App;
 ## Link
 
 目前 HarmonyOS 暂不支持 AutoLink，所以 Link 步骤需要手动配置。
+建议参考鸿蒙官网教程[RN应用鸿蒙化开发指南](https://gitcode.com/openharmony-sig/ohos_react_native/blob/master/docs/zh-cn/应用开发实践/RN应用鸿蒙化开发指南.md#rn应用鸿蒙化开发指南)
 
 首先需要使用 DevEco Studio 打开项目里的 HarmonyOS 工程 `harmony`
 
@@ -105,7 +136,7 @@ export default App;
 ```json
 "dependencies": {
     "@rnoh/react-native-openharmony": "0.72.90",
-    "IdoOhosSdk": "file:../../node_modules/gt-ido-ohos-plugin/harmony/IdoOhosSdk.har"
+    "GtPushOhosSdk": "file:../../node_modules/gt-push-ohos-plugin/harmony/GtPushOhosSdk.har"
   }
 ```
 点击右上角的 `sync` 按钮
@@ -130,7 +161,7 @@ add_compile_definitions(WITH_HITRACE_SYSTRACE)
 set(WITH_HITRACE_SYSTRACE 1) # for other CMakeLists.txt files to use
 
 add_subdirectory("${RNOH_CPP_DIR}" ./rn)
-add_subdirectory("${OH_MODULE_DIR}/IdoOhosSdk/src/main/cpp" ./ido)
+add_subdirectory("${OH_MODULE_DIR}/GtPushOhosSdk/src/main/cpp" ./gtpsuh)
 
 add_library(rnoh_app SHARED
    "./PackageProvider.cpp"
@@ -138,20 +169,20 @@ add_library(rnoh_app SHARED
  )
 
 target_link_libraries(rnoh_app PUBLIC rnoh)
-target_link_libraries(rnoh_app PUBLIC rnoh_ido)
+target_link_libraries(rnoh_app PUBLIC rnoh_gtpush)
 ```
 
 打开 `entry/src/main/cpp/PackageProvider.cpp`，添加：
 
 ```diff
 #include "RNOH/PackageProvider.h"  
-#include "IdoPackage.h"
+#include "GtPushPackage.h"  
 
 using namespace rnoh;  
 std::vector<std::shared_ptr<Package>> 
 PackageProvider::getPackages(Package::Context ctx) {
    return {
-          std::make_shared<IdoPackage>(ctx)
+          std::make_shared<GtPushPackage>(ctx)
    };
 }
 ```
@@ -162,11 +193,11 @@ PackageProvider::getPackages(Package::Context ctx) {
 
 ```diff
 import { RNPackageContext, RNPackage } from '@rnoh/react-native-openharmony/ts';
-import  { IdoPackage } from 'IdoOhosSdk/ts';
+import  { GtPushPackage } from 'GtPushOhosSdk/ts';
 
 export function createRNPackages(ctx: RNPackageContext): RNPackage[] {
   return [
-    new IdoPackage(ctx),
+    new GtPushPackage(ctx),
   ];
 }
 ```
@@ -228,37 +259,141 @@ ohpm install
 ```ts
 export interface Spec extends TurboModule {
 
-startSdk(appid: string, channel: string): void;
+  /**
+   * 初始化推送服务 只有Android,  IOS在AppDelegate中初始化
+   */
+   initPush(): void;
 
-gtcid(cb: (param: string) => void): void;
+  /**
+   * 打开推送服务
+   */
+   turnOnPush(): void;
 
-version(cb: (param: string) => void): void;
+   turnOffPush(): void;
 
-setDebugEnable(isEnable: boolean): void;
+  /**
+   * 获取SDK的Cid
+   *
+   * @param cb 回调函数，接收 Cid 值
+   */
+   clientId(cb: (param: string) => void): void;
 
-setSessionTime(time: number): void;
 
-setMinAppActiveDuration(val: number): void;
+  /**
+   * 获取SDK版本号
+   *
+   * @param cb 回调函数，接收版本值
+   */
+   version(cb: (param: string) => void): void;
 
-setMaxAppActiveDuration(val: number): void;
+  /**
+   * 是否让SDK 后台离线（默认值：true）
+   *
+   * @param offLine 支持当APP进入后台后，个推是否离线,true.离线
+   */
+   setBackgroundOffLine(offLine: boolean): void;
 
-setEventUploadInterval(val: number): void;
+  /**
+   * 绑定别名功能:后台可以根据别名进行推送
+   *
+   * @param alias 别名字符串
+   * @param aSn 绑定序列码, 不为nil
+   */
+   bindAlias(alias: string, aSn?: string): void;
 
-setEventForceUploadSize(val: number): void;
+  /**
+   * 取消绑定别名功能
+   *
+   * @param alias 别名字符串
+   * @param isSelf 是否只对当前cid有效. true: 只对当前cid做解绑；false:对所有绑定该别名的cid列表做解绑.
+   * @param aSn 绑定序列码, 不为nil
+   */
+   unbindAlias(alias: string, isSelf: boolean, aSn?: string): void;
 
-setProfileUploadInterval(val: number): void;
+  /**
+   * 给用户打标签 , 后台可以根据标签进行推送
+   *
+   * @param tags 别名数组
+   *
+   * @return 提交结果，YES表示尝试提交成功，NO表示尝试提交失败
+   */
+   setTag(tags: string[], sn:string):void;
 
-setProfileForceUploadSize(val: number): void;
+   queryTag(sn:string):void;
+  /**
+   * 上行第三方自定义回执actionid
+   *
+   * @param actionId 用户自定义的actionid，int类型，取值90001-90999。
+   * @param taskId 下发任务的任务ID
+   * @param msgId 下发任务的消息ID
+   * 该方法需要在回调方法“GeTuiSdkDidReceivePayload:andTaskId:andMessageId:andOffLine:fromApplication:”使用
+   */
+   sendFeedbackMessage(actionId: number, taskId: string, msgId: string): void;
 
-setUserId(val: string): void;
+   /**
+    * 设置静默时间.
+    *
+    * @param beginHour 开始时间，beginHour >= 0 && beginHour < 24，单位 h.
+    * @param duration  持续时间，duration > 0 && duration <= 23，持续时间为 0 则取消静默，单位 h.
+    * @return 不是真正调用结果, 仅仅是该方法是否调用成功.
+    */
+   setSilentTime(beginHour: number, duration: number): boolean;
 
-trackCustomKeyValueEventBegin(eventId: string): void;
 
-trackCustomKeyValueEventEnd(eventId: string, args:{[key: string]: string|number|boolean}, ext: string): void;
-
-trackCountEvent(eventId: string, args:{[key: string]: string|number|boolean}, ext: string): void;
-
-setProfile(profiles: {[key: string]: string|number|boolean}, ext: string): void;
+   setBadgeNum(badgeNum: number):void;
 
 }
+```
+
+## 设置事件监听
+
+```ts
+const setCallback = (): void => {
+    DeviceEventEmitter.addListener('receiveRemoteNotification', (data) => {
+    console.log('listener  接收到透传消息 : ' + data);
+    });
+
+    DeviceEventEmitter.addListener('onReceiveClientId', (data) => {
+      console.log('listener cid : ' + data);
+      setCid(data);
+    });
+
+    DeviceEventEmitter.addListener('onReceiveDeviceToken', (data) => {
+      console.log('listener 厂商token : ' + data);
+    });
+
+    DeviceEventEmitter.addListener('onReceiveOnlineState', (data) => {
+      console.log('listener 在线状态 : ' + data);
+    });
+
+    DeviceEventEmitter.addListener('onReceiveCommandResult', (data) => {
+      console.log('listener 指令回执(setTag 、bindAlias...) : ' + data);
+      // action
+      // SET_TAG_RESULT = 10009;  setTag
+      // QUERY_TAG_RESULT = 10012; queryTag
+      // BIND_ALIAS_RESULT = 10010; bindAlias
+      // UNBIND_ALIAS_RESULT = 10011; unbindAlias
+      try {
+        const command = JSON.parse(data); // 注意：原代码用了未定义的 jsonString，这里改用 data
+        if (command.action === 10012) {
+          console.log('listener queryTag : ' + data);
+          setTagValue(JSON.stringify(command.tags) )
+        }
+      } catch (e) {
+        console.error('解析 command 数据失败', e);
+      }
+    });
+
+    DeviceEventEmitter.addListener('onNotificationMessageArrived', (data) => {
+      console.log('listener 接受到通知 : ' + data);
+    });
+
+    DeviceEventEmitter.addListener('onNotificationMessageClicked', (data) => {
+      console.log('listener 通知被点击 : ' + data);
+    });
+
+    DeviceEventEmitter.addListener('onNotificationsEnabled', (data) => {
+      console.log('listener 系统通知开关状态 : ' + data);
+    });
+};
 ```
