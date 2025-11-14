@@ -202,7 +202,26 @@ export function createRNPackages(ctx: RNPackageContext): RNPackage[] {
 }
 ```
 
-### 5.配置appid参数
+### 5.补全通知点击报表
+```diff
+import {GtPushModule} from 'GtPushOhosSdk';
+
+export default class EntryAbility extends RNAbility {
+    onCreate(want: Want): void {
+        super.onCreate(want)
+        hilog.info(DOMAIN, 'testTag', '%{public}s', 'Ability onCreate');
+        //补充点击事件报表
+        GtPushModule.setClickWant(want)
+    }
+    
+    onNewWant(want: Want, launchParam: AbilityConstant.LaunchParam): void {
+        //补充点击事件报表
+        GtPushModule.setClickWant(want)
+    }
+}
+```
+
+### 6.配置appid参数
 
 打开 `entry/src/main/module.json5`，添加：
 
@@ -341,6 +360,7 @@ export interface Spec extends TurboModule {
 
 
    setBadgeNum(badgeNum: number):void;
+
 
 }
 ```
