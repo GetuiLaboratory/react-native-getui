@@ -1,6 +1,6 @@
 {
   "name": "gt-push-ohos-plugin",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "push for ohos",
   "main": "index.ts",
   "keywords": [],

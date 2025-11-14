@@ -2,6 +2,7 @@ import { AbilityConstant, ConfigurationConstant, UIAbility, Want } from '@kit.Ab
 import { hilog } from '@kit.PerformanceAnalysisKit';
 import { window } from '@kit.ArkUI';
 import {RNAbility} from '@rnoh/react-native-openharmony';
+import {GtPushModule} from 'GtPushOhosSdk';
 const DOMAIN = 0x0000;
 
 export default class EntryAbility extends RNAbility {
@@ -17,6 +18,13 @@ export default class EntryAbility extends RNAbility {
       hilog.error(DOMAIN, 'testTag', 'Failed to set colorMode. Cause: %{public}s', JSON.stringify(err));
     }
     hilog.info(DOMAIN, 'testTag', '%{public}s', 'Ability onCreate');
+    //补充点击事件报表
+    GtPushModule.setClickWant(want)
+  }
+
+  onNewWant(want: Want, launchParam: AbilityConstant.LaunchParam): void {
+    //补充点击事件报表
+    GtPushModule.setClickWant(want)
   }
 
   onDestroy(): void {

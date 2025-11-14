@@ -1,6 +1,0 @@
-# ninja log v5
-1	7	0	/Users/yangsihao/Downloads/AndroidStudioProjects/getuiSDk/rn/AndroidDemo/android/app/.cxx/Debug/6w1n6239/armeabi-v7a/CMakeFiles/cmake.verify_globs	b42b288e8d4d27b1
-0	1135	1745908243682167239	CMakeFiles/appmodules.dir/Users/yangsihao/Downloads/AndroidStudioProjects/getuiSDk/rn/AndroidDemo/android/app/build/generated/autolinking/src/main/jni/autolinking.cpp.o	c28b8d3f70f67d0b
-0	1297	1745908243843817747	CMakeFiles/appmodules.dir/OnLoad.cpp.o	fafe3c8f25452f99
-1297	1347	1745908243898246404	/Users/yangsihao/Downloads/AndroidStudioProjects/getuiSDk/rn/AndroidDemo/android/app/build/intermediates/cxx/Debug/6w1n6239/obj/armeabi-v7a/libappmodules.so	ff98a5a104eb862f
-0	7	0	/Users/yangsihao/Downloads/AndroidStudioProjects/getuiSDk/rn/AndroidDemo/android/app/.cxx/Debug/6w1n6239/armeabi-v7a/CMakeFiles/cmake.verify_globs	b42b288e8d4d27b1

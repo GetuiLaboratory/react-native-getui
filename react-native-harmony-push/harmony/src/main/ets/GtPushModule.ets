@@ -1,7 +1,7 @@
 // entry/src/main/ets/turbomodule/CalculatorModule.ts
 import { AnyThreadTurboModule, UITurboModule } from '@rnoh/react-native-openharmony/ts';
 
-import { common } from '@kit.AbilityKit';
+import { common,Want } from '@kit.AbilityKit';
 import { RNOHContext, UITurboModuleContext } from '@rnoh/react-native-openharmony/src/main/ets/RNOH/ts';
 import hilog from '@ohos.hilog';
 import PushManager, { GTTransmitMessage, GTCmdMessage, Tag, GTNotificationMessage, GTPushCallback } from "@getui/push"
@@ -142,6 +142,20 @@ export class GtPushModule extends UITurboModule {
       hilog.debug(0x0000, TAG, '%{public}s', "onNotificationMessageClicked = " + msg);
       this._RnContext?.rnInstance?.emitDeviceEvent('onNotificationMessageClicked', msg);
     }
+  }
+
+  static setClickWant(want:Want){
+    if (want && want.parameters && want.parameters['gtdata']) {
+      //注意这里的判断条件，在线点击通知回执和离线报表补全有区别
+      if (!GtPushModule.hasGttask(want.parameters['gtdata'])) {
+        PushManager.setClickWant(want);
+        hilog.info(0x0000, 'EntryAbility', 'onCreate PushManager.setClickWant');
+      }
+    }
+  }
+
+  private  static hasGttask(gtdata: object): boolean {
+    return gtdata['gttask'] !== undefined;
   }
 }
 

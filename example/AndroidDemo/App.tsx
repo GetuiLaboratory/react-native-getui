@@ -13,7 +13,7 @@ import {
   Alert
 } from 'react-native';
 import Getui from 'react-native-getui';
-import { Colors } from 'react-native/Libraries/NewAppScreen';
+
 
 // 定义事件参数类型（根据个推实际返回结构调整）
 interface EventParams {
@@ -89,7 +89,7 @@ function App(): React.JSX.Element {
   }, []);
 
   const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+    backgroundColor: isDarkMode ? '#222' : '#F3F3F3',
   };
   const safePadding = '5%';
 
@@ -102,7 +102,7 @@ function App(): React.JSX.Element {
       <ScrollView style={backgroundStyle}>
         <View
           style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
+            backgroundColor: isDarkMode ? '#222' : '#F3F3F3',
             paddingHorizontal: safePadding,
             paddingBottom: safePadding,
           }}

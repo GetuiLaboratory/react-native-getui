@@ -25,6 +25,8 @@ const wrappedCustomRNComponentBuilder = wrapBuilder(buildCustomRNComponent)
     const stopTracing = this.logger.clone("aboutToAppear").startTracing();
     this.shouldShow = true
     stopTracing();
+
+
   }
 
   onBackPress(): boolean | undefined {
