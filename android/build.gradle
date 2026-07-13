@@ -42,7 +42,8 @@ repositories {
 }
 
 dependencies {
-    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation 'com.getui:gtsdk:3.3.15.0'  // 个推SDK
+    implementation 'com.getui:gtc:3.3.3.0'  // 个推核心组件
     implementation "com.facebook.react:react-native:+"  // From node_modules
 
 

@@ -7,15 +7,18 @@
 
 # 环境
 
-1. React Native Version 
-   "react": "18.3.1"
-   "react-native": "0.75.4"
-2. 当前react-native-getui版本 1.1.55
+当前发布版本为 `react-native-getui@1.1.56`。AndroidDemo 已在以下环境完成构建、安装和推送初始化验证：
 
+```json
+{
+  "react": "19.1.1",
+  "react-native": "0.82.1"
+}
+```
 
 注意：
-- react-native 版本>=0.76，建议使用插件版本>=1.1.54
-- 插件版本1.1.53 是expo App定制版本。
+- React Native `>= 0.76` 建议使用插件 `>= 1.1.54`。
+- `1.1.53` 为 Expo App 定制版本。
 
 
 # 1.安装
@@ -25,29 +28,29 @@
 
 在您的项目根目录下执行
 
-````js
-step1:添加npm包依赖
- npm install react-native-getui@latest --save 
+```bash
+# 安装已验证的 1.1.56 版本
+npm install react-native-getui@1.1.56 --save
 
-
-step2:iOS, pod项目, 链接iOS原生代码
+# iOS CocoaPods 项目
 npx pod-install
+```
 
+如需使用后续版本，可将 `@1.1.56` 替换为 `@latest`，并重新验证项目构建和推送初始化。
 
-step2: 链接 (非Autolinking项目, 和iOS非pod项目)
-react-native link
+React Native `0.60+` 默认使用 Autolinking，无需执行 `react-native link`。仅旧版非 Autolinking 项目按 [Android 手动集成文档](document/android.md) 配置原生工程。
 
-step3: 自动添加GTSDK配置代码
-npm run GetuiConfigure <yourAppId> <yourAppKey> <yourAppSecret>  <yourModuleName>
+旧版项目可使用以下脚本写入历史 `PUSH_*` 配置：
 
-//yourModuleName 指的是你的 Android 项目中的模块名称（对 iOS 没有影响，不填写的话默认值为 app）
-npm run GetuiConfigure DI1jwW3FtZ6kGDeY5dk0Y9 DQCk2V8Jev9hqhWDU94PF9 Rtyp5trKUt8HSyzD8zRXX7 app
+```bash
+npm run GetuiConfigure <yourAppId> <yourAppKey> <yourAppSecret> <yourModuleName>
+```
 
-````
+`yourModuleName` 是 Android 模块名称；iOS 不受此参数影响，默认值为 `app`。现代 React Native Android 项目请采用 [Android 手动集成文档](document/android.md) 中的 `GETUI_APPID` 配置，不建议运行该旧脚本修改 Gradle 文件。
 
 ## 1.2 示例
 
-* 新版本插件[AndroidDemo](https://github.com/GetuiLaboratory/react-native-getui/tree/master/example/AndroidDemo)
+* 新版本插件 [AndroidDemo](https://github.com/GetuiLaboratory/react-native-getui/tree/master/example/AndroidDemo)，本地运行步骤见 [example/AndroidDemo/README.md](example/AndroidDemo/README.md)
 
 * iOS 最新[参考Demo](https://github.com/GetuiLaboratory/react-native-getui/tree/master/example/IosDemo)
 
@@ -60,19 +63,28 @@ npm run GetuiConfigure DI1jwW3FtZ6kGDeY5dk0Y9 DQCk2V8Jev9hqhWDU94PF9 Rtyp5trKUt8
 
 ## 2.1 Android
 
-* 使用step3: 自动添加GTSDK配置代码后, AndroidManifest.xml自动生成配置
+* 从 1.1.56 版本开始，Android 个推 SDK 使用 Maven 依赖：
+  * `com.getui:gtsdk:3.3.15.0`
+  * `com.getui:gtc:3.3.3.0`
+* 如果主工程统一管理 Maven 仓库，请添加个推仓库：
+
+  ```gradle
+  maven {
+      url "https://mvn.getui.com/nexus/content/repositories/releases/"
+  }
+  ```
+
+* React Native `0.60+` 的 Android 项目使用 Autolinking。在 `android/app/src/main/AndroidManifest.xml` 的 `<application>` 中配置 AppID：
 
   ```xml
   <manifest>
    <application>
-  		  <meta-data android:name="PUSH_APPID" android:value="你的appid"/>
-          <meta-data android:name="PUSH_APPKEY" android:value="你的appkey"/>
-          <meta-data android:name="PUSH_APPSECRET" android:value="你的appSecret"/>
+      <meta-data android:name="GETUI_APPID" android:value="你的 AppID" />
      </application>
   </manifest>
   ```
 
-  没有的话, 需要自己添加
+  `1.1.56` AndroidDemo 已使用此配置成功初始化并获取 CID。旧项目如继续使用 `GetuiConfigure` 脚本，会生成 `PUSH_APPID`、`PUSH_APPKEY` 和 `PUSH_APPSECRET` 历史配置。
 
 * 默认不混淆, 如果开启了混淆
   将插件中proguard.txt的内容, 复制到Android工程的proguard-rules.pro中
@@ -194,5 +206,3 @@ android 与 ios 有部分API不同, 查看插件的index.js 或 index.d.ts中API
 <img src="./pics/xcode2.png" width="800px"/>
 
 <img src="./pics/xcode3.png" width="800px"/>
-
-

@@ -56,10 +56,6 @@ public class GetuiModule extends ReactContextBaseJavaModule {
         super.initialize();
     }
 
-    @Override
-    public void onCatalystInstanceDestroy() {
-        super.onCatalystInstanceDestroy();
-    }
 
     /**
      * 初始化推送服务

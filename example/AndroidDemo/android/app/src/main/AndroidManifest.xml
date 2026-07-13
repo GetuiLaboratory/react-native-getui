@@ -23,9 +23,7 @@
         </intent-filter>
       </activity>
 
-<meta-data android:name="PUSH_APPID" android:value="DI1jwW3FtZ6kGDeY5dk0Y9"/>
-<meta-data android:name="PUSH_APPKEY" android:value="DQCk2V8Jev9hqhWDU94PF9"/>
-<meta-data android:name="PUSH_APPSECRET" android:value="Rtyp5trKUt8HSyzD8zRXX7"/>
+        <meta-data android:name="GETUI_APPID" android:value="DI1jwW3FtZ6kGDeY5dk0Y9"/>
 
     </application>
 </manifest>

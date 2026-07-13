@@ -21,4 +21,12 @@ buildscript {
     }
 }
 
+allprojects {
+    repositories {
+        maven {
+            url 'https://mvn.getui.com/nexus/content/repositories/releases/'
+        }
+    }
+}
+
 apply plugin: "com.facebook.react.rootproject"
